@@ -97,6 +97,7 @@ local xguipnl = xlib.makepanel { parent = xgui.null }
 xlib.makebutton { x = 10, y = 10, w = 150, label = "刷新XGUI模块", parent = xguipnl }.DoClick = function()
     xgui.processModules()
 end
+
 local databutton = xlib.makebutton { x = 10, y = 30, w = 150, label = "刷新服务器数据", parent = xguipnl }
 databutton.DoClick = function(self)
     if xgui.offlineMode then
@@ -111,54 +112,56 @@ databutton.DoClick = function(self)
         end
     end
 end
+
 xlib.makelabel { x = 10, y = 55, label = "动画过渡时间:", parent = xguipnl }
-xlib.makeslider { x = 10, y = 70, w = 150, label = "<--->", max = 2, value = xgui.settings.animTime, decimal = 2, parent =
-xguipnl }.OnValueChanged = function(self, val)
+
+xlib.makeslider { x = 10, y = 70, w = 150, label = "<--->", max = 2, value = xgui.settings.animTime, decimal = 2, parent = xguipnl }.OnValueChanged = function(self, val)
     local testval = math.Clamp(tonumber(val), 0, 2)
     if testval ~= tonumber(val) then self:SetValue(testval) end
+
     xgui.settings.animTime = tonumber(val)
 end
-xlib.makecheckbox { x = 10, y = 97, w = 150, label = "显示启动时信息", value = xgui.settings.showLoadMsgs, parent =
-xguipnl }.OnChange = function(self, bVal)
+
+xlib.makecheckbox { x = 10, y = 97, w = 150, label = "显示启动时信息", value = xgui.settings.showLoadMsgs, parent = xguipnl }.OnChange = function(self, bVal)
     xgui.settings.showLoadMsgs = bVal
 end
+
 xlib.makelabel { x = 10, y = 120, label = "信息栏颜色:", parent = xguipnl }
 
-xlib.makecolorpicker { x = 10, y = 135, color = xgui.settings.infoColor, addalpha = true, alphamodetwo = true, parent =
-    xguipnl }.OnChangeImmediate = function(self, color)
+xlib.makecolorpicker { x = 10, y = 135, color = xgui.settings.infoColor, addalpha = true, alphamodetwo = true, parent = xguipnl }.OnChangeImmediate = function(self, color)
     xgui.settings.infoColor = color
 end
 
 ----------------
---SKIN MANAGER--
+-- 皮肤管理器 --
 ----------------
-local themeCounter = {}
+local themeCount = {}
 
 xlib.makelabel{ x=10, y=273, label="XGUI主题:", parent=xguipnl }
-xguipnl.skinselect = xlib.makecombobox{ x=10, y=290, w=150, parent=xguipnl }
+xguipnl.skinSelector = xlib.makecombobox{ x=10, y=290, w=150, parent=xguipnl }
 
 if not derma.SkinList[xgui.settings.skin] then
     xgui.settings.skin = "Default"
 end
 
-xguipnl.skinselect:SetText( derma.SkinList[xgui.settings.skin].PrintName )
+xguipnl.skinSelector:SetText( derma.SkinList[xgui.settings.skin].PrintName )
 xgui.base.refreshSkin = true
 
-xguipnl.skinselect.OnSelect = function( self, index, value, data )
+xguipnl.skinSelector.OnSelect = function( self, index, value, data )
     xgui.settings.skin = data
     xgui.base:SetSkin( data )
 end
 
 -- Loop through the derma.SkinList and add a unique identifier for each theme name
-for skin, skindata in pairs( derma.SkinList ) do
-    local themeName = skindata.PrintName
-    if themeCounter[themeName] then
-        themeCounter[themeName] = themeCounter[themeName] + 1
-        themeName = themeName .. " (" .. themeCounter[themeName] .. ")"
+for skin, skinData in pairs( derma.SkinList ) do
+    local themeName = skinData.PrintName
+    if themeCount[themeName] then
+        themeCount[themeName] = themeCount[themeName] + 1
+        themeName = themeName .. " (" .. themeCount[themeName] .. ")"
     else
-        themeCounter[themeName] = 1
+        themeCount[themeName] = 1
     end
-    xguipnl.skinselect:AddChoice( themeName, skin )
+    xguipnl.skinSelector:AddChoice( themeName, skin )
 end
 
 ----------------

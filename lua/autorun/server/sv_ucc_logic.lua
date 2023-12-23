@@ -26,9 +26,9 @@ if (SERVER) then
     end)
 
     util.AddNetworkString("listfriends")
-    util.AddNetworkString("sendtable")
+    util.AddNetworkString("sendtables")
 
-    net.Receive("sendtable", function(_, ply)
+    net.Receive("sendtables", function(_, ply)
         local caa = net.ReadEntity()
         local cak = net.ReadTable()
 

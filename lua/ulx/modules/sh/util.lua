@@ -141,6 +141,10 @@ function ulx.ban(calling_ply, target_ply, minutes, reason)
     ulx.fancyLogAdmin(calling_ply, str, target_ply, minutes ~= 0 and ULib.secondsToStringTime(minutes * 60) or reason, reason)
     -- Delay by 1 frame to ensure any chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.kickban, target_ply, minutes, reason, calling_ply)
+	RunConsoleCommand("writeid")
+    if (ULib.fileExists("cfg/banned_user.cfg")) then
+        ULib.execFile("cfg/banned_user.cfg")
+    end
 end
 
 local ban = ulx.command(CATEGORY_NAME, "ulx ban", ulx.ban, "!ban", false, false, true)
@@ -185,6 +189,10 @@ function ulx.banid(calling_ply, steamid, minutes, reason)
     ulx.fancyLogAdmin(calling_ply, str, displayid, minutes ~= 0 and ULib.secondsToStringTime(minutes * 60) or reason, reason)
     -- Delay by 1 frame to ensure any chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.addBan, steamid, minutes, reason, name, calling_ply)
+	RunConsoleCommand("writeid")
+    if (ULib.fileExists("cfg/banned_user.cfg")) then
+        ULib.execFile("cfg/banned_user.cfg")
+    end
 end
 
 local banid = ulx.command(CATEGORY_NAME, "ulx banid", ulx.banid, "!banid", false, false, true)
@@ -551,12 +559,25 @@ local cancelcmd = ulx.command(CATEGORY_NAME, "ulx cancelcmd", ulx.cancelcmd, "!c
 cancelcmd:addParam { type = ULib.cmds.BoolArg, invisible = true }
 cancelcmd:defaultAccess(ULib.ACCESS_ADMIN)
 cancelcmd:help("取消定时命令后运行指定\n的命令.")
+function ulx.weaponedit(calling_ply)
+    if not calling_ply:IsSuperAdmin() then
+        ULib.tsayError(calling_ply, "You must be a superadmin to use this command!")
+        return
+    end
+
+    calling_ply:ConCommand("weapon_properties_editor")
+	ulx.fancyLogAdmin(calling_ply, true,"#A 打开了武器编辑器")
+end
+
+local weaponedit = ulx.command("武器编辑器", "ulx weaponedit", ulx.weaponedit, "!weaponedit")
+weaponedit:defaultAccess(ULib.ACCESS_SUPERADMIN)
+weaponedit:help("打开 weapon_properties_editor 控制台.")
 
 function ulx.bot(calling_ply, number, bKick)
 	if (bKick) then
 		for _, v in ipairs(player.GetBots()) do
 			if (v:IsBot()) then 
-				v:Kick("")
+				v:Kick("踢出服务器")
 			end
 		end
 		ulx.fancyLogAdmin(calling_ply, "#A 从服务器踢出所有机器人")
@@ -567,9 +588,6 @@ function ulx.bot(calling_ply, number, bKick)
 			end
 			ulx.fancyLogAdmin(calling_ply, "#A 产生了一些机器人")
 		elseif (tonumber(number) != 0) then
-			for i = 1, number do
-				RunConsoleCommand("bot")
-			end
 			if (number == 1) then
 				ulx.fancyLogAdmin(calling_ply, "#A 产生的 #i 机器人", number)
 			elseif (number > 1) then
@@ -648,9 +666,9 @@ if (CLIENT) then
 end
 
 if (SERVER) then
-    util.AddNetworkString("sendtable")
+    util.AddNetworkString("sendtables")
 
-    net.Receive("sendtable", function(len, ply)
+    net.Receive("sendtables", function(len, ply)
         local calling, tabl = net.ReadEntity(), net.ReadTable()
         local tab = table.concat(tabl, ", ")
 
@@ -764,6 +782,15 @@ administrate:addParam { type = ULib.cmds.BoolArg, invisible = true }
 administrate:defaultAccess(ULib.ACCESS_SUPERADMIN)
 administrate:help("用于管理员处理事件并且无敌")
 administrate:setOpposite("ulx unadministrate", { _, true }, "!unadministrate", true)
+
+function ulx.countentities(calling_ply)
+    local count = #ents.GetAll()
+    ulx.fancyLogAdmin(calling_ply, "#A 检查了实体数量: #s", count)
+end
+
+local countentities = ulx.command(CATEGORY_NAME, "ulx countentities", ulx.countentities, "!countentities")
+countentities:defaultAccess(ULib.ACCESS_ADMIN)
+countentities:help("计算地图上实体的数量.")
 
 function ulx.debuginfo(calling_ply)
     local str = string.format("ULX 版本: %s\nULib 版本: %s\n", ULib.pluginVersionStr("ULX"),
@@ -943,10 +970,7 @@ if SERVER then
                 ULib.kick(ply, "更改名字次数过多")
             else
                 if showWarning == 1 then
-                    ULib.tsay(ply,
-                        "警告: 你更改了 " ..
-                        curAttempts .. " 次名字, 每 " .. duration .. " 秒内最大可以改 " ..
-                        maxAttempts .. " 次名字")
+                    ULib.tsay(ply, "警告: 你更改了 " .. curAttempts .. " 次名字, 每 " .. duration .. " 秒内最大可以改 " .. maxAttempts .. " 次名字")
                 end
             end
         end
@@ -988,3 +1012,68 @@ local function playerDrop(ply, ent)
 end
 
 hook.Add("PhysgunDrop", "ulxPlayerDrop", playerDrop)
+
+if SERVER then
+    local maxEdicts = 8192
+    local threshold = 8000
+
+    timer.Create("AutoCleanup", 1, 0, function()
+        local entities = ents.GetAll()
+
+        if #entities > threshold then
+            table.sort(entities, function(a, b)
+                return a:CreationTime() < b:CreationTime()
+            end)
+
+            for i = 1, #entities - maxEdicts do
+                entities[i]:Remove()
+            end
+        end
+    end)
+else
+    local maxEdicts = 8192
+    local threshold = 8000
+    timer.Create("AutoCleanup", 1, 0, function()
+        local entities = ents.GetAll()
+
+        if #entities > threshold then
+            table.sort(entities, function(a, b)
+                return a:CreationTime() < b:CreationTime()
+            end)
+
+            for i = 1, #entities - maxEdicts do
+                entities[i]:Remove()
+            end
+        end
+    end)
+end
+
+--[[CreateConVar("cleanup_time", 1, FCVAR_ARCHIVE, "Time (IN MINUTES) between every cleanup")
+
+if SERVER then
+	local convar = GetConVar("cleanup_time"):GetInt()
+	local pass = 0
+	timer.Create("AutoCleanup", 60, 0, function()
+		pass = pass + 1
+		if pass == convar then game.CleanUpMap() pass = 0 end
+	end)
+end
+--]]
+--[[timer.Create("CleanupProps", 60, 0, function()
+    for _, entity in pairs(ents.FindByClass("prop_physics")) do
+	if SERVER then
+        entity:Remove()
+	end
+    end
+	for _, v in ipairs (ents.GetAll()) do
+		local cls = v:GetClass()
+       if (cls:StartWith("prop_physics")) then
+			local phys = v:GetPhysicsObject()
+			if (IsValid(phys)) then
+				-- phys:Sleep()
+				-- phys:EnableMotion(false)
+				v:PhysicsDestroy()
+			end
+		end
+	end
+end)--]]
