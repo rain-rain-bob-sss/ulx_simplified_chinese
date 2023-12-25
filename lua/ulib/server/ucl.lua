@@ -4,8 +4,7 @@
 	ULib's Access Control List
 
 	Formatting Details:
-
-		Format of admin account in users.txt--
+		Format of admin account in users.txt
 		"<steamid|ip|unique id>"
 		{
 			"group" "superadmin"
@@ -20,7 +19,7 @@
 			}
 		}
 
-		Example of a superadmin--
+		Example of a superadmin
 		"STEAM_0:1:123456"
 		{
 			"group" "superadmin"
@@ -32,7 +31,7 @@
 			}
 		}
 
-		Format of group that gets the same allows as a superadmin in groups.txt--
+		Format of group that gets the same allows as a superadmin in groups.txt
 		"<group_name>"
 		{
 			"allow"
@@ -42,9 +41,9 @@
 			}
 			"inherit_from" "superadmin"
 		}
-]]
+--]]
 
-local ucl = ULib.ucl      -- Make it easier for us to refer to
+local ucl = ULib.ucl -- Make it easier for us to refer to
 
 local defaultGroupsText = -- To populate initially or when the user deletes it
 [["operator"
@@ -301,18 +300,16 @@ reloadUsers()
 	Adds a new group to the UCL. Automatically saves.
 
 	Parameters:
-
 		name - A string of the group name. (IE: superadmin)
 		allows - *(Optional, defaults to empty table)* The allowed access for the group.
 		inherit_from - *(Optional)* A string of a valid group to inherit from
 		from_CAMI - *(Optional)* An indicator for this group coming from CAMI.
 
 	Revisions:
-
 		v2.10 - acl is now an options parameter, added inherit_from.
 		v2.40 - Rewrite, changed parameter list around.
 		v2.60 - Added CAMI support and parameter.
-]]
+--]]
 
 function ucl.addGroup(name, allows, inherit_from, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.addGroup", "string", name)
@@ -348,19 +345,16 @@ end
 	Adds or removes an access tag in the allows for a group. Automatically reprobes, automatically saves.
 
 	Parameters:
-
 		name - A string of the group name. (IE: superadmin)
 		access - The string of the access or a table of accesses to add or remove. Access tags can be specified in values in the table for allows.
 		revoke - *(Optional, defaults to false)* A boolean of whether access should be granted or revoked.
 
 	Returns:
-
 		A boolean stating whether you changed anything or not.
 
 	Revisions:
-
 		v2.40 - Initial.
-]]
+--]]
 
 function ucl.groupAllow(name, access, revoke)
     ULib.checkArg(1, "ULib.ucl.groupAllow", "string", name)
@@ -425,15 +419,13 @@ end
 	Renames a group in the UCL. Automatically moves current members, automatically renames inheritances, automatically saves.
 
 	Parameters:
-
 		orig - A string of the original group name. (IE: superadmin)
 		new - A string of the new group name. (IE: owner)
 
 	Revisions:
-
 		v2.40 - Initial.
 		v2.60 - Added CAMI support.
-]]
+--]]
 
 function ucl.renameGroup(orig, new)
     ULib.checkArg(1, "ULib.ucl.renameGroup", "string", orig)
@@ -490,16 +482,15 @@ end
 	Sets a group's inheritance in the UCL. Automatically reprobes current members, automatically saves.
 
 	Parameters:
-
 		group - A string of the group name. (IE: superadmin)
 		inherit_from - Either a string of the new inheritance group name or nil to remove inheritance. (IE: admin)
 		from_CAMI - *(Optional)* An indicator for this group coming from CAMI.
 
 	Revisions:
-
 		v2.40 - Initial.
 		v2.60 - Added CAMI support and parameter.
-]]
+--]]
+
 function ucl.setGroupInheritance(group, inherit_from, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.renameGroup", "string", group)
     ULib.checkArg(2, "ULib.ucl.renameGroup", { "nil", "string" }, inherit_from)
@@ -551,14 +542,12 @@ end
 	Sets what a group is allowed to target in the UCL. Automatically saves.
 
 	Parameters:
-
 		group - A string of the group name. (IE: superadmin)
 		can_target - Either a string of who the group is allowed to target (IE: !%admin) or nil to clear the restriction.
 
 	Revisions:
-
 		v2.40 - Initial.
-]]
+--]]
 
 function ucl.setGroupCanTarget(group, can_target)
     ULib.checkArg(1, "ULib.ucl.setGroupCanTarget", "string", group)
@@ -582,16 +571,15 @@ end
 	Removes a group from the UCL. Automatically removes this group from members in it, automatically patches inheritances, automatically saves.
 
 	Parameters:
-
 		name - A string of the group name. (IE: superadmin)
 		from_CAMI - *(Optional)* An indicator for this group coming from CAMI.
 
 	Revisions:
-
 		v2.10 - Initial.
 		v2.40 - Rewrite, removed write parameter.
 		v2.60 - Added CAMI support and parameter.
-]]
+--]]
+
 function ucl.removeGroup(name, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.removeGroup", "string", name)
 
@@ -643,13 +631,11 @@ end
 	Returns the SteamID, IP, or UniqueID of a player if they're registered under any of those IDs under ucl.users. Checks in order. Returns nil if not registered.
 
 	Parameters:
-
 		ply - The player object you wish to check.
 
 	Revisions:
-
 		v2.41 - Initial.
-]]
+--]]
 
 function ucl.getUserRegisteredID(ply)
     local id = ply:SteamID()
@@ -669,9 +655,8 @@ end
 	Returns a table containing the name and group of a player in the UCL table of users if they exist.
 
 	Parameters:
-
 		id - The SteamID, IP, or UniqueID of the user you wish to check.
-]]
+--]]
 
 function ucl.getUserInfoFromID(id)
     ULib.checkArg(1, "ULib.ucl.addUser", "string", id)
@@ -690,7 +675,6 @@ end
 	Adds a user to the UCL. Automatically probes for the user, automatically saves.
 
 	Parameters:
-
 		id - The SteamID, IP, or UniqueID of the user you wish to add.
 		allows - *(Optional, defaults to empty table)* The list of access you wish to give this user.
 		denies - *(Optional, defaults to empty table)* The list of access you wish to explicitly deny this user.
@@ -698,11 +682,11 @@ end
 		from_CAMI - *(Optional)* An indicator for this information coming from CAMI.
 
 	Revisions:
-
 		v2.10 - No longer makes a group if it doesn't exist.
 		v2.40 - Rewrite, changed the arguments all around.
 		v2.60 - Added support for CAMI and parameter.
-]]
+--]]
+
 function ucl.addUser(id, allows, denies, group, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.addUser", "string", id)
     ULib.checkArg(2, "ULib.ucl.addUser", { "nil", "table" }, allows)
@@ -759,15 +743,14 @@ end
 			if false it's added or removed from the allow list.
 
 	Returns:
-
 		A boolean stating whether you changed anything or not.
 
 	Revisions:
-
 		v2.40 - Initial.
 		v2.50 - Relaxed restrictions on id parameter.
 		v2.51 - Fixed this function not working on disconnected players.
-]]
+--]]
+
 function ucl.userAllow(id, access, revoke, deny)
     ULib.checkArg(1, "ULib.ucl.userAllow", "string", id)
     ULib.checkArg(2, "ULib.ucl.userAllow", { "string", "table" }, access)
@@ -875,16 +858,15 @@ end
 	Removes a user from the UCL. Automatically probes for the user, automatically saves.
 
 	Parameters:
-
 		id - The SteamID, IP, or UniqueID of the user you wish to remove. Must be a valid, existing ID.
 			The unique id of a connected user is always valid.
 		from_CAMI - *(Optional)* An indicator for this information coming from CAMI.
 
 	Revisions:
-
 		v2.40 - Rewrite, removed the write argument.
 		v2.60 - Added CAMI support and parameter.
-]]
+--]]
+
 function ucl.removeUser(id, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.addUser", "string", id)
     id = id:upper()                                   -- In case of steamid, needs to be upper case
@@ -942,16 +924,15 @@ end
 	to query an access string, but it's use is highly recommended.
 
 	Parameters:
-
 		access - The access string (IE, "ulx slap" or "ups deletionAccess").
 		groups - *(Optional, defaults to no access)* Either a string of a group or a table of groups to give the default access to.
 		comment - *(Optional)* A brief description of what this access string is granting access to.
 		category - *(Optional)* Category  for the access string (IE, "Command", "CVAR", "Limits")
 
 	Revisions:
-
 		v2.40 - Rewrite.
-]]
+--]]
+
 function ucl.registerAccess(access, groups, comment, category)
     ULib.checkArg(1, "ULib.ucl.registerAccess", "string", access)
     ULib.checkArg(2, "ULib.ucl.registerAccess", { "nil", "string", "table" }, groups)
@@ -999,13 +980,12 @@ end
 	*DO NOT CALL THIS DIRECTLY, UCL HANDLES IT.*
 
 	Parameters:
-
 		ply - The player object to probe.
 
 	Revisions:
-
 		v2.40 - Rewrite.
-]]
+--]]
+
 function ucl.probe(ply)
     local ip = ULib.splitPort(ply:IPAddress())
     local uid = ply:UniqueID()
@@ -1091,15 +1071,13 @@ local function UCLChanged()
 end
 hook.Add(ULib.HOOK_UCLCHANGED, "ULibSendUCLToClients", UCLChanged)
 
---[[
 -- The following is useful for debugging since Garry changes client bootstrapping so frequently
-hook.Add( ULib.HOOK_UCLCHANGED, "UTEST", function() print( "HERE HERE: UCL Changed" ) end )
+--[[hook.Add( ULib.HOOK_UCLCHANGED, "UTEST", function() print( "HERE HERE: UCL Changed" ) end )
 hook.Add( "PlayerInitialSpawn", "UTEST", function() print( "HERE HERE: Initial Spawn" ) end )
 hook.Add( "PlayerAuthed", "UTEST", function() print( "HERE HERE: Player Authed" ) end )
-]]
+--]]
 
----------- Modify
-
+-- Modify
 -- Move garry's auth function so it gets called sooner
 local playerAuth = hook.GetTable().PlayerInitialSpawn.PlayerAuthSpawn
 hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")   -- Remove from original spot

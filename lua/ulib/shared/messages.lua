@@ -2,8 +2,7 @@
 	Title: Messages
 
 	Handles messaging like logging, debug, etc.
-]]
-
+--]]
 
 --[[
 	Function: tsay
@@ -11,16 +10,15 @@
 	Prints a message in talk say as well as in the user's consoles.
 
 	Parameters:
-
 		ply - The player to print to, set to nil to send to everyone. (Ignores this param if called on client)
 		msg - The message to print.
 		wait - *(Optional, defaults to false)* Wait one frame before posting. (Useful to use from things like chat hooks)
 		wasValid - *(INTERNAL USE ONLY)* This is flagged on waiting if the player *was* valid.
 
 	Revisions:
-
 		v2.10 - Initial
-]]
+--]]
+
 function ULib.tsay(ply, msg, wait, wasValid)
     ULib.checkArg(1, "ULib.tsay", { "nil", "Player", "Entity" }, ply)
     ULib.checkArg(2, "ULib.tsay", "string", msg)
@@ -29,10 +27,10 @@ function ULib.tsay(ply, msg, wait, wasValid)
     if wait then
         ULib.namedQueueFunctionCall("ULibChats", ULib.tsay, ply, msg, false, ply and ply:IsValid())
         return
-    end                                                                                                                -- Call next frame
+    end -- Call next frame
 
-    if SERVER and ply and not ply:IsValid() then                                                                       -- Server console
-        if wasValid then                                                                                               -- This means we had a valid player that left, so do nothing
+    if SERVER and ply and not ply:IsValid() then -- Server console
+        if wasValid then -- This means we had a valid player that left, so do nothing
             return
         end
         Msg(msg .. "\n")
@@ -80,7 +78,7 @@ local function tsayColorCallback(ply, ...)
     while #args > 0 do
         local arg = table.remove(args, 1)
         local typ = type(arg)
-        local arg_size = typ == "table" and 4 or #arg + 2                    -- Include null in strings, bool in both
+        local arg_size = typ == "table" and 4 or #arg + 2 -- Include null in strings, bool in both
         if typ == "string" and current_chunk.size + arg_size > max_chunk_size then -- Split a large string up into multiple messages
             local substr = arg:sub(1, math.max(1, max_chunk_size - current_chunk.size - 2))
             if #substr > 0 then
@@ -154,22 +152,20 @@ end
 	Prints a tsay message in color!
 
 	Parameters:
-
 		ply - The player to print to, set to nil to send to everyone. (Ignores this param if called on client)
 		wait - *(Optional, defaults to false)* Wait one frame before posting. (Useful to use from things like chat hooks)
 		... - color arg and text arg ad infinitum, color needs to come before the text it's coloring.
 
 	Revisions:
-
 		v2.40 - Initial.
-]]
+--]]
 function ULib.tsayColor(ply, wait, ...)
-    if SERVER and ply and not ply:IsValid() then ply = serverConsole end                         -- Mark as server
+    if SERVER and ply and not ply:IsValid() then ply = serverConsole end -- Mark as server
 
     if wait then
         ULib.namedQueueFunctionCall("ULibChats", tsayColorCallback, ply, ...)
         return
-    end                                                                                          -- Call next frame
+    end -- Call next frame
     tsayColorCallback(ply, ...)
 end
 
@@ -179,15 +175,13 @@ end
 	Just like tsay, but prints the string in red
 
 	Parameters:
-
 		ply - The player to print to, set to nil to send to everyone. (Ignores this param if called on client)
 		msg - The message to print.
 		wait - *(Optional, defaults to false)* Wait one frame before posting. (Useful to use from things like chat hooks)
 
 	Revisions:
-
 		v2.40 - Initial.
-]]
+--]]
 function ULib.tsayError(ply, msg, wait)
     return ULib.tsayColor(ply, wait, Color(255, 140, 39), msg)
 end
@@ -198,7 +192,6 @@ end
 	Prints a message in center of the screen as well as in the user's consoles.
 
 	Parameters:
-
 		ply - The player to print to, set to nil to send to everyone. (Ignores this param if called on client)
 		msg - The message to print.
 		color - *(Optional, defaults to 255, 255, 255, 255)* The color of the text.
@@ -206,10 +199,9 @@ end
 		fade - *(Optional, defaults to 0.5)* The length of fade time
 
 	Revisions:
-
 		v2.10 - Added fade parameter. Fixed it sending the message multiple times.
 		v2.40 - Changed to use clientRPC.
-]]
+--]]
 function ULib.csay(ply, msg, color, duration, fade)
     if CLIENT then
         ULib.csayDraw(msg, color, duration, fade)
@@ -230,7 +222,7 @@ end
 
 		ply - The player to print to, set to nil to send to everyone. (Ignores this param if called on client)
 		msg - The message to print.
-]]
+--]]
 function ULib.console(ply, msg)
     if CLIENT or (ply and not ply:IsValid()) then
         Msg(msg .. "\n")
@@ -253,9 +245,8 @@ end
 	Gives an error to console.
 
 	Parameters:
-
 		s - The string to use as the error message
-]]
+--]]
 function ULib.error(s)
     if CLIENT then
         Msg("[LC ULIB ERROR] " .. s .. "\n")
@@ -270,15 +261,13 @@ end
 	Prints a function call, very useful for debugging.
 
 	Parameters:
-
 		name - The name of the function called.
 		... - all arguments to the function.
 
 	Revisions:
-
 		v2.40 - Now uses print instead of Msg, since Msg seems to have a low max length.
 			Changed how the variable length params work so you can pass nil followed by more params
-]]
+--]]
 function ULib.debugFunctionCall(name, ...)
     local args = { ... }
 

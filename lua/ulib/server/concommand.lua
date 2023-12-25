@@ -2,13 +2,14 @@
 	Title: Concommand Helpers
 
 	Server-side compliment of the shared commands.lua
-]]
+--]]
 
 --[[
 	Table: sayCmds
 
 	This table holds our say commands.
-]]
+--]]
+
 ULib.sayCmds = ULib.sayCmds or {}
 
 --[[
@@ -17,15 +18,13 @@ ULib.sayCmds = ULib.sayCmds or {}
 	Say callback which will check to see if there's a say command being used. *DO NOT CALL DIRECTLY*
 
 	Parameters:
-
 		ply - The player.
 		strText - The text.
 		bTeam - Team say.
 
 	Revisions:
-
 		v2.10 - Made case-insensitive
-]]
+--]]
 
 local function sayCmdCheck(ply, strText, bTeam)
     local match
@@ -85,7 +84,6 @@ hook.Add("PlayerSay", "ULib_saycmd", sayCmdCheck, HOOK_HIGH)   -- High-priority
 	Just like ULib's <concommand()> except that the callback is called when the command is said in chat instead of typed in the console.
 
 	Parameters:
-
 		say_cmd - A command string for says. IE: "!kick", then when someone says "!kick", it'll call the callback.
 		fn_call - The function to call when the command's called.
 		access - The access string to associate access with this say command. (IE: "ulx kick"). Remember to call <ULib.ucl.registerAccess()> if the access string isn't being used in a command.
@@ -93,10 +91,9 @@ hook.Add("PlayerSay", "ULib_saycmd", sayCmdCheck, HOOK_HIGH)   -- High-priority
 		nospace - *(Optional, defaults to false)* If true, a space won't be required after the command "IE: !slapbob" vs "!slap bob".
 
 	Revisions:
-
 		v2.10 - Added nospace parameter, made case insensitive
 		v2.40 - Removed the command help parameter, now accepts nil as access (for always allowed)
-]]
+--]]
 
 function ULib.addSayCommand(say_cmd, fn_call, access, hide_say, nospace)
     say_cmd = string.Trim(say_cmd:lower())
@@ -114,9 +111,8 @@ end
 	Removes a say command.
 
 	Parameters:
-
 		say_cmd - The command string for says to remove.
-]]
+--]]
 
 function ULib.removeSayCommand(say_cmd)
     ULib.sayCmds[say_cmd] = nil -- Remove both forms

@@ -9,7 +9,7 @@
     	ply - The player using the command
     	command - The command being used
     	argv - The table of arguments
-]]
+--]]
 
 function ULib.redirect(ply, command, argv)
     local totalArgv = table.Add(ULib.explode(" ", command), argv)

@@ -9,7 +9,7 @@
 	To update the shared FPtje CAMI logic, run the following in the
 	appropriate directory...
 	: wget https://raw.githubusercontent.com/glua/CAMI/master/sh_cami.lua -O cami_global.lua
-]]
+--]]
 
 CAMI.ULX_TOKEN = "ULX"
 

@@ -1,7 +1,7 @@
 --[[
 	Title: Draw
 	Our client-side draw functions
-]]
+--]]
 
 --[[
 	Function: csayDraw
@@ -13,7 +13,7 @@
 		fade - *(Optional, defaults to 0.5)* The length of fade time
 	Revisions:
 		v2.10 - Added fade parameter
-]]
+--]]
 
 function ULib.csayDraw(msg, color, duration, fade)
     color = color or Color(255, 255, 255, 255)

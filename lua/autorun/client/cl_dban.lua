@@ -79,8 +79,7 @@ local function OpenPanel(player, cmd, args, str)
             execbutton:SetPos(47, 73)
             execbutton:SetText("封禁死它!")
             execbutton.DoClick = function()
-                RunConsoleCommand("ulx", "banid", tostring(list:GetLine(line):GetValue(2)), Time:GetText(),
-                    Reason:GetText())
+                RunConsoleCommand("ulx", "banid", tostring(list:GetLine(line):GetValue(2)), Time:GetText(), Reason:GetText())
                 Frame:Close()
             end
 

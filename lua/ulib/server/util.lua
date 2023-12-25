@@ -2,7 +2,7 @@
 	Title: Utilities
 
 	Has some useful server utilities
-]]
+--]]
 
 --[[
 	Function: clientRPC
@@ -12,15 +12,14 @@
 	data type that's allowed on the network and of any size. Send huge tables or strings, it's all the same, and it all works.
 
 	Parameters:
-
 		filter - The Player object, table of Player objects for who you want to send this to, nil sends to everyone.
 		fn - A string of the function to run on the client. Does *not* need to be in the global namespace, "myTable.myFunction" works too.
 		... - *Optional* The parameters to pass to the function.
 
 	Revisions:
-
 		v2.40 - Initial.
-]]
+--]]
+
 function ULib.clientRPC(plys, fn, ...)
     ULib.checkArg(1, "ULib.clientRPC", { "nil", "Player", "table" }, plys)
     ULib.checkArg(2, "ULib.clientRPC", { "string" }, fn)
@@ -41,12 +40,12 @@ end
 	Plays a 3D sound, the further away from the point the player is, the softer the sound will be.
 
 	Parameters:
-
 		sound - The sound to play, relative to the sound folder.
 		vector - The point to play the sound at.
 		volume - *(Optional, defaults to 1)* The volume to make the sound.
 		pitch - *(Optional, defaults to 1)* The pitch to make the sound, 1 = normal.
-]]
+--]]
+
 function ULib.play3DSound(sound, vector, volume, pitch)
     volume = volume or 100
     pitch = pitch or 100
@@ -92,7 +91,6 @@ local repCvarServerChanged
 	This function also creates a cvar on the client that can be modified and will be sent back to the server.
 
 	Parameters:
-
 		sv_cvar - The string of server side cvar.
 		cl_cvar - The string of the client side cvar. *THIS MUST BE DIFFERENT FROM THE sv_cvar VALUE IF YOU'RE PIGGY BACKING AN EXISTING REPLICATED CVAR (like sv_gravity)*.
 		default_value - The string of the default value for the cvar.
@@ -102,14 +100,12 @@ local repCvarServerChanged
 		access - The string of the access required for a client to actually change the value.
 
 	Returns:
-
 		The server-side cvar object.
 
 	Revisions:
-
 		v2.40 - Initial.
 		v2.50 - Changed to not depend on the replicated cvars themselves due to Garry-breakage.
-]]
+--]]
 
 function ULib.replicatedWritableCvar(sv_cvar, cl_cvar, default_value, save, notify, access)
     sv_cvar = sv_cvar:lower()

@@ -2,7 +2,7 @@
 	Title: Bans
 
 	Ban-related functions and listeners.
-]]
+--]]
 
 -- ULib default ban message
 ULib.BanMessage = [[
@@ -67,6 +67,7 @@ local function checkBan(steamid64, ip, password, clpassword, name)
     Msg(string.format("%s (%s)<%s> was kicked by ULib because they are on the ban list\n", name, steamid, ip))
     return false, message
 end
+
 hook.Add("CheckPassword", "ULibBanCheck", checkBan, HOOK_LOW)
 -- Low priority to allow servers to easily have another ban message addon
 
@@ -76,16 +77,14 @@ hook.Add("CheckPassword", "ULibBanCheck", checkBan, HOOK_LOW)
 	Bans a user.
 
 	Parameters:
-
 	ply - The player to ban.
 	time - *(Optional)* The time in minutes to ban the person for, leave nil or 0 for permaban.
 	reason - *(Optional)* The reason for banning
 	admin - *(Optional)* Admin player enacting ban
 
 	Revisions:
-
 	v2.10 - Added support for custom ban list
-]]
+--]]
 
 function ULib.ban(ply, time, reason, admin)
     if not time or type(time) ~= "number" then
@@ -129,7 +128,6 @@ end
 	Helper function to store additional data about bans.
 
 	Parameters:
-
 	steamid - Banned player's steamid
 	time - Length of ban in minutes, use 0 for permanant bans
 	reason - *(Optional)* Reason for banning
@@ -137,10 +135,10 @@ end
 	admin - *(Optional)* Admin player enacting the ban
 
 	Revisions:
-
 	2.10 - Initial
 	2.40 - If the steamid is connected, kicks them with the reason given
-]]
+--]]
+
 function ULib.addBan(steamid, time, reason, name, admin)
     if reason == "" then reason = nil end
 
@@ -218,7 +216,7 @@ end
 	Revisions:
 
 	v2.10 - Initial
-]]
+--]]
 
 function ULib.unban(steamid, admin)
     RunConsoleCommand("removeid", steamid) -- Remove from srcds in case it was stored there
@@ -238,7 +236,6 @@ local function nilIfNull(data)
     end
 end
 
-
 -- Init our bans table
 if not sql.TableExists("ulib_bans") then
     sql.Query("CREATE TABLE IF NOT EXISTS ulib_bans ( " .. "steamid INTEGER NOT NULL PRIMARY KEY, " .. "time INTEGER NOT NULL, " .. "unban INTEGER NOT NULL, " .. "reason TEXT, " .. "name TEXT, " .. "admin TEXT, " .. "modified_admin TEXT, " .. "modified_time INTEGER " .. ");")
@@ -251,7 +248,8 @@ local LEGACY_BANS_FILE = "data/ulib/bans.txt"
 	Function: getLegacyBans
 
 	Returns bans written by ULib versions prior to 2.7.
-]]
+--]]
+
 function ULib.getLegacyBans()
     if not ULib.fileExists(LEGACY_BANS_FILE) then
         return nil
@@ -268,12 +266,12 @@ end
 
 local legacy_bans = ULib.getLegacyBans()
 
-
 --[[
 	Function: refreshBans
 
 	Refreshes the ULib bans.
-]]
+--]]
+
 function ULib.refreshBans()
     local results = sql.Query("SELECT * FROM ulib_bans")
 

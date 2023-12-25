@@ -42,9 +42,9 @@ function GetULibTable() return Hooks end
 --
 function Add(event_name, name, func, priority)
     priority = priority or 0
-    if (! isfunction(func)) then return end
-    if (! isstring(event_name)) then return end
-    if (! isnumber(priority)) then return end
+    if (not isfunction(func)) then return end
+    if (not isstring(event_name)) then return end
+    if (not isnumber(priority)) then return end
 
     priority = math.floor(priority)
     if (priority < -2) then priority = -2 end -- math.Clamp may not have been defined yet
@@ -58,15 +58,15 @@ function Add(event_name, name, func, priority)
     end
 
     Hooks[event_name][priority][name] = { fn = func, isstring = isstring(name) }
-    BackwardsHooks[event_name][name] = func  -- Keep the classic style too so we won't break anything
+    BackwardsHooks[event_name][name] = func -- Keep the classic style too so we won't break anything
 end
 
 --
 -- Remove a hook
 --
 function Remove(event_name, name)
-    if (! isstring(event_name)) then return end
-    if (! Hooks[event_name]) then return end
+    if (not isstring(event_name)) then return end
+    if (not Hooks[event_name]) then return end
 
     for i = -2, 2 do
         Hooks[event_name][i][name] = nil
@@ -129,7 +129,7 @@ function Call(name, gm, ...)
     --
     -- Call the gamemode function
     --
-    if (! gm) then return end
+    if (not gm) then return end
 
     local GamemodeFunction = gm[name]
     if (GamemodeFunction == nil) then return end
@@ -236,4 +236,5 @@ local function doTests( ply, cmd, argv )
 	end
 end
 
-concommand.Add( "run_hook_tests", doTests )--]]
+concommand.Add( "run_hook_tests", doTests )
+--]]

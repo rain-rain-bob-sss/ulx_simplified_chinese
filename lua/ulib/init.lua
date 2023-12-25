@@ -51,7 +51,7 @@ if not ULib then
     include("shared/cami_global.lua")
     Msg("//  shared/cami_ulib.lua     //\n")
     include("shared/cami_ulib.lua")
-    Msg("// Load Complete!            //\n")
+    Msg("// Load Complete!由波と一緒に漂う汉化 //\n")
     Msg("///////////////////////////////\n")
 
     AddCSLuaFile("ulib/cl_init.lua")

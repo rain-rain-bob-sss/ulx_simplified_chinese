@@ -118,6 +118,7 @@ local function tool(ply, tr, toolmode, second)
         end
     end
 end
+
 hook.Add("CanTool", "ULibEntToolCheck", tool, HOOK_HIGH)
 
 local function property(ply, propertymode, ent)

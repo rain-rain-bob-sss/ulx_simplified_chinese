@@ -2,7 +2,7 @@
 	Title: Defines
 
 	Holds some defines used on both client and server.
-]]
+--]]
 
 ULib = ULib or {}
 
@@ -17,14 +17,14 @@ ULib.ACCESS_SUPERADMIN = "superadmin"
 
 ULib.DEFAULT_ACCESS = ULib.ACCESS_ALL
 
-ULib.DEFAULT_TSAY_COLOR = Color(151, 211, 255)   -- Found by using MS Paint
+ULib.DEFAULT_TSAY_COLOR = Color(151, 211, 255) -- Found by using MS Paint
 
 
 --[[
 	Section: Hooks
 
 	These are the hooks that ULib has created that other modders are free to make use of.
-]]
+--]]
 
 --[[
 	Hook: UCLAuthed
@@ -32,13 +32,11 @@ ULib.DEFAULT_TSAY_COLOR = Color(151, 211, 255)   -- Found by using MS Paint
 	Called *on both server and client* when a player has been (re)authenticated by UCL. Called for ALL players, regardless of access.
 
 	Parameters passed to callback:
-
 		ply - The player that got (re)authenticated.
 
 	Revisions:
-
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_UCLAUTH = "UCLAuthed"
 
 --[[
@@ -49,7 +47,7 @@ ULib.HOOK_UCLAUTH = "UCLAuthed"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_UCLCHANGED = "UCLChanged"
 
 --[[
@@ -60,7 +58,7 @@ ULib.HOOK_UCLCHANGED = "UCLChanged"
 	Revisions:
 
 		v2.70 - Initial
-]]
+--]]
 ULib.HOOK_ACCESS_REGISTERED = "UCLAccessRegistered"
 
 --[[
@@ -80,7 +78,7 @@ ULib.HOOK_ACCESS_REGISTERED = "UCLAccessRegistered"
 
 		v2.40 - Initial
 		v2.50 - Removed nil on client side restriction.
-]]
+--]]
 ULib.HOOK_REPCVARCHANGED = "ULibReplicatedCvarChanged"
 
 --[[
@@ -96,7 +94,7 @@ ULib.HOOK_REPCVARCHANGED = "ULibReplicatedCvarChanged"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_LOCALPLAYERREADY = "ULibLocalPlayerReady"
 
 --[[
@@ -113,7 +111,7 @@ ULib.HOOK_LOCALPLAYERREADY = "ULibLocalPlayerReady"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_COMMAND_CALLED = "ULibCommandCalled"
 
 --[[
@@ -133,7 +131,7 @@ ULib.HOOK_COMMAND_CALLED = "ULibCommandCalled"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_PLAYER_TARGET = "ULibPlayerTarget"
 
 --[[
@@ -153,9 +151,9 @@ ULib.HOOK_PLAYER_TARGET = "ULibPlayerTarget"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_PLAYER_TARGETS =
-"ULibPlayerTargets"                            -- Exactly the same as the above but used when the player is using a command that can target multiple players.
+"ULibPlayerTargets" -- Exactly the same as the above but used when the player is using a command that can target multiple players.
 
 --[[
 	Hook: ULibPostTranslatedCommand
@@ -172,7 +170,7 @@ ULib.HOOK_PLAYER_TARGETS =
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_POST_TRANSLATED_COMMAND = "ULibPostTranslatedCommand"
 
 --[[
@@ -189,7 +187,7 @@ ULib.HOOK_POST_TRANSLATED_COMMAND = "ULibPostTranslatedCommand"
 	Revisions:
 
 		v2.40 - Initial
-]]
+--]]
 ULib.HOOK_PLAYER_NAME_CHANGED = "ULibPlayerNameChanged"
 
 --[[
@@ -208,7 +206,7 @@ ULib.HOOK_PLAYER_NAME_CHANGED = "ULibPlayerNameChanged"
 	Revisions:
 
 		v2.60 - Initial
-]]
+--]]
 ULib.HOOK_GETUSERS_CUSTOM_KEYWORD = "ULibGetUsersCustomKeyword"
 
 --[[
@@ -228,7 +226,7 @@ ULib.HOOK_GETUSERS_CUSTOM_KEYWORD = "ULibGetUsersCustomKeyword"
 	Revisions:
 
 		v2.60 - Initial
-]]
+--]]
 ULib.HOOK_GETUSER_CUSTOM_KEYWORD = "ULibGetUserCustomKeyword"
 
 --[[
@@ -246,7 +244,7 @@ ULib.HOOK_GETUSER_CUSTOM_KEYWORD = "ULibGetUserCustomKeyword"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_KICKED = "ULibPlayerKicked"
 
 --[[
@@ -263,7 +261,7 @@ ULib.HOOK_USER_KICKED = "ULibPlayerKicked"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_BANNED = "ULibPlayerBanned"
 
 --[[
@@ -280,7 +278,7 @@ ULib.HOOK_USER_BANNED = "ULibPlayerBanned"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_UNBANNED = "ULibPlayerUnBanned"
 
 --[[
@@ -297,7 +295,7 @@ ULib.HOOK_USER_UNBANNED = "ULibPlayerUnBanned"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_CREATED = "ULibGroupCreated"
 
 --[[
@@ -314,7 +312,7 @@ ULib.HOOK_GROUP_CREATED = "ULibGroupCreated"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_REMOVED = "ULibGroupRemoved"
 
 --[[
@@ -332,7 +330,7 @@ ULib.HOOK_GROUP_REMOVED = "ULibGroupRemoved"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_ACCESS_CHANGE = "ULibGroupAccessChanged"
 
 --[[
@@ -349,7 +347,7 @@ ULib.HOOK_GROUP_ACCESS_CHANGE = "ULibGroupAccessChanged"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_RENAMED = "ULibGroupRenamed"
 
 --[[
@@ -367,7 +365,7 @@ ULib.HOOK_GROUP_RENAMED = "ULibGroupRenamed"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_INHERIT_CHANGE = "ULibGroupInheritanceChanged"
 
 --[[
@@ -385,7 +383,7 @@ ULib.HOOK_GROUP_INHERIT_CHANGE = "ULibGroupInheritanceChanged"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_GROUP_CANTARGET_CHANGE = "ULibGroupCanTargetChanged"
 
 --[[
@@ -405,7 +403,7 @@ ULib.HOOK_GROUP_CANTARGET_CHANGE = "ULibGroupCanTargetChanged"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_GROUP_CHANGE = "ULibUserGroupChange"
 
 --[[
@@ -424,7 +422,7 @@ ULib.HOOK_USER_GROUP_CHANGE = "ULibUserGroupChange"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_ACCESS_CHANGE = "ULibUserAccessChange"
 
 --[[
@@ -441,14 +439,14 @@ ULib.HOOK_USER_ACCESS_CHANGE = "ULibUserAccessChange"
 	Revisions:
 
 		v2.62 - Initial
-]]
+--]]
 ULib.HOOK_USER_REMOVED = "ULibUserRemoved"
 
 --[[
 	Section: UCL Helpers
 
 	These defines are server-only, to help with UCL.
-]]
+--]]
 
 if SERVER then
     ULib.UCL_LOAD_DEFAULT = true -- Set this to false to ignore the SetUserGroup() call.
@@ -463,7 +461,7 @@ end
 	Section: Net pooled strings
 
 	These defines are server-only, to help with the networking library.
-]]
+--]]
 if SERVER then
     util.AddNetworkString("URPC")
     util.AddNetworkString("tsayc")

@@ -2,13 +2,13 @@
 	Title: Player
 
 	Holds some helpful player functions.
-]]
+--]]
 
 --[[
 	Table: slapSounds
 
 	These are the sounds used for slaps.
-]]
+--]]
 
 local slapSounds = {
     "physics/body/body_medium_impact_hard1.wav",
@@ -27,12 +27,11 @@ local slapSounds = {
 	Slaps an entity, can be a user or any entity.
 
 	Parameters:
-
 		ent - The target ent.
 		damage - *(Optional, defaults to 0)* The amount of damage to inflict on the entity.
 		power - *(Optional, defaults to 30)* The power of the slap.
 		nosound - *(Optional, defaults to false)* If true, no sound will be played.
-]]
+--]]
 
 function ULib.slap(ent, damage, power, nosound)
     if ent:GetMoveType() == MOVETYPE_OBSERVER then return end -- Nothing we can do.
@@ -97,9 +96,9 @@ end
 		calling_ply - *(Optional)* The player doing the kicking.
 
 	Revisions:
-
 		v2.60 - Fixed a bug with the parameters if you didn't pass reason and calling_ply together.
-]]
+--]]
+
 function ULib.kick(ply, reason, calling_ply)
     local nick = calling_ply and calling_ply:IsValid() and
         (string.format("%s(%s)", calling_ply:Nick(), calling_ply:SteamID()) or "Console")
@@ -147,15 +146,14 @@ end
 	Makes a user invisible
 
 	Parameters:
-
 		ply - The player to affect.
 		bool - Whether they're invisible or not
 		visibility - *(Optional, defaults to 0)* A number from 0 to 255 for their visibility.
 
 	Revisions:
-
 		v2.40 - Removes shadow when invisible
-]]
+--]]
+
 function ULib.invisible(ply, bool, visibility)
     if not ply:IsValid() then return end -- This is called on a timer so we need to verify they're still connected
 
@@ -200,14 +198,12 @@ end
 	Grabs and returns player information that can be used to respawn player with same health/armor as before the spawn.
 
 	Parameters:
-
 		ply - The player to grab information for.
 
-
 	Returns:
-
 		Updates player object to store health and armor. Has no effect unless ULib.Spawn is used later.
-]]
+--]]
+
 function ULib.getSpawnInfo(ply)
     local t = {}
     ply.ULibSpawnInfo = t
@@ -273,14 +269,12 @@ end
 	Clears previously set values that were stored from ULib.getSpawnInfo.
 
 	Parameters:
-
 		ply - The player to grab information for.
 		bool - If true, spawn will set player information to values stored using ULib.SpawnInfo
 
 	Returns:
-
 		Spawns player. Sets health/armor to stored defaults if ULib.getSpawnInfo was used previously. Clears SpawnInfo table afterwards.
-]]
+--]]
 
 function ULib.spawn(player, bool)
     player:Spawn()

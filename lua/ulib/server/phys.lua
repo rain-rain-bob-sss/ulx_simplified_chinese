@@ -2,18 +2,18 @@
 	Title: Physics Helpers
 
 	Various functions to make dealing with the HL2 physics engine a little easier.
-]]
+--]]
 
 --[[
 	Function: applyAccel
 
 	Parameters:
-
 		ent - The entity to apply the acceleration to
 		magnitude - The amount of acceleration ( Use nil if the magnitude is specified in the direction )
 		direction - The direction to apply the acceleration in ( if the magnitude is part of the direction, specify nil for the magnitude )
 		dTime - *(Optional, defaults to 1)* The time passed since the last update in seconds ( IE: 0.5 for dTime would only apply half the acceleration )
-]]
+--]]
+
 function ULib.applyAccel(ent, magnitude, direction, dTime)
     if dTime == nil then dTime = 1 end
 
@@ -41,12 +41,12 @@ end
 	Function: applyForce
 
 	Parameters:
-
 		ent - The entity to apply the force to
 		magnitude - The amount of force ( Use nil if the magnitude is specified in the direction )
 		direction - The direction to apply the force in ( if the magnitude is part of the direction, specify nil for the magnitude )
 		dTime - *(Optional, defaults to 1)* The time passed since the last update in seconds ( IE: 0.5 for dTime would only apply half the force )
-]]
+--]]
+
 function ULib.applyForce(ent, magnitude, direction, dTime)
     if dTime == nil then dTime = 1 end
 
@@ -84,11 +84,10 @@ end
         Basically makes the entity go faster or slower ( if a negative magnitude is passed ).
 
 	Parameters:
-
 		ent - The entity to apply the force to
 		magnitude - The amount of acceleration
 		dTime - *(Optional, defaults to 1)* The time passed since the last update in seconds ( IE: 0.5 for dTime would only apply half the acceleration )
-]]
+--]]
 
 function ULib.applyAccelInCurDirection(ent, magnitude, dTime)
     local direction = ent:GetVelocity(entid):GetNormalized()
@@ -102,11 +101,10 @@ end
         Basically makes the entity go faster or slower ( if a negative magnitude is passed ).
 
 	Parameters:
-
 		ent - The entity to apply the force to
 		magnitude - The amount of force
 		dTime - *(Optional, defaults to 1)* The time passed since the last update in seconds ( IE: 0.5 for dTime would only apply half the force )
-]]
+--]]
 
 function ULib.applyForceInCurDirection(ent, magnitude, dTime)
     local direction = ent:GetVelocity(entid):GetNormalized()
