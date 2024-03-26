@@ -1,14 +1,14 @@
 local ulxBuildNumURL = ulx.release and "https://teamulysses.github.io/ulx/ulx.build" or "https://raw.githubusercontent.com/TeamUlysses/ulx/master/ulx.build"
 ULib.registerPlugin {
-    Name              = "ULX",
-    Version           = string.format("%.2f", ulx.version),
-    IsRelease         = ulx.release,
-    Author            = "Team Ulysses",
-    URL               = "http://ulyssesmod.net",
-    WorkshopID        = 557962280,
-    BuildNumLocal     = tonumber(ULib.fileRead("ulx.build")),
-    BuildNumRemoteURL = ulxBuildNumURL,
-    --BuildNumRemoteReceivedCallback = nil
+	Name          = "ULX",
+	Version       = string.format( "%.2f", ulx.version ),
+	IsRelease     = ulx.release,
+	Author        = "Team Ulysses",
+	URL           = "https://ulyssesmod.net",
+	WorkshopID    = 557962280,
+	BuildNumLocal         = tonumber(ULib.fileRead( "ulx.build" )),
+	BuildNumRemoteURL      = ulxBuildNumURL,
+	--BuildNumRemoteReceivedCallback = nil
 }
 
 function ulx.getVersion() -- This function will be removed in the future

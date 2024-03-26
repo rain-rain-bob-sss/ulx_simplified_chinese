@@ -1,32 +1,41 @@
---Server settings module for GUI -- by Stickly Man!
---A settings module for modifying server and based settings. Also has the base code for loading the server settings modules.
-
+-- Server settings module for ULX GUI -- by Stickly Man!
+-- A settings module for modifying server and ULX based settings. Also has the base code for loading the server settings modules.
 local server = xlib.makepanel { parent = xgui.null }
 
 --------------------------GMOD Settings--------------------------
-xlib.makecheckbox { x = 10, y = 10, label = "启用语音聊天", repconvar = "rep_sv_voiceenable", parent = server }
-xlib.makelabel { x = 10, y = 33, label = "语音聊天设置:", parent = server }
-xlib.makecombobox { x = 10, y = 50, w = 120, repconvar = "rep_sv_alltalk", isNumberConvar = true, choices = { "附近的队友",
-    "仅队友", "附近的任何人", "所有人" }, parent = server }
-xlib.makecheckbox { x = 10, y = 75, label = "关闭AI", repconvar = "rep_ai_disabled", parent = server }
-xlib.makecheckbox { x = 10, y = 95, label = "AI无视玩家", repconvar = "rep_ai_ignoreplayers", parent = server }
-local offset = 0
-if game.SinglePlayer() then
-    offset = 20
-    xlib.makecheckbox { x = 10, y = 115, label = "Keep AI Ragdolls", repconvar = "rep_ai_keepragdolls", parent = server }
-end
-xlib.makelabel { x = 10, y = 120 + offset, label = "服务器重力", parent = server }
-xlib.makeslider { x = 10, y = 135 + offset, label = "<--->", w = 125, min = -1000, max = 1000, repconvar =
-"rep_sv_gravity", parent = server }
-xlib.makelabel { x = 10, y = 165 + offset, label = "时间流逝速度", parent = server }
-xlib.makeslider { x = 10, y = 180 + offset, label = "<--->", w = 125, min = 0, max = 4, decimal = 2, repconvar =
-"rep_phys_timescale", parent = server }
+local sidepanel = xlib.makescrollpanel { x = 5, y = 5, w = 140, h = 322, spacing = 4, parent = server }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 0, 0, 0 }, label = "语音聊天设置:", parent = sidepanel }
+xlib.makecombobox { dock = TOP, dockmargin = { 0, 2, 0, 0 }, w = 140, repconvar = "rep_sv_alltalk", isNumberConvar = true, choices = { "附近的队友", "仅队友", "附近的任何人", "所有人" }, parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "启用语音聊天", convar = xlib.ifListenHost("sv_voiceenable"), repconvar = xlib.ifNotListenHost("rep_sv_voiceenable"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 20, 0, 0 }, label = "关闭AI", convar = xlib.ifListenHost("ai_disabled"), repconvar = xlib.ifNotListenHost("rep_ai_disabled"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "AI无视玩家", convar = xlib.ifListenHost("ai_ignoreplayers"), repconvar = xlib.ifNotListenHost("rep_ai_ignoreplayers"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "保留尸体", convar = xlib.ifListenHost("ai_serverragdolls"), repconvar = xlib.ifNotListenHost("rep_ai_serverragdolls"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 20, 0, 0 }, label = "贴近地面", convar = xlib.ifListenHost("sv_sticktoground"), repconvar = xlib.ifNotListenHost("rep_sv_sticktoground"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "USE key prop pickups", convar = xlib.ifListenHost("sv_playerpickupallowed"), repconvar = xlib.ifNotListenHost("rep_sv_playerpickupallowed"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "真实的坠落伤害", convar = xlib.ifListenHost("mp_falldamage"), repconvar = xlib.ifNotListenHost("rep_mp_falldamage"), parent = sidepanel }
+xlib.makecheckbox { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "HEV 套件功能", convar = xlib.ifListenHost("gmod_suit"), repconvar = xlib.ifNotListenHost("rep_gmod_suit"), parent = sidepanel }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "重力", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = -1000, max = 1000, convar = xlib.ifListenHost("sv_gravity"), repconvar = xlib.ifNotListenHost("rep_sv_gravity"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "地面摩擦力", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = -2, max = 16, convar = xlib.ifListenHost("sv_friction"), repconvar = xlib.ifNotListenHost("rep_sv_friction"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "时间流逝速度", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 0, max = 4, decimal = 2, convar = xlib.ifListenHost("phys_timescale"), repconvar = xlib.ifNotListenHost("rep_phys_timescale"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "武器部署速度", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 0.1, max = 10, decimal = 2, convar = xlib.ifListenHost("sv_defaultdeployspeed"), repconvar = xlib.ifNotListenHost("rep_sv_defaultdeployspeed"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "穿墙速度", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 1, max = 10, convar = xlib.ifListenHost("sv_noclipspeed"), repconvar = xlib.ifNotListenHost("rep_sv_noclipspeed"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "弹药限制", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 0, max = 9999, convar = xlib.ifListenHost("gmod_maxammo"), repconvar = xlib.ifNotListenHost("rep_gmod_maxammo"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "物理迭代", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 0, max = 10, convar = xlib.ifListenHost("gmod_physiterations"), repconvar = xlib.ifNotListenHost("rep_gmod_physiterations"), parent = sidepanel, fixclip = true }
+xlib.makelabel { dock = TOP, dockmargin = { 0, 5, 0, 0 }, label = "客户端超时", parent = sidepanel }
+xlib.makeslider { dock = TOP, dockmargin = { 0, 2, 5, 0 }, label = "<--->", w = 125, min = 60, max = 300, convar = xlib.ifListenHost("sv_timeout"), repconvar = xlib.ifNotListenHost("rep_sv_timeout"), parent = sidepanel, fixclip = true }
 
-------------------------Category Menu------------------------
-server.mask = xlib.makepanel { x = 295, y = 5, w = 290, h = 322, parent = server }
+------------------------ULX Category Menu------------------------
+server.mask = xlib.makepanel { x = 300, y = 5, w = 285, h = 322, parent = server }
 server.panel = xlib.makepanel { x = 5, w = 285, h = 322, parent = server.mask }
 
-server.catList = xlib.makelistview { x = 145, y = 5, w = 150, h = 322, parent = server }
+server.catList = xlib.makelistview { x = 150, y = 5, w = 150, h = 322, parent = server }
 server.catList:AddColumn("服务器设置模块")
 server.catList.Columns[1].DoClick = function() end
 server.catList.OnRowSelected = function(self, LineID, Line)
@@ -35,34 +44,19 @@ server.catList.OnRowSelected = function(self, LineID, Line)
         if server.curPanel then
             local temppanel = server.curPanel
             --Close before opening new one
-            xlib.addToAnimQueue("pnlSlide",
-                { panel = server.panel, startx = 5, starty = 0, endx = -285, endy = 0, setvisible = false })
+            xlib.addToAnimQueue("pnlSlide", { panel = server.panel, startx = 5, starty = 0, endx = -285, endy = 0, setvisible = false })
             xlib.addToAnimQueue(function() temppanel:SetVisible(false) end)
         end
         --Open
         server.curPanel = nPanel
         xlib.addToAnimQueue(function() nPanel:SetVisible(true) end)
         if nPanel.onOpen then xlib.addToAnimQueue(nPanel.onOpen) end --If the panel has it, call a function when it's opened
-        xlib.addToAnimQueue("pnlSlide", {
-            panel = server.panel,
-            startx = -285,
-            starty = 0,
-            endx = 5,
-            endy = 0,
-            setvisible = true
-        })
+        xlib.addToAnimQueue("pnlSlide", { panel = server.panel, startx = -285, starty = 0, endx = 5, endy = 0, setvisible = true })
     else
         --Close
         server.curPanel = nil
         self:ClearSelection()
-        xlib.addToAnimQueue("pnlSlide", {
-            panel = server.panel,
-            startx = 5,
-            starty = 0,
-            endx = -285,
-            endy = 0,
-            setvisible = false
-        })
+        xlib.addToAnimQueue("pnlSlide", { panel = server.panel, startx = 5, starty = 0, endx = -285, endy = 0, setvisible = false })
         xlib.addToAnimQueue(function() nPanel:SetVisible(false) end)
     end
     xlib.animQueue_start()
@@ -117,8 +111,7 @@ end
 server.processModules()
 
 xgui.hookEvent("onProcessModules", nil, server.processModules, "serverSettingsProcessModules")
-xgui.addSettingModule("服务器设定", server, "icon16/server.png", "xgui_svsettings")
-
+xgui.addSettingModule("服务器", server, "icon16/server.png", "xgui_svsettings")
 
 ---------------------------
 --Server Settings Modules--
@@ -188,22 +181,18 @@ end
 adverts.seloffset = 0
 adverts.message = xlib.maketextbox { x = 125, w = 150, h = 20, text = "输入信息...", parent = adverts, selectall = true }
 xlib.makelabel { x = 125, y = 25, label = "循环显示周期:", parent = adverts }
-adverts.time = xlib.makeslider { x = 125, y = 40, w = 150, label = "<--->", value = 60, min = 1, max = 1000, tooltip =
-"公告在下一次显示所需的延时.", parent = adverts }
+adverts.time = xlib.makeslider { x = 125, y = 40, w = 150, label = "<--->", value = 60, min = 1, max = 1000, tooltip = "公告在下一次显示所需的延时.", parent = adverts }
 adverts.group = xlib.makecombobox { x = 125, y = 65, w = 150, enableinput = true, parent = adverts, tooltip = "选择或新建公告组." }
 adverts.color = xlib.makecolorpicker { x = 135, y = 90, parent = adverts }
 local panel = xlib.makelistlayout { w = 150, h = 45, spacing = 4, parent = xgui.null }
 panel:Add(xlib.makelabel { label = "停留时间 (秒)" })
-adverts.display = xlib.makeslider { label = "<--->", min = 1, max = 60, value = 10, tooltip =
-"The time in seconds the CSay advert is displayed" }
+adverts.display = xlib.makeslider { label = "<--->", min = 1, max = 60, value = 10, tooltip = "CSay 广告的显示时间（以秒为单位)" }
 panel:Add(adverts.display)
-adverts.csay = xlib.makecat { x = 125, y = 230, w = 150, label = "在中心显示", checkbox = true, contents = panel, parent =
-    adverts, expanded = false }
+adverts.csay = xlib.makecat { x = 125, y = 230, w = 150, label = "在中心显示", checkbox = true, contents = panel, parent = adverts, expanded = false }
 xlib.makebutton { x = 200, y = 302, w = 75, label = "创建", parent = adverts }.DoClick = function()
     local col = adverts.color:GetColor()
     local rpt = tonumber(adverts.time:GetValue())
-    RunConsoleCommand("xgui", "addAdvert", adverts.message:GetValue(), (rpt < 0.1) and 0.1 or rpt,
-        adverts.group:GetValue(), col.r, col.g, col.b, adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
+    RunConsoleCommand("xgui", "addAdvert", adverts.message:GetValue(), (rpt < 0.1) and 0.1 or rpt, adverts.group:GetValue(), col.r, col.g, col.b, adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
 end
 adverts.removebutton = xlib.makebutton { y = 302, w = 75, label = "移除", disabled = true, parent = adverts }
 adverts.removebutton.DoClick = function(node)
@@ -214,14 +203,10 @@ adverts.updatebutton.DoClick = function(node)
     local node = adverts.tree:GetSelectedItem()
     local col = adverts.color:GetColor()
     if (((type(node.group) == "number") and "<No Group>" or node.group) == adverts.group:GetValue()) then
-        RunConsoleCommand("xgui", "updateAdvert", type(node.group), node.group, node.number, adverts.message:GetValue(),
-            (adverts.time:GetValue() < 0.1) and 0.1 or adverts.time:GetValue(), col.r, col.g, col.b,
-            adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
+        RunConsoleCommand("xgui", "updateAdvert", type(node.group), node.group, node.number, adverts.message:GetValue(), (adverts.time:GetValue() < 0.1) and 0.1 or adverts.time:GetValue(), col.r, col.g, col.b, adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
     else
         RunConsoleCommand("xgui", "removeAdvert", node.group, node.number, type(node.group), "hold")
-        RunConsoleCommand("xgui", "addAdvert", adverts.message:GetValue(),
-            (adverts.time:GetValue() < 0.1) and 0.1 or adverts.time:GetValue(), adverts.group:GetValue(), col.r, col.g,
-            col.b, adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
+        RunConsoleCommand("xgui", "addAdvert", adverts.message:GetValue(), (adverts.time:GetValue() < 0.1) and 0.1 or adverts.time:GetValue(), adverts.group:GetValue(), col.r, col.g, col.b, adverts.csay:GetExpanded() and adverts.display:GetValue() or nil)
         adverts.selnewgroup = adverts.group:GetValue()
         if xgui.data.adverts[adverts.group:GetValue()] then
             adverts.seloffset = #xgui.data.adverts[adverts.group:GetValue()] + 1
@@ -230,8 +215,7 @@ adverts.updatebutton.DoClick = function(node)
         end
     end
 end
-adverts.nodeup = xlib.makebutton { x = 80, y = 302, w = 20, icon = "icon16/bullet_arrow_up.png", centericon = true, parent =
-    adverts, disabled = true }
+adverts.nodeup = xlib.makebutton { x = 80, y = 302, w = 20, icon = "icon16/bullet_arrow_up.png", centericon = true, parent = adverts, disabled = true }
 adverts.nodeup.DoClick = function()
     adverts.nodedown:SetDisabled(true)
     adverts.nodeup:SetDisabled(true)
@@ -255,16 +239,14 @@ adverts.nodeup.DoClick = function()
             end
         end
         RunConsoleCommand("xgui", "removeAdvert", node.group, node.number, type(node.group), "hold")
-        RunConsoleCommand("xgui", "addAdvert", node.data.message, node.data.rpt, newgroup, node.data.color.r,
-            node.data.color.g, node.data.color.b, node.data.len)
+        RunConsoleCommand("xgui", "addAdvert", node.data.message, node.data.rpt, newgroup, node.data.color.r, node.data.color.g, node.data.color.b, node.data.len)
         if newgroup == "<No Group>" then
             adverts.selnewgroup = #xgui.data.adverts + 1
             adverts.seloffset = 1
         end
     end
 end
-adverts.nodedown = xlib.makebutton { x = 100, y = 302, w = 20, icon = "icon16/bullet_arrow_down.png", centericon = true, parent =
-    adverts, disabled = true }
+adverts.nodedown = xlib.makebutton { x = 100, y = 302, w = 20, icon = "icon16/bullet_arrow_down.png", centericon = true, parent = adverts, disabled = true }
 adverts.nodedown.DoClick = function()
     adverts.nodedown:SetDisabled(true)
     adverts.nodeup:SetDisabled(true)
@@ -289,8 +271,7 @@ adverts.nodedown.DoClick = function()
             end
         end
         RunConsoleCommand("xgui", "removeAdvert", node.group, node.number, type(node.group), "hold")
-        RunConsoleCommand("xgui", "addAdvert", node.data.message, node.data.rpt, newgroup, node.data.color.r,
-            node.data.color.g, node.data.color.b, node.data.len or "", "hold")
+        RunConsoleCommand("xgui", "addAdvert", node.data.message, node.data.rpt, newgroup, node.data.color.r, node.data.color.g, node.data.color.b, node.data.len or "", "hold")
         RunConsoleCommand("xgui", "moveAdvert", type(newgroup), newgroup, #xgui.data.adverts[newgroup] + 1, 1)
     else
         RunConsoleCommand("xgui", "moveAdvert", type(node.group), node.group, node.number, node.number + 1)
@@ -301,9 +282,9 @@ function adverts.removeAdvert(node)
     if node then
         Derma_Query("你确定想删除此" .. (node.data and "公告?" or "公告组?"), "XGUI 警告",
             "删除", function()
-                if node.data then --Remove a single advert
+                if node.data then -- Remove a single advert
                     RunConsoleCommand("xgui", "removeAdvert", node.group, node.number, type(node.group))
-                else              --Remove an advert group
+                else -- Remove an advert group
                     RunConsoleCommand("xgui", "removeAdvertGroup", node.group, type(node.group))
                 end
                 adverts.tree:SetSelectedItem(nil)
@@ -312,8 +293,7 @@ function adverts.removeAdvert(node)
 end
 
 function adverts.RenameAdvert(old)
-    advertRename = xlib.makeframe { label = "为新公告组设置名字 - " .. old, w = 400, h = 80, showclose = true, skin =
-        xgui.settings.skin }
+    advertRename = xlib.makeframe { label = "为新公告组设置名字 - " .. old, w = 400, h = 80, showclose = true, skin = xgui.settings.skin }
     advertRename.text = xlib.maketextbox { x = 10, y = 30, w = 380, h = 20, text = old, parent = advertRename }
     advertRename.text.OnEnter = function(self)
         RunConsoleCommand("xgui", "renameAdvertGroup", old, self:GetValue())
@@ -364,8 +344,7 @@ function adverts.updateAdverts()
     table.sort(sortSingle, function(a, b) return string.lower(a.message) < string.lower(b.message) end)
     table.sort(sortGroups, function(a, b) return string.lower(a) < string.lower(b) end)
     for _, advert in ipairs(sortSingle) do
-        adverts.createNode(adverts.tree, xgui.data.adverts[advert.group][1], advert.group, 1,
-            xgui.data.adverts[advert.group][1].message, lastNode)
+        adverts.createNode(adverts.tree, xgui.data.adverts[advert.group][1], advert.group, 1, xgui.data.adverts[advert.group][1].message, lastNode)
     end
     for _, group in ipairs(sortGroups) do
         advertgroup = xgui.data.adverts[group]
@@ -496,12 +475,9 @@ xgui.addSubModule("ULX 封禁提示", plist, nil, "server")
 local plist = xlib.makelistlayout { w = 275, h = 322, parent = xgui.null }
 plist:Add(xlib.makelabel { label = "指令回显设置" })
 plist:Add(xlib.makecheckbox { label = "显示玩家投票选择的选项", repconvar = "ulx_voteEcho" })
-plist:Add(xlib.makecombobox { repconvar = "ulx_logEcho", isNumberConvar = true, choices = { "不显示执行回显",
-    "显示为匿名管理员", "显示为管理员名字" } })
-plist:Add(xlib.makecombobox { repconvar = "ulx_logSpawnsEcho", isNumberConvar = true, choices = { "不显示物品生成信息",
-    "只显示给管理员", "显示给所有人" } })
-plist:Add(xlib.makecheckbox { label = "当执行结果回显时附上颜色 (在下面调整)", repconvar =
-"ulx_logEchoColors" })
+plist:Add(xlib.makecombobox { repconvar = "ulx_logEcho", isNumberConvar = true, choices = { "不显示执行回显", "显示为匿名管理员", "显示为管理员名字" } })
+plist:Add(xlib.makecombobox { repconvar = "ulx_logSpawnsEcho", isNumberConvar = true, choices = { "不显示物品生成信息", "只显示给管理员", "显示给所有人" } })
+plist:Add(xlib.makecheckbox { label = "当执行结果回显时附上颜色 (在下面调整)", repconvar = "ulx_logEchoColors" })
 
 plist:Add(xlib.makelabel { label = "默认回显颜色" })
 plist:Add(xlib.makecolorpicker { repconvar = "ulx_logEchoColorDefault", noalphamodetwo = true })
@@ -523,16 +499,14 @@ local plist = xlib.makelistlayout { w = 275, h = 322, parent = xgui.null }
 plist:Add(xlib.makelabel { label = "ULX 通常设置" })
 plist:Add(xlib.makeslider { label = "聊天延时", min = 0, max = 5, decimal = 1, repconvar = "ulx_chattime" })
 plist:Add(xlib.makelabel { label = "\n允许 '/me' 聊天功能" })
-plist:Add(xlib.makecombobox { repconvar = "ulx_meChatEnabled", isNumberConvar = true, choices = { "关闭", "仅沙盒启用",
-    "启用" } })
+plist:Add(xlib.makecombobox { repconvar = "ulx_meChatEnabled", isNumberConvar = true, choices = { "关闭", "仅沙盒启用", "启用" } })
 plist:Add(xlib.makelabel { label = "\n欢迎信息" })
 plist:Add(xlib.maketextbox { repconvar = "ulx_welcomemessage", selectall = true })
 plist:Add(xlib.makelabel { label = "允许的变量: %curmap%, %host%" })
 plist:Add(xlib.makelabel { label = "\n自动踢出更改名字的玩家" })
 plist:Add(xlib.makelabel { label = "名字更改多少次后会被踢出 (0 为关闭)" })
 plist:Add(xlib.makeslider { label = "<--->", min = 0, max = 10, decimal = 0, repconvar = "ulx_kickAfterNameChanges" })
-plist:Add(xlib.makeslider { label = "冷却间隔", min = 0, max = 600, decimal = 0, repconvar =
-"ulx_kickAfterNameChangesCooldown" })
+plist:Add(xlib.makeslider { label = "冷却间隔", min = 0, max = 600, decimal = 0, repconvar = "ulx_kickAfterNameChangesCooldown" })
 plist:Add(xlib.makecheckbox { label = "警告玩家剩余更改次数", repconvar = "ulx_kickAfterNameChangesWarning" })
 
 xgui.addSubModule("ULX 通常设置", plist, nil, "server")
@@ -619,8 +593,7 @@ plist:Add(xlib.makelabel { label = "日志设置" })
 plist:Add(xlib.makecheckbox { label = "启用日志", repconvar = "ulx_logFile" })
 plist:Add(xlib.makecheckbox { label = "记录聊天", repconvar = "ulx_logChat" })
 plist:Add(xlib.makecheckbox { label = "记录玩家状态 (连接, 死亡, 等等.)", repconvar = "ulx_logEvents" })
-plist:Add(xlib.makecheckbox { label = "记录生成物信息 (物品, 效果, 布娃娃, 等等.)", repconvar =
-"ulx_logSpawns" })
+plist:Add(xlib.makecheckbox { label = "记录生成物信息 (物品, 效果, 布娃娃, 等等.)", repconvar = "ulx_logSpawns" })
 plist:Add(xlib.makelabel { label = "日志目录:" })
 local logdirbutton = xlib.makebutton {}
 xlib.checkRepCvarCreated("ulx_logdir")
@@ -641,16 +614,11 @@ xgui.prepareDataType("motdsettings")
 local motdpnl = xlib.makepanel { w = 275, h = 322, parent = xgui.null }
 local plist = xlib.makelistlayout { w = 275, h = 298, parent = motdpnl }
 
-local fontWeights = { "normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900", "lighter",
-    "bolder" }
-local commonFonts = { "Arial", "Arial Black", "Calibri", "Candara", "Cambria", "Consolas", "Courier New",
-    "Fraklin Gothic Medium", "Futura", "Georgia", "Helvetica", "Impact", "Lucida Console", "Segoe UI", "Tahoma",
-    "Times New Roman", "Trebuchet MS", "Verdana" }
-
+local fontWeights = { "normal", "bold", "100", "200", "300", "400", "500", "600", "700", "800", "900", "lighter", "bolder" }
+local commonFonts = { "Arial", "Arial Black", "Calibri", "Candara", "Cambria", "Consolas", "Courier New", "Fraklin Gothic Medium", "Futura", "Georgia", "Helvetica", "Impact", "Lucida Console", "Segoe UI", "Tahoma", "Times New Roman", "Trebuchet MS", "Verdana" }
 
 plist:Add(xlib.makelabel { label = "MOTD 模式:", zpos = 0 })
-plist:Add(xlib.makecombobox { repconvar = "ulx_showmotd", isNumberConvar = true, choices = { "0 - 关闭", "1 - 本地文件",
-    "2 - MOTD 生成器", "3 - URL" }, zpos = 1 })
+plist:Add(xlib.makecombobox { repconvar = "ulx_showmotd", isNumberConvar = true, choices = { "0 - 关闭", "1 - 本地文件", "2 - MOTD 生成器", "3 - URL" }, zpos = 1 })
 plist.txtMotdFile = xlib.maketextbox { repconvar = "ulx_motdfile", zpos = 2 }
 plist:Add(plist.txtMotdFile)
 plist.txtMotdURL = xlib.maketextbox { repconvar = "ulx_motdurl", zpos = 3 }
@@ -741,7 +709,7 @@ local function registerMOTDChangeEventsSlider(slider, setting)
     local tmpfunc = slider.Slider.SetDragging
     slider.Slider.SetDragging = function(self, bval)
         tmpfunc(self, bval)
-        if (! bval) then
+        if (not bval) then
             net.Start("XGUI.UpdateMotdData")
             net.WriteString(setting)
             net.WriteString(slider.TextArea:GetValue())
@@ -849,51 +817,38 @@ plist.generator:Add(xlib.makelabel { label = "\nMOTD 生成器_字体" })
 plist.generator:Add(xlib.makelabel { label = "\n服务器名称 (标题)" })
 local pnlFontServerName = xlib.makepanel { h = 80, parent = xgui.null }
 xlib.makelabel { x = 5, y = 8, label = "字体", parent = pnlFontServerName }
-pnlFontServerName.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices =
-    commonFonts, parent = pnlFontServerName }
-pnlFontServerName.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent =
-    pnlFontServerName }
+pnlFontServerName.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices = commonFonts, parent = pnlFontServerName }
+pnlFontServerName.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent = pnlFontServerName }
 xlib.makelabel { x = 5, y = 58, label = "字体宽度", parent = pnlFontServerName }
-pnlFontServerName.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices =
-    fontWeights, parent = pnlFontServerName }
+pnlFontServerName.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices = fontWeights, parent = pnlFontServerName }
 plist.generator:Add(pnlFontServerName)
 
 plist.generator:Add(xlib.makelabel { label = "\n服务器描述 (内容)" })
 local pnlFontSubtitle = xlib.makepanel { h = 80, parent = xgui.null }
 xlib.makelabel { x = 5, y = 8, label = "字体", parent = pnlFontSubtitle }
-pnlFontSubtitle.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices =
-    commonFonts, parent = pnlFontSubtitle }
-pnlFontSubtitle.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent =
-    pnlFontSubtitle }
+pnlFontSubtitle.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices = commonFonts, parent = pnlFontSubtitle }
+pnlFontSubtitle.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent = pnlFontSubtitle }
 xlib.makelabel { x = 5, y = 58, label = "字体宽度", parent = pnlFontSubtitle }
-pnlFontSubtitle.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices =
-    fontWeights, parent = pnlFontSubtitle }
+pnlFontSubtitle.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices = fontWeights, parent = pnlFontSubtitle }
 plist.generator:Add(pnlFontSubtitle)
 
 plist.generator:Add(xlib.makelabel { label = "\n分类菜单" })
 local pnlFontSection = xlib.makepanel { h = 80, parent = xgui.null }
 xlib.makelabel { x = 5, y = 8, label = "字体", parent = pnlFontSection }
-pnlFontSection.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices =
-    commonFonts, parent = pnlFontSection }
-pnlFontSection.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent =
-    pnlFontSection }
+pnlFontSection.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices = commonFonts, parent = pnlFontSection }
+pnlFontSection.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent = pnlFontSection }
 xlib.makelabel { x = 5, y = 58, label = "字体宽度", parent = pnlFontSection }
-pnlFontSection.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices =
-    fontWeights, parent = pnlFontSection }
+pnlFontSection.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices = fontWeights, parent = pnlFontSection }
 plist.generator:Add(pnlFontSection)
 
 plist.generator:Add(xlib.makelabel { label = "\n普通文本" })
 local pnlFontRegular = xlib.makepanel { h = 80, parent = xgui.null }
 xlib.makelabel { x = 5, y = 8, label = "字体", parent = pnlFontRegular }
-pnlFontRegular.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices =
-    commonFonts, parent = pnlFontRegular }
-pnlFontRegular.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent =
-    pnlFontRegular }
+pnlFontRegular.name = xlib.makecombobox { x = 65, y = 5, w = 190, enableinput = true, selectall = true, choices = commonFonts, parent = pnlFontRegular }
+pnlFontRegular.size = xlib.makeslider { x = 5, y = 30, w = 250, label = "字体大小 (像素)", value = 16, min = 4, max = 72, parent = pnlFontRegular }
 xlib.makelabel { x = 5, y = 58, label = "Font Weight", parent = pnlFontRegular }
-pnlFontRegular.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices =
-    fontWeights, parent = pnlFontRegular }
+pnlFontRegular.weight = xlib.makecombobox { x = 72, y = 55, w = 183, enableinput = true, selectall = true, choices = fontWeights, parent = pnlFontRegular }
 plist.generator:Add(pnlFontRegular)
-
 
 plist.generator:Add(xlib.makelabel { label = "\nMOTD 生成器_颜色\n" })
 
@@ -944,8 +899,6 @@ registerMOTDChangeEventsColor(pnlColorText, "style.colors.text_color")
 
 registerMOTDChangeEventsColor(pnlBorderColor, "style.borders.border_color")
 registerMOTDChangeEventsSlider(pnlBorderThickness, "style.borders.border_thickness")
-
-
 
 -- MOTD Cvar and data handling
 plist.updateGeneratorSettings = function(data)
@@ -1194,8 +1147,7 @@ panel.add.DoClick = function()
     net.WriteTable(temp)
     net.SendToServer()
 end
-panel.votemapmode = xlib.makecombobox { y = 302, w = 275, repconvar = "ulx_votemapMapmode", isNumberConvar = true, numOffset = 0, choices = {
-    "默认添加新地图到可投票列表", "默认添加新地图到不可投票列表" }, parent = panel }
+panel.votemapmode = xlib.makecombobox { y = 302, w = 275, repconvar = "ulx_votemapMapmode", isNumberConvar = true, numOffset = 0, choices = { "默认添加新地图到可投票列表", "默认添加新地图到不可投票列表" }, parent = panel }
 panel.updateList = function()
     if #ulx.maps ~= 0 then
         panel.votemaps:Clear()
