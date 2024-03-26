@@ -1,6 +1,5 @@
 --XLIB -- by Stickly Man!
 --A library of helper functions used by XGUI for creating derma controls with a single line of code.
-
 --Currently a bit disorganized and unstandardized, (just put in things as I needed them). I'm hoping to fix that sometime.
 
 xlib = {}
@@ -9,6 +8,9 @@ function xlib.makecheckbox(t)
     local pnl = vgui.Create("DCheckBoxLabel", t.parent)
     pnl:SetPos(t.x, t.y)
     pnl:SetText(t.label or "")
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SizeToContents()
     pnl:SetValue(t.value or 0)
     pnl:SetZPos(t.zpos or 0)
@@ -70,6 +72,9 @@ end
 function xlib.makelabel(t)
     local pnl = vgui.Create("DLabel", t.parent)
     pnl:SetPos(t.x, t.y)
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SetText(t.label or "")
     pnl:SetZPos(t.zpos or 0)
     if not t.tooltipwidth then t.tooltipwidth = 250 end
@@ -186,6 +191,9 @@ function xlib.maketextbox(t)
     pnl:SetPos(t.x, t.y)
     pnl:SetWide(t.w)
     pnl:SetTall(t.h or 20)
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[3], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SetEnterAllowed(true)
     pnl:SetZPos(t.zpos or 0)
     if t.convar then pnl:SetConVar(t.convar) end
@@ -294,6 +302,22 @@ function xlib.makepanel(t)
     local pnl = vgui.Create("DPanel", t.parent)
     pnl:SetPos(t.x, t.y)
     pnl:SetSize(t.w, t.h)
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
+    pnl:SetZPos(t.zpos or 0)
+    if t.skin then pnl:SetSkin(t.skin) end
+    if t.visible ~= nil then pnl:SetVisible(t.visible) end
+    return pnl
+end
+
+function xlib.makescrollpanel(t)
+    local pnl = vgui.Create("DScrollPanel", t.parent)
+    pnl:SetPos(t.x, t.y)
+    pnl:SetSize(t.w, t.h)
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SetZPos(t.zpos or 0)
     if t.skin then pnl:SetSkin(t.skin) end
     if t.visible ~= nil then pnl:SetVisible(t.visible) end
@@ -326,6 +350,9 @@ function xlib.makecombobox(t)
     local pnl = vgui.Create("DComboBox", t.parent)
     t.w = t.w or 100
     t.h = t.h or 20
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SetPos(t.x, t.y)
     pnl:SetSize(t.w, t.h)
     pnl:SetZPos(t.zpos or 0)
@@ -556,6 +583,9 @@ function xlib.makeslider(t)
     pnl:SetWide(t.w or 100)
     pnl:SetTall(t.h or 20)
     pnl:SetText(t.label or "")
+    if t.dock then pnl:Dock(t.dock) end -- NODOCK, FILL, LEFT, RIGHT, TOP, BOTTOM
+    if t.dockmargin then pnl:DockMargin(t.dockmargin[1], t.dockmargin[2], t.dockmargin[3], t.dockmargin[4]) end
+    if t.dockpadding then pnl:DockPadding(t.dockpadding[1], t.dockpadding[2], t.dockpadding[3], t.dockpadding[4]) end
     pnl:SetMinMax(t.min or 0, t.max or 100)
     pnl:SetDecimals(t.decimal or 0)
     pnl.TextArea:SetDrawBackground(true)
@@ -635,8 +665,7 @@ function xlib.makeslider(t)
     --Slider
     local pnl_val
     function pnl:TranslateSliderValues(x, y)
-        pnl_val = self.Scratch:GetMin() +
-            (x * self.Scratch:GetRange()) --Store the value and update the textbox to the new value
+        pnl_val = self.Scratch:GetMin() + (x * self.Scratch:GetRange()) --Store the value and update the textbox to the new value
         pnl.ValueUpdated(pnl_val)
         self.Scratch:SetFraction(x)
 
@@ -917,7 +946,7 @@ function PANEL:AddAlphaBar()
         local val = tonumber(self:GetValue())
         if not val then val = 0 end
         if val ~= math.Clamp(val, 0, 255) then self:SetValue(math.Clamp(val, 0, 255)) end
-        p.AlphaBar:SetValue(1 - (val / 255))
+        p.AlphaBar:SetValue(val / 255)
         p:OnChangeImmediate(p:GetColor())
     end
     self.txtA.OnLoseFocus = function(self)
@@ -943,7 +972,7 @@ function PANEL:AddAlphaBar()
     end
 
     self.AlphaBar = vgui.Create("DAlphaBar", self)
-    self.AlphaBar.OnChange = function(ctrl, alpha) self:SetColorAlpha(alpha * 255) end
+    self.AlphaBar.OnChange = function(ctrl, alpha) self:SetColorAlpha(math.floor((alpha * 255))) end
     self.AlphaBar:SetPos(25, 5)
     self.AlphaBar:SetSize(15, 100)
     self.AlphaBar:SetValue(1)
@@ -978,14 +1007,9 @@ function PANEL:NoAlphaModeTwo()
 end
 
 function PANEL:UpdateColorText()
-    self.RGBBar:SetColor(Color(self.txtR:GetValue(), self.txtG:GetValue(), self.txtB:GetValue(),
-        self.showAlpha and self.txtA:GetValue()))
-    self.ColorCube:SetColor(Color(self.txtR:GetValue(), self.txtG:GetValue(), self.txtB:GetValue(),
-        self.showAlpha and self.txtA:GetValue()))
-    if (self.showAlpha) then
-        self.AlphaBar:SetBarColor(Color(self.txtR:GetValue(), self.txtG:GetValue(),
-            self.txtB:GetValue(), 255))
-    end
+    self.RGBBar:SetColor(Color(self.txtR:GetValue(), self.txtG:GetValue(), self.txtB:GetValue(), self.showAlpha and self.txtA:GetValue()))
+    self.ColorCube:SetColor(Color(self.txtR:GetValue(), self.txtG:GetValue(), self.txtB:GetValue(), self.showAlpha and self.txtA:GetValue()))
+    if (self.showAlpha) then self.AlphaBar:SetBarColor(Color(self.txtR:GetValue(), self.txtG:GetValue(), self.txtB:GetValue(), 255)) end
     self:OnChangeImmediate(self:GetColor())
 end
 
@@ -1204,8 +1228,7 @@ xlib.addToAnimQueue = function(obj, ...)
                 xlib.animRunning:Start((xlib.curAnimStep ~= -1 and (length / xlib.curAnimStep) or 0), arg[1])
             end)
     else
-        Msg("Error: XLIB recieved an invalid animation call! TYPE:" ..
-            type(obj) .. " VALUE:" .. tostring(obj) .. "\n")
+        Msg("Error: XLIB recieved an invalid animation call! TYPE:" .. type(obj) .. " VALUE:" .. tostring(obj) .. "\n")
     end
 end
 
@@ -1215,8 +1238,7 @@ end
 --Slide animation
 local function slideAnim_run(delta, data)
     --data.panel, data.startx, data.starty, data.endx, data.endy, data.setvisible
-    data.panel:SetPos(data.startx + ((data.endx - data.startx) * delta),
-        data.starty + ((data.endy - data.starty) * delta))
+    data.panel:SetPos(data.startx + ((data.endx - data.startx) * delta), data.starty + ((data.endy - data.starty) * delta))
 end
 
 local function slideAnim_start(data)
@@ -1262,3 +1284,18 @@ local function fadeAnim_end(data)
     if data.panelIn then data.panelIn:SetAlpha(255) end
 end
 xlib.registerAnimType("pnlFade", fadeAnim_run, fadeAnim_start, fadeAnim_end)
+
+-------------------------
+-- Convar/Listen helpers
+-------------------------
+
+-- Useful for switching between cvar or replicated cvar depending on if the player is the host
+xlib.ifListenHost = function(value)
+    if LocalPlayer():IsListenServerHost() then return value end
+    return nil
+end
+
+xlib.ifNotListenHost = function(value)
+    if not LocalPlayer():IsListenServerHost() then return value end
+    return nil
+end
