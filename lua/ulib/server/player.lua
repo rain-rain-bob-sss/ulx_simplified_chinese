@@ -114,9 +114,8 @@ function ULib.kick(ply, reason, calling_ply)
 end
 
 local function doInvis()
-    local players = player.GetAll()
     local remove = true
-    for _, player in ipairs(players) do
+    for _, player in player.Iterator() do
         local t = player:GetTable()
         if t.invis then
             remove = false

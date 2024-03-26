@@ -462,6 +462,7 @@ end
 
 	These defines are server-only, to help with the networking library.
 --]]
+
 if SERVER then
     util.AddNetworkString("URPC")
     util.AddNetworkString("tsayc")
