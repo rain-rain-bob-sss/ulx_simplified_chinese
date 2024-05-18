@@ -249,6 +249,7 @@ function ulx.activateNewSpecialEffect(calling_ply, target_plys, shouldClear)
                 end
             end
         end)
+
     elseif GetConVar("gamemode"):GetString() == "terrortown" then
         hook.Add("TTTPrepareRound", "tttcleareffects", function()
             for _, ply in ipairs(affected_plys) do
