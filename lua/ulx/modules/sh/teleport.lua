@@ -159,7 +159,7 @@ function ulx.bring(calling_ply, target_plys)
     end
 
     if #affected_plys > 0 then
-        ulx.fancyLogAdmin(calling_ply, "#A 将 #T 带到身边", affected_plys)
+        ulx.fancyLogAdmin(calling_ply, "#A 带来了 #T", affected_plys)
     end
 end
 

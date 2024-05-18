@@ -559,14 +559,21 @@ local cancelcmd = ulx.command(CATEGORY_NAME, "ulx cancelcmd", ulx.cancelcmd, "!c
 cancelcmd:addParam { type = ULib.cmds.BoolArg, invisible = true }
 cancelcmd:defaultAccess(ULib.ACCESS_ADMIN)
 cancelcmd:help("取消定时命令后运行指定\n的命令.")
+
 function ulx.weaponedit(calling_ply)
     if not calling_ply:IsSuperAdmin() then
-        ULib.tsayError(calling_ply, "You must be a superadmin to use this command!")
+        ULib.tsayError(calling_ply, "您必须是超级管理员才能使用此命令!")
+        return
+    end
+
+    local convar = GetConVar("weapon_properties_editor")
+    if convar == nil then
+        ULib.tsayError(calling_ply, "无法使用武!请下载:https://steamcommunity.com/sharedfiles/filedetails/?id=933160196")
         return
     end
 
     calling_ply:ConCommand("weapon_properties_editor")
-	ulx.fancyLogAdmin(calling_ply, true,"#A 打开了武器编辑器")
+    ulx.fancyLogAdmin(calling_ply, true,"#A 打开了武器编辑器!")
 end
 
 local weaponedit = ulx.command("武器编辑器", "ulx weaponedit", ulx.weaponedit, "!weaponedit")

@@ -29,6 +29,18 @@ if SERVER then
 
     SetGlobalInt("hacker_mode", hacker_mode)
     SetGlobalInt("hacker_show_names", hacker_show_names)
+
+	hook.Add("PlayerDeath", "ClearEffectsOnDeath", function(victim, inflictor, attacker)
+        local hackerMode = GetConVar("hacker_mode"):GetInt()
+
+        if hackerMode == 0 then
+            net.Start("ClearSpecialEffects")
+            net.Send(victim)
+        elseif hackerMode == 1 then
+            net.Start("ClearEffects")
+            net.Send(victim)
+        end
+    end)
 end
 
 if CLIENT then
@@ -55,9 +67,9 @@ if CLIENT then
     local showNames = GetGlobalInt("hacker_show_names", 1)
 
     if hackerMode == 0 then
-        net.Receive("SpecialEffect", function()
-            local playerMap = {}
+	    local playerMap = {}
 
+        net.Receive("SpecialEffect", function()
             for _, ply in ipairs(player.GetAll()) do
                 if ply:Alive() then
                     playerMap[ply:UserID()] = ply
@@ -198,9 +210,8 @@ function ulx.activateNewSpecialEffect(calling_ply, target_plys)
 
     local players = player.GetAll()
 
-    local hackerMode = GetConVar("hacker_mode"):GetInt()
-
     for _, ply in ipairs(affected_plys) do
+        local hackerMode = GetConVar("hacker_mode"):GetInt()
         if hackerMode == 0 then
             net.Start("SpecialEffect")
         elseif hackerMode == 1 then
@@ -216,6 +227,7 @@ function ulx.activateNewSpecialEffect(calling_ply, target_plys)
     if GetConVarString("gamemode") == "murder" then
         hook.Add("OnStartRound", "EffectOnNewRound", function()
             for _, ply in ipairs(affected_plys) do
+                local hackerMode = GetConVar("hacker_mode"):GetInt()
                 if hackerMode == 0 then
                     net.Start("ClearSpecialEffects")
                     net.Send(ply)
