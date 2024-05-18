@@ -229,7 +229,7 @@ unban:help("解封指定的SteamID.")
 function ulx.banweapon(calling_ply, target_ply)
     -- Check if the weapon exists in the game
     if not weapons.Get("weapon_aeonbanhammer") then
-        ULib.tsay(calling_ply, "该武器不存在，无法执行此指令！", true)
+        ULib.tsay(calling_ply, "该武器不存在!请访问:https://steamcommunity.com/sharedfiles/filedetails/?id=888776789", true)
         return
     end
 
@@ -237,7 +237,7 @@ function ulx.banweapon(calling_ply, target_ply)
         target_ply = calling_ply
     end
 
-    target_ply:Give("weapon_aeonbanhammer") -- https://steamcommunity.com/sharedfiles/filedetails/?id=888776789
+    target_ply:Give("weapon_aeonbanhammer")
 
     ULib.tsay(calling_ply, target_ply:Nick() .. " 已获得封禁武器！", true)
 end

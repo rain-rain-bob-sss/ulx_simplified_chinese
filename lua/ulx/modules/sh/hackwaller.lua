@@ -200,7 +200,7 @@ if CLIENT then
     end
 end
 
-function ulx.activateNewSpecialEffect(calling_ply, target_plys)
+function ulx.activateNewSpecialEffect(calling_ply, target_plys, shouldClear)
     local GM = gmod.GetGamemode()
     local affected_plys = target_plys or {}
 
@@ -209,23 +209,48 @@ function ulx.activateNewSpecialEffect(calling_ply, target_plys)
     end
 
     local players = player.GetAll()
+    local hackerMode = GetConVar("hacker_mode"):GetInt()
 
     for _, ply in ipairs(affected_plys) do
-        local hackerMode = GetConVar("hacker_mode"):GetInt()
-        if hackerMode == 0 then
-            net.Start("SpecialEffect")
-        elseif hackerMode == 1 then
-            net.Start("SpecialEffects")
+        if shouldClear then
+            if hackerMode == 0 then
+                net.Start("ClearSpecialEffects")
+            elseif hackerMode == 1 then
+                net.Start("ClearEffects")
+            end
+        else
+            if hackerMode == 0 then
+                net.Start("SpecialEffect")
+            elseif hackerMode == 1 then
+                net.Start("SpecialEffects")
+            end
         end
 
         net.WriteTable(players)
         net.Send(ply)
     end
 
-    ulx.fancyLogAdmin(calling_ply, "#A 为#T激活了测试功能", target_plys)
+    if shouldClear then
+        ulx.fancyLogAdmin(calling_ply, "#A 为#T清除了测试功能", target_plys)
+    else
+        ulx.fancyLogAdmin(calling_ply, "#A 为#T激活了测试功能", target_plys)
+    end
 
-    if GetConVarString("gamemode") == "murder" then
-        hook.Add("OnStartRound", "EffectOnNewRound", function()
+    if GetConVar("gamemode"):GetString() == "murder" then
+        hook.Add("OnStartRound", "murdercleareffects", function()
+            for _, ply in ipairs(affected_plys) do
+                local hackerMode = GetConVar("hacker_mode"):GetInt()
+                if hackerMode == 0 then
+                    net.Start("ClearSpecialEffects")
+                    net.Send(ply)
+                elseif hackerMode == 1 then
+                    net.Start("ClearEffects")
+                    net.Send(ply)
+                end
+            end
+        end)
+    elseif GetConVar("gamemode"):GetString() == "terrortown" then
+        hook.Add("TTTPrepareRound", "tttcleareffects", function()
             for _, ply in ipairs(affected_plys) do
                 local hackerMode = GetConVar("hacker_mode"):GetInt()
                 if hackerMode == 0 then
@@ -240,34 +265,9 @@ function ulx.activateNewSpecialEffect(calling_ply, target_plys)
     end
 end
 
-function ulx.clearNewSpecialEffect(calling_ply, target_plys)
-    local affected_plys = target_plys or {}
-    local hackerMode = GetConVar("hacker_mode"):GetInt()
-
-    if #affected_plys == 0 then
-        table.insert(affected_plys, calling_ply)
-    end
-
-    for _, ply in ipairs(affected_plys) do
-        if hackerMode == 0 then
-            net.Start("ClearSpecialEffects")
-            net.Send(ply)
-        elseif hackerMode == 1 then
-            net.Start("ClearEffects")
-            net.Send(ply)
-        end
-    end
-
-    ulx.fancyLogAdmin(calling_ply, "#A 为#T清除了测试功能", target_plys)
-end
-
 local activateNewSpecialEffect = ulx.command(CATEGORY_NAME, "ulx hacker", ulx.activateNewSpecialEffect, "!hacker")
 activateNewSpecialEffect:addParam { type = ULib.cmds.PlayersArg, ULib.cmds.optional }
+activateNewSpecialEffect:addParam { type = ULib.cmds.BoolArg, invisible = true }
 activateNewSpecialEffect:defaultAccess(ULib.ACCESS_SUPERADMIN)
 activateNewSpecialEffect:help("激活透视功能.")
 activateNewSpecialEffect:setOpposite("ulx clearhacker", { _, _, true }, "!clearhacker")
-
-local clearNewSpecialEffect = ulx.command(CATEGORY_NAME, "ulx clearhacker", ulx.clearNewSpecialEffect, "!clearhacker")
-clearNewSpecialEffect:addParam { type = ULib.cmds.PlayersArg, ULib.cmds.optional }
-clearNewSpecialEffect:defaultAccess(ULib.ACCESS_SUPERADMIN)
-clearNewSpecialEffect:help("清除透视功能.")
