@@ -1,9 +1,22 @@
 local CATEGORY_NAME = "功能"
 
-CreateConVar("hacker_mode", 0, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Set hacker mode (0 for Halos SpecialEffect, 1 for 3D2D SpecialEffect)")
+CreateConVar("hacker_mode", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Set hacker mode (0 for Halos SpecialEffect, 1 for 3D2D SpecialEffect)")
 CreateConVar("hacker_show_names", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Show player names (0 for off, 1 for on)")
 hacker_mode = GetConVar("hacker_mode"):GetInt()
 hacker_show_names = GetConVar("hacker_show_names"):GetInt()
+
+hook.Add("HackerSyncGlobals", "AddHackerGlobals", function()
+    SetGlobalInt("hacker_mode", GetConVar("hacker_mode"):GetInt())
+    SetGlobalInt("hacker_show_names", GetConVar("hacker_show_names"):GetInt())
+end)
+
+cvars.AddChangeCallback("hacker_mode", function(name, old, new)
+    SetGlobalInt("hacker_mode", tonumber(new))
+end)
+
+cvars.AddChangeCallback("hacker_show_names", function(name, old, new)
+    SetGlobalInt("hacker_show_names", tonumber(new))
+end)
 
 if SERVER then
     util.AddNetworkString("SpecialEffect")
@@ -63,8 +76,8 @@ if CLIENT then
         antialias = true,
     })
 
-    local hackerMode = GetGlobalInt("hacker_mode", 0)
-    local showNames = GetGlobalInt("hacker_show_names", 1)
+    local hackerMode = GetConVar("hacker_mode"):GetInt()
+    local showNames = GetConVar("hacker_show_names"):GetInt()
 
     if hackerMode == 0 then
 	    local playerMap = {}
