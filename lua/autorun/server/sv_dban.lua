@@ -31,7 +31,7 @@ concommand.Add("print_disconnects", function(ply)
     if (not IsValid(ply) and SERVER) then
         PrintTable(DisconnectedPlayers, 4)
     elseif (IsValid(ply)) then
-        ply:ChatPrint("[ERROR]: This is a server console command.")
+        ply:ChatPrint("[ERROR]： 这是一条服务器控制台命令.")
     end
 end)
 
@@ -41,8 +41,8 @@ net.Receive("DisconnectsRequestTable", function(_, sender)
         net.WriteTable(DisconnectedPlayers)
         net.Send(sender)
     elseif (table.Count(DisconnectedPlayers) == 0) then 
-        sender:ChatPrint("[ERROR]: The disconnections table is empty, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
+        sender:ChatPrint("[ERROR]: 断开连接表为空, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
     elseif (IsValid(sender)) then
-        sender:ChatPrint("[ERROR]: You don't have access to this command, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
+        sender:ChatPrint("[ERROR]: 您无法使用该命令, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
     end
 end)
