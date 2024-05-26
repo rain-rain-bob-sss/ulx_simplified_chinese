@@ -20,8 +20,8 @@ psay:help("发送私密信息到目标玩家.")
 ------------------------------ Asay ------------------------------
 local seeasayAccess = "ulx seeasay"
 
-if SERVER then 
-    ULib.ucl.registerAccess(seeasayAccess, ULib.ACCESS_OPERATOR, "Ability to see 'ulx asay'", "Other") 
+if SERVER then
+    ULib.ucl.registerAccess(seeasayAccess, ULib.ACCESS_OPERATOR, "Ability to see 'ulx asay'", "Other")
 end
 
 function ulx.asay(calling_ply, message)
@@ -52,14 +52,14 @@ function ulx.asay(calling_ply, message)
             umsg.String(message)
             umsg.Bool(isAdmin)
             umsg.End()
-			if ply:IsAdmin() then
-                ply:SendLua("surface.PlaySound(\"common/warning.wav\")") -- 只对管理员播放声音
+            if ply:IsAdmin() then
+                ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
             end
         end
     end
 end
 
-local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, {"@@", "!举报", "!report"}, true, true)
+local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, { "@@", "!举报", "!report" }, true, true)
 asay:addParam { type = ULib.cmds.StringArg, hint = "信息", ULib.cmds.takeRestOfLine }
 asay:defaultAccess(ULib.ACCESS_ALL)
 asay:help("发送信息给当前在线的管理员.")
@@ -71,7 +71,7 @@ if CLIENT then
         local isAdmin = um:ReadBool()
         local prefix = isAdmin and "[管理员] " or "[玩家举报] "
 
-        chat.AddText(Color(255,0,0), prefix, Color(255,0,0), name .. ": " .. message)
+        chat.AddText(Color(255, 0, 0), prefix, Color(255, 0, 0), name .. ": " .. message)
     end)
 end
 
@@ -157,8 +157,7 @@ local function doAdvert(group, id)
     ULib.queueFunctionCall(function()
         local nextid = math.fmod(id, #adverts[group]) + 1
         timer.Remove("ULXAdvert" .. type(group) .. group)
-        timer.Create("ULXAdvert" .. type(group) .. group, adverts[group][nextid].rpt, 1,
-            function() doAdvert(group, nextid) end)
+        timer.Create("ULXAdvert" .. type(group) .. group, adverts[group][nextid].rpt, 1, function() doAdvert(group, nextid) end)
     end)
 end
 
@@ -403,17 +402,13 @@ function ulx.tsaycolor(calling_ply, message, color)
         end
     end
     if (GetConVar("ulx_logChat"):GetInt() > 0) then
-        ulx.logString(string.format("(Tsay 来自 %s) %s",
-            (IsValid(calling_ply)) and ((calling_ply.Nick and calling_ply:Nick()) or "控制台"), message))
+        ulx.logString(string.format("(Tsay 来自 %s) %s", (IsValid(calling_ply)) and ((calling_ply.Nick and calling_ply:Nick()) or "控制台"), message))
     end
 end
 
-local tsaycolor = ulx.command(CATEGORY_NAME, "ulx tsaycolor", ulx.tsaycolor,
-    { "!tcol", "!tcolor", "!color", "!tsaycolor" },
-    true, true)
+local tsaycolor = ulx.command(CATEGORY_NAME, "ulx tsaycolor", ulx.tsaycolor, { "!tcol", "!tcolor", "!color", "!tsaycolor" }, true, true)
 tsaycolor:addParam { type = ULib.cmds.StringArg, hint = "消息" }
-tsaycolor:addParam { type = ULib.cmds.StringArg, hint = "请选择颜色", completes = ULXColorTblTxt, ULib.cmds
-    .restrictToCompletes }
+tsaycolor:addParam { type = ULib.cmds.StringArg, hint = "请选择颜色", completes = ULXColorTblTxt, ULib.cmds.restrictToCompletes }
 tsaycolor:defaultAccess(ULib.ACCESS_ADMIN)
 tsaycolor:help("向所有人发送彩色信息.")
 
@@ -443,12 +438,10 @@ function ulx.notifications(calling_ply, target_plys, text, ntype, duration)
     end
 end
 
-local notifications = ulx.command(CATEGORY_NAME, "ulx notifications", ulx.notifications,
-    { "!notifications", "!notify", "!noti" }, false)
+local notifications = ulx.command(CATEGORY_NAME, "ulx notifications", ulx.notifications, { "!notifications", "!notify", "!noti" }, false)
 notifications:addParam { type = ULib.cmds.PlayersArg }
 notifications:addParam { type = ULib.cmds.StringArg, hint = "文本" }
-notifications:addParam { type = ULib.cmds.StringArg, hint = "类型", completes = notiTypesTxt, ULib.cmds
-    .restrictToCompletes }
+notifications:addParam { type = ULib.cmds.StringArg, hint = "类型", completes = notiTypesTxt, ULib.cmds.restrictToCompletes }
 notifications:addParam { type = ULib.cmds.NumArg, default = 5, min = 3, max = 15, hint = "期间", ULib.cmds.optional }
 notifications:defaultAccess(ULib.ACCESS_ADMIN)
 notifications:help("向玩家发送沙盒类型的通知.")
@@ -462,8 +455,7 @@ function ulx.csaycolor(calling_ply, message, color)
         end
     end
     if (GetConVar("ulx_logChat"):GetInt() > 0) then
-        ulx.logString(string.format("(Csay 来自 %s) %s",
-            (IsValid(calling_ply)) and ((calling_ply.Nick and calling_ply:Nick()) or "控制台"), message))
+        ulx.logString(string.format("(Csay 来自 %s) %s", (IsValid(calling_ply)) and ((calling_ply.Nick and calling_ply:Nick()) or "控制台"), message))
     end
 end
 
@@ -482,7 +474,7 @@ hook.Add("PlayerCanHearPlayersVoice", "ULXGag", gagHook)
 
 -- Anti-spam stuff
 if SERVER then
-    local chattime_cvar = ulx.convar( "chattime", "1.5", "<time> - Players can only chat every x seconds (anti-spam). 0 to disable.", ULib.ACCESS_ADMIN )
+    local chattime_cvar = ulx.convar("chattime", "1.5", "<time> - Players can only chat every x seconds (anti-spam). 0 to disable.", ULib.ACCESS_ADMIN)
     local function playerSay(ply)
         if not ply.lastChatTime then ply.lastChatTime = 0 end
 
@@ -543,6 +535,6 @@ end
 hook.Add("PlayerInitialSpawn", "ULXWelcome", showWelcome)
 
 if SERVER then
-    ulx.convar("meChatEnabled", "1","Allow players to use '/me' in chat. 0 = Disabled, 1 = Sandbox only (Default), 2 = Enabled", ULib.ACCESS_ADMIN)
+    ulx.convar("meChatEnabled", "1", "Allow players to use '/me' in chat. 0 = Disabled, 1 = Sandbox only (Default), 2 = Enabled", ULib.ACCESS_ADMIN)
     ulx.convar("welcomemessage", "", "<msg> - This is shown to players on join.", ULib.ACCESS_ADMIN)
 end
