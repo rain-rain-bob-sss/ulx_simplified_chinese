@@ -943,14 +943,9 @@ resettodefaults:defaultAccess(ULib.ACCESS_SUPERADMIN)
 resettodefaults:help("(谨慎考虑)重设ULX和Ulib所有\n设置!")
 
 if SERVER then
-    local ulx_kickAfterNameChanges = ulx.convar("kickAfterNameChanges", "0",
-        "<number> - Players can only change their name x times every ulx_kickAfterNameChangesCooldown seconds. 0 to disable.",
-        ULib.ACCESS_ADMIN)
-    local ulx_kickAfterNameChangesCooldown = ulx.convar("kickAfterNameChangesCooldown", "60",
-        "<time> - Players can change their name ulx_kickAfterXNameChanges times every x seconds.", ULib.ACCESS_ADMIN)
-    local ulx_kickAfterNameChangesWarning = ulx.convar("kickAfterNameChangesWarning", "1",
-        "<1/0> - Display a warning to users to let them know how many more times they can change their name.",
-        ULib.ACCESS_ADMIN)
+    local ulx_kickAfterNameChanges = ulx.convar("kickAfterNameChanges", "0", "<number> - Players can only change their name x times every ulx_kickAfterNameChangesCooldown seconds. 0 to disable.", ULib.ACCESS_ADMIN)
+    local ulx_kickAfterNameChangesCooldown = ulx.convar("kickAfterNameChangesCooldown", "60", "<time> - Players can change their name ulx_kickAfterXNameChanges times every x seconds.", ULib.ACCESS_ADMIN)
+    local ulx_kickAfterNameChangesWarning = ulx.convar("kickAfterNameChangesWarning", "1", "<1/0> - Display a warning to users to let them know how many more times they can change their name.", ULib.ACCESS_ADMIN)
     ulx.nameChangeTable = ulx.nameChangeTable or {}
 
     local function checkNameChangeLimit(ply, oldname, newname)
