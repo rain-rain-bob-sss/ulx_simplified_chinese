@@ -20,33 +20,60 @@ psay:help("发送私密信息到目标玩家.")
 ------------------------------ Asay ------------------------------
 local seeasayAccess = "ulx seeasay"
 
-if SERVER then ULib.ucl.registerAccess(seeasayAccess, ULib.ACCESS_OPERATOR, "Ability to see 'ulx asay'", "Other") end -- Give operators access to see asays echoes by default
+if SERVER then 
+    ULib.ucl.registerAccess(seeasayAccess, ULib.ACCESS_OPERATOR, "Ability to see 'ulx asay'", "Other") 
+end
 
 function ulx.asay(calling_ply, message)
-    local format
-    local me = "/me "
-    if message:sub(1, me:len()) == me then
-        format = "(ADMINS) *** #P #s"
-        message = message:sub(me:len() + 1)
-    else
-        format = "#P 发送信息给管理员: #s"
-    end
+    local isAdmin = IsValid(calling_ply) and calling_ply:IsPlayer() and calling_ply:IsAdmin()
+    local plyName = IsValid(calling_ply) and calling_ply:IsPlayer() and calling_ply:Nick() or "Console"
+    local admins = false
 
-    local players = player.GetAll()
-    for i = #players, 1, -1 do
-        local v = players[i]
-        if not ULib.ucl.query(v, seeasayAccess) and v ~= calling_ply then -- Calling player always gets to see the echo
-            table.remove(players, i)
+    for _, ply in ipairs(player.GetAll()) do
+        if IsValid(ply) and ply:IsAdmin() then
+            admins = true
+            break
         end
     end
 
-    ulx.fancyLog(players, format, calling_ply, message)
+    if not admins then
+        if IsValid(calling_ply) then
+            calling_ply:ChatPrint("当前没有管理员在线")
+        else
+            print("当前没有管理员在线")
+        end
+        return
+    end
+
+    for _, ply in ipairs(player.GetAll()) do
+        if IsValid(ply) and (ply:IsAdmin() or ply == calling_ply) then
+            umsg.Start("ULXAsayColoredMessage", ply)
+            umsg.String(plyName)
+            umsg.String(message)
+            umsg.Bool(isAdmin)
+            umsg.End()
+			if ply:IsAdmin() then
+                ply:SendLua("surface.PlaySound(\"common/warning.wav\")") -- 只对管理员播放声音
+            end
+        end
+    end
 end
 
-local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, "@@", true, true)
+local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, {"@@", "!举报", "!report"}, true, true)
 asay:addParam { type = ULib.cmds.StringArg, hint = "信息", ULib.cmds.takeRestOfLine }
 asay:defaultAccess(ULib.ACCESS_ALL)
 asay:help("发送信息给当前在线的管理员.")
+
+if CLIENT then
+    usermessage.Hook("ULXAsayColoredMessage", function(um)
+        local name = um:ReadString()
+        local message = um:ReadString()
+        local isAdmin = um:ReadBool()
+        local prefix = isAdmin and "[管理员] " or "[玩家举报] "
+
+        chat.AddText(Color(255,0,0), prefix, Color(255,0,0), name .. ": " .. message)
+    end)
+end
 
 ------------------------------ Tsay ------------------------------
 function ulx.tsay(calling_ply, message)
@@ -455,8 +482,7 @@ hook.Add("PlayerCanHearPlayersVoice", "ULXGag", gagHook)
 
 -- Anti-spam stuff
 if SERVER then
-    local chattime_cvar = ulx.convar("chattime", "1",
-        "<time> - Players can only chat every x seconds (anti-spam). 0 to disable.", ULib.ACCESS_ADMIN)
+    local chattime_cvar = CreateConVar("ulx_chattime", "1.5", FCVAR_ARCHIVE, "Players can only chat every x seconds (anti-spam). 0 to disable.", 0, 60)
     local function playerSay(ply)
         if not ply.lastChatTime then ply.lastChatTime = 0 end
 
@@ -513,9 +539,10 @@ local function showWelcome(ply)
 
     ply:ChatPrint(message) -- We're not using tsay because ULib might not be loaded yet. (client side)
 end
+
 hook.Add("PlayerInitialSpawn", "ULXWelcome", showWelcome)
+
 if SERVER then
-    ulx.convar("meChatEnabled", "1",
-        "Allow players to use '/me' in chat. 0 = Disabled, 1 = Sandbox only (Default), 2 = Enabled", ULib.ACCESS_ADMIN)
+    ulx.convar("meChatEnabled", "1","Allow players to use '/me' in chat. 0 = Disabled, 1 = Sandbox only (Default), 2 = Enabled", ULib.ACCESS_ADMIN)
     ulx.convar("welcomemessage", "", "<msg> - This is shown to players on join.", ULib.ACCESS_ADMIN)
 end
