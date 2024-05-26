@@ -482,11 +482,11 @@ hook.Add("PlayerCanHearPlayersVoice", "ULXGag", gagHook)
 
 -- Anti-spam stuff
 if SERVER then
-    local ulx_chattime = ulx.convar( "chattime", "1.5", "<time> - Players can only chat every x seconds (anti-spam). 0 to disable.", ULib.ACCESS_ADMIN )
+    local chattime_cvar = ulx.convar( "chattime", "1.5", "<time> - Players can only chat every x seconds (anti-spam). 0 to disable.", ULib.ACCESS_ADMIN )
     local function playerSay(ply)
         if not ply.lastChatTime then ply.lastChatTime = 0 end
 
-        local chattime = ulx_chattime:GetFloat()
+        local chattime = chattime_cvar:GetFloat()
         if chattime <= 0 then return end
 
         if ply.lastChatTime + chattime > CurTime() then
