@@ -40,7 +40,7 @@ net.Receive("DisconnectsRequestTable", function(_, sender)
         net.Start("DisconnectsTransferTable")
         net.WriteTable(DisconnectedPlayers)
         net.Send(sender)
-    elseif (table.Count(DisconnectedPlayers) == 0) then 
+    elseif (table.Count(DisconnectedPlayers) == 0) then
         sender:ChatPrint("[ERROR]: 断开连接表为空, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
     elseif (IsValid(sender)) then
         sender:ChatPrint("[ERROR]: 您无法使用该命令, " .. (sender.Nick and tostring(sender:Nick())) .. "!")
