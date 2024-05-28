@@ -29,7 +29,7 @@ function ULib.getBanMessage(steamid, banData, templateMessage)
         REASON = "未说明",
         TIME_LEFT = "永久",
         STEAMID = steamid,
-        STEAMID64 = util.SteamIDTo64(steamid),/
+        STEAMID64 = util.SteamIDTo64(steamid),
     }
 
     if banData.admin and banData.admin ~= "" then
