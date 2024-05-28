@@ -95,10 +95,9 @@ if not xgui.settings.infoColor then
     xgui.settings.infoColor = Color(100, 255, 255, 128)
 else
     --Ensure that the color contains numbers, not strings
-    xgui.settings.infoColor = Color(xgui.settings.infoColor.r, xgui.settings.infoColor.g, xgui.settings.infoColor.b,
-        xgui.settings.infoColor.a)
+    xgui.settings.infoColor = Color(xgui.settings.infoColor.r, xgui.settings.infoColor.g, xgui.settings.infoColor.b, xgui.settings.infoColor.a)
 end
-if not xgui.settings.showLoadMsgs then xgui.settings.showLoadMsgs = true else xgui.settings.showLoadMsgs = ULib.toBool( xgui.settings.showLoadMsgs) end
+if not xgui.settings.showLoadMsgs then xgui.settings.showLoadMsgs = true else xgui.settings.showLoadMsgs = ULib.toBool(xgui.settings.showLoadMsgs) end
 if not xgui.settings.skin then xgui.settings.skin = "Default" end
 if not xgui.settings.xguipos then xgui.settings.xguipos = { pos = 5, xoff = 0, yoff = 0 } end
 if not xgui.settings.animIntype then xgui.settings.animIntype = 1 end
@@ -116,8 +115,7 @@ function xgui.init(ply)
     xgui.infobar.Paint = function(self, w, h)
         draw.RoundedBoxEx(4, 0, 1, 580, 20, xgui.settings.infoColor, false, false, true, true)
     end
-    local infoLabel = string.format("\nULX 管理插件 :: XGUI - Team Ulysses |  ULX %s  |  ULib %s",
-        ULib.pluginVersionStr("ULX"), ULib.pluginVersionStr("ULib"))
+    local infoLabel = string.format("\nULX 管理插件 :: XGUI - Team Ulysses |  ULX %s  |  ULib %s", ULib.pluginVersionStr("ULX"), ULib.pluginVersionStr("ULib"))
     xlib.makelabel { x = 5, y = -10, label = infoLabel, parent = xgui.infobar }:NoClipping(true)
     xgui.thetime = xlib.makelabel { x = 515, y = -10, label = "", parent = xgui.infobar }
     xgui.thetime:NoClipping(true)
@@ -452,18 +450,18 @@ end
 
 function xgui.getChunk(flag, datatype, data)
     if xgui.expectingdata then
-        --print( datatype, flag ) --Debug
+        --print( datatype, flag ) -- Debug
         if flag == -1 then
-            --Ignore these chunks
-        elseif flag == 0 then --Data should be purged
+            -- Ignore these chunks
+        elseif flag == 0 then -- Data should be purged
             if xgui.data[datatype] then
                 table.Empty(xgui.data[datatype])
             end
             xgui.flushQueue(datatype)
             xgui.callUpdate(datatype, "clear")
         elseif flag == 1 then
-            if not xgui.mergeData then --A full data table is coming in
-                if not data then data = {} end --Failsafe for no table being sent
+            if not xgui.mergeData then -- A full data table is coming in
+                if not data then data = {} end -- Failsafe for no table being sent
                 xgui.flushQueue(datatype)
                 table.Empty(xgui.data[datatype])
                 table.Merge(xgui.data[datatype], data)
@@ -477,10 +475,10 @@ function xgui.getChunk(flag, datatype, data)
         elseif flag == 2 or flag == 3 then --Add/Update a portion of data
             table.Merge(xgui.data[datatype], data)
             xgui.callUpdate(datatype, flag == 2 and "add" or "update", data)
-        elseif flag == 4 then                        --Remove a key from the table
+        elseif flag == 4 then --Remove a key from the table
             xgui.removeDataEntry(xgui.data[datatype], data) --Needs to be called recursively!
             xgui.callUpdate(datatype, "remove", data)
-        elseif flag == 5 then                        --Begin a set of chunks (Clear the old data, then flag to merge incoming data)
+        elseif flag == 5 then --Begin a set of chunks (Clear the old data, then flag to merge incoming data)
             table.Empty(xgui.data[datatype])
             xgui.mergeData = true
             xgui.flushQueue(datatype)

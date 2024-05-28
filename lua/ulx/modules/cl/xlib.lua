@@ -1177,7 +1177,7 @@ xlib.animStep = 0
 xlib.animQueue_start = function()
     if xlib.animRunning then --If a new animation is starting while one is running, then we should instantly stop the old one.
         xlib.animQueue_forceStop()
-        return            --The old animation should be finished now, and the new one should be starting
+        return --The old animation should be finished now, and the new one should be starting
     end
     xlib.curAnimStep = xlib.animStep
     xlib.animStep = 0

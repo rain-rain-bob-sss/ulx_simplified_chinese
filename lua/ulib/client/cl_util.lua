@@ -39,12 +39,12 @@ net.Receive("ulib_sound", function(ln)
     end
 end)
 
-local cvarinfo = {}    -- Stores the client cvar object indexed by name of the server cvar
+local cvarinfo = {} -- Stores the client cvar object indexed by name of the server cvar
 local reversecvar = {} -- Stores the name of server cvars indexed by the client cvar
 
 -- When our client side cvar is changed, notify the server to change it's cvar too.
 local function clCvarChanged(cl_cvar, oldvalue, newvalue)
-    if not reversecvar[cl_cvar] then       -- Error
+    if not reversecvar[cl_cvar] then -- Error
         return
     elseif reversecvar[cl_cvar].ignore then -- ignore
         reversecvar[cl_cvar].ignore = nil

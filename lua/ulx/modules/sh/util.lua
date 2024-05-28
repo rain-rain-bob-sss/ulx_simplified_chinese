@@ -57,10 +57,8 @@ function ulx.map(calling_ply, map, gamemode)
 end
 
 local map = ulx.command(CATEGORY_NAME, "ulx map", ulx.map, "!map")
-map:addParam { type = ULib.cmds.StringArg, completes = ulx.maps, hint = "指定地图", error = "指定的地图错误 \"%s\" ",
-    ULib.cmds.restrictToCompletes }
-map:addParam { type = ULib.cmds.StringArg, completes = ulx.gamemodes, hint = "指定模式", error = "指定的模式错误 \"%s\" ",
-    ULib.cmds.restrictToCompletes, ULib.cmds.optional }
+map:addParam { type = ULib.cmds.StringArg, completes = ulx.maps, hint = "指定地图", error = "指定的地图错误 \"%s\" ", ULib.cmds.restrictToCompletes }
+map:addParam { type = ULib.cmds.StringArg, completes = ulx.gamemodes, hint = "指定模式", error = "指定的模式错误 \"%s\" ", ULib.cmds.restrictToCompletes, ULib.cmds.optional }
 map:defaultAccess(ULib.ACCESS_ADMIN)
 map:help("更改地图和游戏模式.")
 
@@ -82,8 +80,7 @@ end
 
 local kick = ulx.command(CATEGORY_NAME, "ulx kick", ulx.kick, "!kick")
 kick:addParam { type = ULib.cmds.PlayerArg }
-kick:addParam { type = ULib.cmds.StringArg, hint = "请输入原因或者选择原因", ULib.cmds.optional, ULib.cmds
-    .takeRestOfLine, completes = ulx.common_kick_reasons }
+kick:addParam { type = ULib.cmds.StringArg, hint = "请输入原因或者选择原因", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes = ulx.common_kick_reasons }
 kick:defaultAccess(ULib.ACCESS_ADMIN)
 kick:help("踢出目标玩家.")
 
@@ -141,7 +138,7 @@ function ulx.ban(calling_ply, target_ply, minutes, reason)
     ulx.fancyLogAdmin(calling_ply, str, target_ply, minutes ~= 0 and ULib.secondsToStringTime(minutes * 60) or reason, reason)
     -- Delay by 1 frame to ensure any chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.kickban, target_ply, minutes, reason, calling_ply)
-	RunConsoleCommand("writeid")
+    RunConsoleCommand("writeid")
     if (ULib.fileExists("cfg/banned_user.cfg")) then
         ULib.execFile("cfg/banned_user.cfg")
     end
@@ -189,7 +186,7 @@ function ulx.banid(calling_ply, steamid, minutes, reason)
     ulx.fancyLogAdmin(calling_ply, str, displayid, minutes ~= 0 and ULib.secondsToStringTime(minutes * 60) or reason, reason)
     -- Delay by 1 frame to ensure any chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.addBan, steamid, minutes, reason, name, calling_ply)
-	RunConsoleCommand("writeid")
+    RunConsoleCommand("writeid")
     if (ULib.fileExists("cfg/banned_user.cfg")) then
         ULib.execFile("cfg/banned_user.cfg")
     end
@@ -417,9 +414,7 @@ cleardecals:defaultAccess(ULib.ACCESS_ADMIN)
 cleardecals:help("为所有玩家清除贴花.")
 
 function ulx.ip(calling_ply, target_ply)
-    calling_ply:SendLua([[SetClipboardText("]] ..
-        tostring(string.sub(tostring(target_ply:IPAddress()), 1, string.len(tostring(target_ply:IPAddress())) - 6)) ..
-        [[")]])
+    calling_ply:SendLua([[SetClipboardText("]] .. tostring(string.sub(tostring(target_ply:IPAddress()), 1, string.len(tostring(target_ply:IPAddress())) - 6)) .. [[")]])
 
     ulx.fancyLog({ calling_ply }, "复制了 #T的ip地址", target_ply)
 end
@@ -508,10 +503,8 @@ end
 
 local fakeban = ulx.command(CATEGORY_NAME, "ulx fakeban", ulx.fakeban, "!fakeban", true)
 fakeban:addParam { type = ULib.cmds.PlayerArg }
-fakeban:addParam { type = ULib.cmds.NumArg, hint = "分钟,0 表示永久", ULib.cmds.optional, ULib.cmds
-    .allowTimeString, min = 0 }
-fakeban:addParam { type = ULib.cmds.StringArg, hint = "原因", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes =
-    ulx.common_kick_reasons }
+fakeban:addParam { type = ULib.cmds.NumArg, hint = "分钟,0 表示永久", ULib.cmds.optional, ULib.cmds.allowTimeString, min = 0 }
+fakeban:addParam { type = ULib.cmds.StringArg, hint = "原因", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes = ulx.common_kick_reasons }
 fakeban:defaultAccess(ULib.ACCESS_SUPERADMIN)
 fakeban:help("实际上并没有封禁目标.")
 
@@ -573,7 +566,7 @@ function ulx.weaponedit(calling_ply)
     end
 
     calling_ply:ConCommand("weapon_properties_editor")
-    ulx.fancyLogAdmin(calling_ply, true,"#A 打开了武器编辑器!")
+    ulx.fancyLogAdmin(calling_ply, true, "#A 打开了武器编辑器!")
 end
 
 local weaponedit = ulx.command("武器编辑器", "ulx weaponedit", ulx.weaponedit, "!weaponedit")
@@ -581,34 +574,35 @@ weaponedit:defaultAccess(ULib.ACCESS_SUPERADMIN)
 weaponedit:help("打开 weapon_properties_editor 控制台.")
 
 function ulx.bot(calling_ply, number, bKick)
-	if (bKick) then
-		for _, v in ipairs(player.GetBots()) do
-			if (v:IsBot()) then 
-				v:Kick("踢出服务器")
-			end
-		end
-		ulx.fancyLogAdmin(calling_ply, "#A 从服务器踢出所有机器人")
-	elseif (!bKick) then
-		if (tonumber(number) == 0) then
-			for i = 1, 6 do 
-				RunConsoleCommand("bot")
-			end
-			ulx.fancyLogAdmin(calling_ply, "#A 产生了一些机器人")
-		elseif (tonumber(number) != 0) then
-			if (number == 1) then
-				ulx.fancyLogAdmin(calling_ply, "#A 产生的 #i 机器人", number)
-			elseif (number > 1) then
-				ulx.fancyLogAdmin(calling_ply, "#A 产生了 #i 机器人", number)
-			end
-		end
-	end
+    if bKick then
+        for _, v in ipairs(player.GetBots()) do
+            if (v:IsBot()) then
+                v:Kick("踢出服务器")
+            end
+        end
+        ulx.fancyLogAdmin(calling_ply, "#A 从服务器踢出所有机器人")
+    elseif not bKick then
+        if tonumber(number) == 0 then
+            for i = 1, 6 do
+                RunConsoleCommand("bot")
+            end
+            ulx.fancyLogAdmin(calling_ply, "#A 产生了一些机器人")
+        elseif tonumber(number) ~= 0 then
+            if number == 1 then
+                ulx.fancyLogAdmin(calling_ply, "#A 产生的 #i 机器人", number)
+            elseif number > 1 then
+                ulx.fancyLogAdmin(calling_ply, "#A 产生了 #i 机器人", number)
+            end
+        end
+    end
 end
+
 local bot = ulx.command(CATEGORY_NAME, "ulx bot", ulx.bot, "!bot")
-bot:addParam{type = ULib.cmds.NumArg, default = 0, hint = "数量", ULib.cmds.optional}
-bot:addParam{type = ULib.cmds.BoolArg, invisible = true}
+bot:addParam { type = ULib.cmds.NumArg, default = 0, hint = "数量", ULib.cmds.optional }
+bot:addParam { type = ULib.cmds.BoolArg, invisible = true }
 bot:defaultAccess(ULib.ACCESS_ADMIN)
 bot:help("生成或移除机器人.")
-bot:setOpposite("ulx kickbots", {_, _, true}, "!kickbots")
+bot:setOpposite("ulx kickbots", { _, _, true }, "!kickbots")
 
 function ulx.watch(calling_ply, target_ply, reason, bUnwatch)
     local id = string.gsub(target_ply:SteamID(), ":", "X")
@@ -711,7 +705,7 @@ function ulx.hide(calling_ply, command)
         newstr = string.gsub(command, "!", "ulx ")
         strexc = true
     end
-    if (not strexc and ! string.find(command, "ulx")) then
+    if (not strexc and not string.find(command, "ulx")) then
         ULib.tsayError(calling_ply, "无效的 ULX 命令!")
         return
     end
@@ -730,9 +724,7 @@ function ulx.hide(calling_ply, command)
     if (GetConVar("ulx_hide_notify_superadmins"):GetInt() == 1 and IsValid(calling_ply)) then
         for _, v in ipairs(player.GetAll()) do
             if (v:IsSuperAdmin() and v ~= calling_ply) then
-                ULib.tsayColor(v, false, Color(151, 211, 255), "(HIDDEN) ", Color(0, 255, 0),
-                    tostring(calling_ply:Nick()), Color(151, 211, 255), " ran hidden command ", Color(0, 255, 0),
-                    tostring(command))
+                ULib.tsayColor(v, false, Color(151, 211, 255), "(HIDDEN) ", Color(0, 255, 0), tostring(calling_ply:Nick()), Color(151, 211, 255), " ran hidden command ", Color(0, 255, 0), tostring(command))
             end
         end
     end
@@ -815,10 +807,10 @@ function ulx.debuginfo(calling_ply)
         local uid = tostring(ply:UniqueID())
         local name = utf8.force(ply:Nick())
 
-        local plyline = name .. str.rep(" ", 32 - utf8.len(name))        -- Name
+        local plyline = name .. str.rep(" ", 32 - utf8.len(name)) -- Name
         plyline = plyline .. steamid .. str.rep(" ", 20 - steamid:len()) -- Steamid
-        plyline = plyline .. uid .. str.rep(" ", 11 - uid:len())         -- Steamid
-        plyline = plyline .. id .. str.rep(" ", 3 - id:len())            -- id
+        plyline = plyline .. uid .. str.rep(" ", 11 - uid:len()) -- Steamid
+        plyline = plyline .. id .. str.rep(" ", 3 - id:len()) -- id
         if ply:IsListenServerHost() then
             plyline = plyline .. "y	  "
         else
@@ -829,14 +821,10 @@ function ulx.debuginfo(calling_ply)
     end
 
     local gmoddefault = ULib.parseKeyValues(ULib.stripComments(ULib.fileRead("settings/users.txt", true), "//")) or {}
-    str = str ..
-        "\n\nULib.ucl.users (#=" .. table.Count(ULib.ucl.users) .. "):\n" .. ulx.dumpTable(ULib.ucl.users, 1) .. "\n\n"
-    str = str ..
-        "ULib.ucl.groups (#=" .. table.Count(ULib.ucl.groups) .. "):\n" .. ulx.dumpTable(ULib.ucl.groups, 1) .. "\n\n"
-    str = str ..
-        "ULib.ucl.authed (#=" .. table.Count(ULib.ucl.authed) .. "):\n" .. ulx.dumpTable(ULib.ucl.authed, 1) .. "\n\n"
-    str = str ..
-        "Garrysmod default file (#=" .. table.Count(gmoddefault) .. "):\n" .. ulx.dumpTable(gmoddefault, 1) .. "\n\n"
+    str = str .. "\n\nULib.ucl.users (#=" .. table.Count(ULib.ucl.users) .. "):\n" .. ulx.dumpTable(ULib.ucl.users, 1) .. "\n\n"
+    str = str .. "ULib.ucl.groups (#=" .. table.Count(ULib.ucl.groups) .. "):\n" .. ulx.dumpTable(ULib.ucl.groups, 1) .. "\n\n"
+    str = str .. "ULib.ucl.authed (#=" .. table.Count(ULib.ucl.authed) .. "):\n" .. ulx.dumpTable(ULib.ucl.authed, 1) .. "\n\n"
+    str = str .. "Garrysmod default file (#=" .. table.Count(gmoddefault) .. "):\n" .. ulx.dumpTable(gmoddefault, 1) .. "\n\n"
 
     str = str .. "在此服务器启用了的创意工坊物品:\n"
     local addons = engine.GetAddons()
@@ -844,8 +832,7 @@ function ulx.debuginfo(calling_ply)
         local addon = addons[i]
         if addon.mounted then
             local name = utf8.force(addon.title)
-            str = str ..
-                string.format("%s%s workshop ID %s\n", name, str.rep(" ", 32 - utf8.len(name)), addon.file:gsub("%D", ""))
+            str = str .. string.format("%s%s workshop ID %s\n", name, str.rep(" ", 32 - utf8.len(name)), addon.file:gsub("%D", ""))
         end
     end
     str = str .. "\n"

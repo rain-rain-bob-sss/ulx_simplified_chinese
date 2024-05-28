@@ -47,7 +47,7 @@ maps.svote.DoClick = function()
 end
 
 maps.changemap = xlib.makebutton { x = 185, y = 295, w = 192, h = 20, disabled = true, label = "强制切换到这张地图", parent =
-maps }
+    maps }
 maps.changemap.DoClick = function()
     if maps.curmap:GetValue() ~= "未选择地图" then
         Derma_Query("你确定要更改地图至 \"" .. maps.curmap:GetValue() .. "\"?", "XGUI 警告",
@@ -115,8 +115,7 @@ function maps.updateVoteMaps()
     end
     maps.updateButtonStates()
 
-    ULib.cmds.translatedCmds["ulx votemap"].args[2].completes = xgui.data
-    .votemaps                                                                   --Set concommand completes for the ulx votemap command. (Used by XGUI in the cmds tab)
+    ULib.cmds.translatedCmds["ulx votemap"].args[2].completes = xgui.data.votemaps --Set concommand completes for the ulx votemap command. (Used by XGUI in the cmds tab)
 end
 
 function maps.updateGamemodes()
@@ -128,7 +127,7 @@ function maps.updateGamemodes()
     -- Get allowed gamemodes
     local access, tag = LocalPlayer():query("ulx map")
     local restrictions = {}
-    ULib.cmds.StringArg.processRestrictions(restrictions, ULib.cmds.translatedCmds['ulx map'].args[3],
+    ULib.cmds.StringArg.processRestrictions(restrictions, ULib.cmds.translatedCmds["ulx map"].args[3],
         ulx.getTagArgNum(tag, 2))
 
     for _, v in ipairs(restrictions.restrictedCompletes) do

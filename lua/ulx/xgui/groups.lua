@@ -19,14 +19,12 @@ function groups.list:populate()
     self:AddChoice("--*")
     self:AddChoice("管理权限组...")
     self:SetText(groups.lastOpenGroup or prev_sel)
-    if groups.lastOpenGroup then
-        if not ULib.ucl.groups[groups.lastOpenGroup] then --Group no longer exists
-            groups.pnlG1:Close()
-            xlib.animQueue_start()
-            self.openFlag = nil
-            groups.lastOpenGroup = nil
-            self:SetText("选择权限组...")
-        end
+    if groups.lastOpenGroup and not ULib.ucl.groups[groups.lastOpenGroup] then --Group no longer exists
+        groups.pnlG1:Close()
+        xlib.animQueue_start()
+        self.openFlag = nil
+        groups.lastOpenGroup = nil
+        self:SetText("选择权限组...")
     end
 end
 
@@ -618,10 +616,8 @@ function groups.populateAccesses()
             line.Columns[2]:SetValue(foundAccess)
             line:SetColumnText(3, restrictionString)
             line:SetColumnText(4, fromGroup)
-            if groups.selcmd == line:GetColumnText(1) then
-                if (groups.access_lines[groups.selcmd].Columns[2].disabled or fromGroup) or line:GetColumnText(3) ~= restrictionString then
-                    groups.populateRestrictionArgs(line:GetColumnText(1), restrictionString)
-                end
+            if groups.selcmd == line:GetColumnText(1) and ((groups.access_lines[groups.selcmd].Columns[2].disabled or fromGroup) or line:GetColumnText(3) ~= restrictionString) then
+                groups.populateRestrictionArgs(line:GetColumnText(1), restrictionString)
             end
         end
     end
@@ -712,8 +708,8 @@ function groups.populateRestrictionArgs(cmd, accessStr)
                         rmax = temp[2]
                         if rmax == nil then rmax = rmin end
                     end
-                    outPanel.hasmin = xlib.makecheckbox { x = 5, y = 8, value = (rmin ~= nil), parent = outPanel }
-                    outPanel.hasmax = xlib.makecheckbox { x = 5, y = 48, value = (rmax ~= nil), parent = outPanel }
+                    outPanel.hasmin = xlib.makecheckbox { x = 5, y = 8, value = rmin ~= nil, parent = outPanel }
+                    outPanel.hasmax = xlib.makecheckbox { x = 5, y = 48, value = rmax ~= nil, parent = outPanel }
                     if table.HasValue(arg, ULib.cmds.allowTimeString) then
                         outPanel.type = "time"
 
@@ -724,7 +720,7 @@ function groups.populateRestrictionArgs(cmd, accessStr)
 
                         local curinterval = (irmin or iargmin or "Permanent")
                         local curval = vrmin or vargmin or 0
-                        outPanel.min = xlib.makeslider { x = 25, y = 25, w = 150, label = "<--->", min = (vargmin or 0), max = (vargmax or 100), value = curval, decimal = 0, disabled = (curinterval == "Permanent"), parent = outPanel }
+                        outPanel.min = xlib.makeslider { x = 25, y = 25, w = 150, label = "<--->", min = vargmin or 0, max = (vargmax or 100), value = curval, decimal = 0, disabled = (curinterval == "Permanent"), parent = outPanel }
                         outPanel.min:SetValue(curval) --Set the value of the textentry manually to show decimals even though decimal=0.
                         outPanel.minterval = xlib.makecombobox { x = 105, y = 5, w = 50, text = curinterval, choices = { "Permanent", "Minutes", "Hours", "Days", "Weeks", "Years" }, disabled = (rmin == nil), parent = outPanel }
                         outPanel.minterval.OnSelect = function(self, index, value, data)
@@ -737,7 +733,7 @@ function groups.populateRestrictionArgs(cmd, accessStr)
 
                         local curinterval = (irmax or iargmax or "Permanent")
                         local curval = vrmax or vargmax or 0
-                        outPanel.max = xlib.makeslider { x = 25, y = 65, w = 150, label = "<--->", min = (vargmin or 0), max = (vargmax or 100), value = curval, decimal = 0, disabled = (curinterval == "Permanent"), parent = outPanel }
+                        outPanel.max = xlib.makeslider { x = 25, y = 65, w = 150, label = "<--->", min = vargmin or 0, max = (vargmax or 100), value = curval, decimal = 0, disabled = (curinterval == "Permanent"), parent = outPanel }
                         outPanel.max:SetValue(curval)
                         outPanel.maxterval = xlib.makecombobox { x = 105, y = 45, w = 50, text = curinterval, choices = { "Permanent", "Minutes", "Hours", "Days", "Weeks", "Years" }, disabled = (rmax == nil), parent = outPanel }
                         outPanel.maxterval.OnSelect = function(self, index, value, data)
@@ -763,8 +759,8 @@ function groups.populateRestrictionArgs(cmd, accessStr)
                         end
                     else
                         outPanel.type = "num"
-                        outPanel.min = xlib.makeslider { x = 25, y = 5, w = 150, value = (rmin or arg.min or 0), min = (arg.min or 0), max = (arg.max or 100), label = "Min", disabled = (rmin == nil), parent = outPanel }
-                        outPanel.max = xlib.makeslider { x = 25, y = 30, w = 150, value = (rmax or arg.max or 100), min = (arg.min or 0), max = (arg.max or 100), label = "Max", disabled = (rmax == nil), parent = outPanel }
+                        outPanel.min = xlib.makeslider { x = 25, y = 5, w = 150, value = rmin or arg.min or 0, min = (arg.min or 0), max = (arg.max or 100), label = "Min", disabled = (rmin == nil), parent = outPanel }
+                        outPanel.max = xlib.makeslider { x = 25, y = 30, w = 150, value = rmax or arg.max or 100, min = (arg.min or 0), max = (arg.max or 100), label = "Max", disabled = (rmax == nil), parent = outPanel }
                         outPanel.hasmax:SetPos(5, 33)
                         outPanel:SetHeight(55)
                         outPanel.hasmin.OnChange = function(self, bVal)

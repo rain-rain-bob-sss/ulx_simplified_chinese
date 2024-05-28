@@ -29,7 +29,7 @@ function ULib.getBanMessage(steamid, banData, templateMessage)
         REASON = "未说明",
         TIME_LEFT = "永久",
         STEAMID = steamid,
-        STEAMID64 = util.SteamIDTo64(steamid),
+        STEAMID64 = util.SteamIDTo64(steamid),/
     }
 
     if banData.admin and banData.admin ~= "" then
@@ -220,7 +220,7 @@ end
 
 function ULib.unban(steamid, admin)
     RunConsoleCommand("removeid", steamid) -- Remove from srcds in case it was stored there
-    RunConsoleCommand("writeid")           -- Saving
+    RunConsoleCommand("writeid") -- Saving
 
     --ULib banlist
     ULib.bans[steamid] = nil

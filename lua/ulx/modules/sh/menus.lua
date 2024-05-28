@@ -2,8 +2,8 @@ local CATEGORY_NAME = "菜单"
 
 if ULib.fileExists("lua/ulx/modules/cl/motdmenu.lua") or ulx.motdmenu_exists then
     local function sendMotd(ply, showMotd)
-        if ply.ulxHasMotd then return end                                      -- This player already has the motd data
-        if showMotd == "1" then                                                -- Assume it's a file
+        if ply.ulxHasMotd then return end -- This player already has the motd data
+        if showMotd == "1" then -- Assume it's a file
             if not ULib.fileExists(GetConVarString("ulx_motdfile")) then return end -- Invalid
             local f = ULib.fileRead(GetConVarString("ulx_motdfile"))
 
@@ -107,7 +107,7 @@ if ULib.fileExists("lua/ulx/modules/cl/motdmenu.lua") or ulx.motdmenu_exists the
                 for _, addon in ipairs(possibleaddons) do
                     if ULib.fileExists("addons/" .. addon .. "/addon.txt") then
                         local t = ULib.parseKeyValues(ULib.stripComments(
-                        ULib.fileRead("addons/" .. addon .. "/addon.txt"), "//"))
+                            ULib.fileRead("addons/" .. addon .. "/addon.txt"), "//"))
                         if t and t.AddonInfo then
                             local name = t.AddonInfo.name or addon
                             table.insert(ulx.motdSettings.addons, { title = name, author = t.AddonInfo.author_name })

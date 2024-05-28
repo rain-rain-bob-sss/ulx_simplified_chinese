@@ -2,7 +2,7 @@ if (CLIENT) then
      local enabled = false
 
      concommand.Add("thirdperson_toggle", function()
-          enabled = ! enabled
+          enabled = not enabled
           if (enabled) then
                chat.AddText(Color(162, 255, 162), "开启第三人称模式.")
           else

@@ -41,7 +41,7 @@ local function init()
         ulx.logString("New map: " .. game.GetMap())
     end
 end
-hook.Add(ulx.HOOK_ULXDONELOADING, "InitULX", init)   -- So we load the settings first
+hook.Add(ulx.HOOK_ULXDONELOADING, "InitULX", init) -- So we load the settings first
 
 local function next_log()
     if logFile:GetBool() then
@@ -363,8 +363,8 @@ local function makePlayerList(calling_ply, target_list, showing_ply, use_self_su
     local players = player.GetAll()
     -- Is the calling player acting anonymously in the eyes of the player this is being showed to?
     local anonymous = showing_ply ~= "CONSOLE" and not ULib.ucl.query(showing_ply, seeanonymousechoAccess) and
-    logEcho:GetInt() == 1
 
+    logEcho:GetInt() == 1
     if #players > 1 and #target_list == #players then
         return { everyone_color, "每个人" }
     elseif is_admin_part then

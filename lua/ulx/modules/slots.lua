@@ -23,7 +23,7 @@ function calcSlots(disconnect)
         end
 
         if disconnect then admins = admins - 1 end -- Otherwise we're counting the disconnecting admin
-        if admins < 0 then admins = 0 end          -- Just to be safe!
+        if admins < 0 then admins = 0 end -- Just to be safe!
 
         local rslots = slots - admins
         if rslots < 0 then rslots = 0 end -- If we have more admins right now then slots for them, we don't want to return a negative number.
@@ -54,7 +54,7 @@ local function playerAccess(ply)
     local max = game.MaxPlayers()
 
     if ply:query(access) then -- If they have access, handle this differently
-        if not visible then   -- Make sure our visible slots is up to date
+        if not visible then -- Make sure our visible slots is up to date
             updateSlots()
         end
 

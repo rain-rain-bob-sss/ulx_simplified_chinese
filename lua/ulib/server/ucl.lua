@@ -452,7 +452,7 @@ function ucl.renameGroup(orig, new)
         end
     end
 
-    ucl.groups[new] = ucl.groups[orig]  -- Copy!
+    ucl.groups[new] = ucl.groups[orig] -- Copy!
     ucl.groups[orig] = nil
 
     for _, groupInfo in pairs(ucl.groups) do
@@ -505,7 +505,7 @@ function ucl.setGroupInheritance(group, inherit_from, from_CAMI)
     ucl.groups[group].inherit_from = inherit_from -- Temporary!
     local groupCheck = ucl.groupInheritsFrom(group)
     while groupCheck do
-        if groupCheck == group then               -- Got back to ourselves. This is bad.
+        if groupCheck == group then -- Got back to ourselves. This is bad.
             ucl.groups[group].inherit_from = old_inherit -- Set it back
             error("Changing group \"" .. group .. "\" inheritance to \"" .. inherit_from .. "\" would cause cyclical inheritance. Aborting.", 2)
         end
@@ -601,7 +601,7 @@ function ucl.removeGroup(name, from_CAMI)
             if ply:GetUserGroup() == name then
                 ULib.queueFunctionCall(ply.SetUserGroup, ply, inherits_from or ULib.ACCESS_ALL) -- Queued so group will be removed
             else
-                ULib.queueFunctionCall(hook.Call, ULib.HOOK_UCLAUTH, _, ply)          -- Inform the masses
+                ULib.queueFunctionCall(hook.Call, ULib.HOOK_UCLAUTH, _, ply) -- Inform the masses
             end
         end
     end
@@ -705,7 +705,7 @@ function ucl.addUser(id, allows, denies, group, from_CAMI)
     for k, v in ipairs(denies) do denies[k] = v end
 
     local name, oldgroup
-    if ucl.users[id] and ucl.users[id].name then name = ucl.users[id].name end    -- Preserve name
+    if ucl.users[id] and ucl.users[id].name then name = ucl.users[id].name end -- Preserve name
     if ucl.users[id] and ucl.users[id].group then oldgroup = ucl.users[id].group end
     ucl.users[id] = { allow = allows, deny = denies, group = group, name = name }
 
@@ -768,7 +768,7 @@ function ucl.userAllow(id, access, revoke, deny)
         end
     end
 
-    local userInfo = ucl.users[id] or ucl.authed[uid]  -- Check both tables
+    local userInfo = ucl.users[id] or ucl.authed[uid] -- Check both tables
     if not userInfo then return error("User id does not exist for changing access (" .. id .. ")", 2) end
 
     -- If they're connected but don't exist in the ULib user database, add them.
@@ -869,14 +869,14 @@ end
 
 function ucl.removeUser(id, from_CAMI)
     ULib.checkArg(1, "ULib.ucl.addUser", "string", id)
-    id = id:upper()                                   -- In case of steamid, needs to be upper case
+    id = id:upper() -- In case of steamid, needs to be upper case
 
-    local userInfo = ucl.users[id] or ucl.authed[id]  -- Check both tables
+    local userInfo = ucl.users[id] or ucl.authed[id] -- Check both tables
     if not userInfo then return error("User id does not exist for removing (" .. id .. ")", 2) end
 
     local changed = false
 
-    if ucl.authed[id] and not ucl.users[id] then             -- Different ids between offline and authed
+    if ucl.authed[id] and not ucl.users[id] then -- Different ids between offline and authed
         local ply = ULib.getPlyByID(id)
         if not ply then return error("SANITY CHECK FAILED!") end -- Should never be invalid
 
@@ -908,7 +908,7 @@ function ucl.removeUser(id, from_CAMI)
 
         ply:SetUserGroup(ULib.ACCESS_ALL, true)
         ucl.probe(ply) -- Reprobe
-    else           -- Otherwise this is called twice
+    else -- Otherwise this is called twice
         if not from_CAMI then
             CAMI.SignalSteamIDUserGroupChanged(id, userInfo.group, ULib.ACCESS_ALL, CAMI.ULX_TOKEN)
         end
@@ -1024,7 +1024,6 @@ function ucl.probe(ply)
 end
 
 -- Note that this function is hooked into "PlayerAuthed", below.
-
 local function setupBot(ply)
     if not ply or not ply:IsValid() then return end
 
@@ -1050,8 +1049,8 @@ hook.Add(ULib.HOOK_UCLAUTH, "ULibSendAuthToClients", sendAuthToClients, HOOK_MON
 
 local function sendUCLDataToClient(ply)
     ULib.clientRPC(ply, "ULib.ucl.initClientUCL", ucl.authed, ucl.groups) -- Send all UCL data (minus offline users) to all loaded users
-    ULib.clientRPC(ply, "hook.Call", ULib.HOOK_UCLCHANGED)               -- Call hook on client
-    ULib.clientRPC(ply, "authPlayerIfReady", ply, ply:UserID())          -- Call on client
+    ULib.clientRPC(ply, "hook.Call", ULib.HOOK_UCLCHANGED) -- Call hook on client
+    ULib.clientRPC(ply, "authPlayerIfReady", ply, ply:UserID()) -- Call on client
 end
 hook.Add(ULib.HOOK_LOCALPLAYERREADY, "ULibSendUCLDataToClient", sendUCLDataToClient, HOOK_MONITOR_HIGH)
 
@@ -1067,7 +1066,7 @@ hook.Add("PlayerDisconnected", "ULibUCLDisconnect", playerDisconnected, HOOK_MON
 
 local function UCLChanged()
     ULib.clientRPC(_, "ULib.ucl.initClientUCL", ucl.authed, ucl.groups) -- Send all UCL data (minus offline users) to all loaded users
-    ULib.clientRPC(_, "hook.Call", ULib.HOOK_UCLCHANGED)               -- Call hook on client
+    ULib.clientRPC(_, "hook.Call", ULib.HOOK_UCLCHANGED) -- Call hook on client
 end
 hook.Add(ULib.HOOK_UCLCHANGED, "ULibSendUCLToClients", UCLChanged)
 
@@ -1080,11 +1079,11 @@ hook.Add( "PlayerAuthed", "UTEST", function() print( "HERE HERE: Player Authed" 
 -- Modify
 -- Move garry's auth function so it gets called sooner
 local playerAuth = hook.GetTable().PlayerInitialSpawn.PlayerAuthSpawn
-hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn")   -- Remove from original spot
+hook.Remove("PlayerInitialSpawn", "PlayerAuthSpawn") -- Remove from original spot
 
 local function newPlayerAuth(ply, ...)
     ucl.authed[ply:UniqueID()] = nil -- If the player ent is removed before disconnecting, we can have this hanging out there.
-    playerAuth(ply, ...)            -- Put here, slightly ahead of ucl.
+    playerAuth(ply, ...) -- Put here, slightly ahead of ucl.
     ucl.probe(ply, ...)
 end
 hook.Add("PlayerAuthed", "ULibAuth", newPlayerAuth, HOOK_MONITOR_HIGH)

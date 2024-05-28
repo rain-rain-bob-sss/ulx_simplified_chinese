@@ -6,7 +6,7 @@ function ulx.mapreload(calling_ply, delay)
     if delay == 0 then
         game.ConsoleCommand('changelevel "' .. game.GetMap() .. '"\n')
     elseif delay > 0 then
-        timer.Create("map_reload", delay, 1,function() game.ConsoleCommand('changelevel "' .. game.GetMap() .. '"\n') end)
+        timer.Create("map_reload", delay, 1, function() game.ConsoleCommand('changelevel "' .. game.GetMap() .. '"\n') end)
         ulx.fancyLogAdmin(calling_ply, "#A 计划了地图重新加载，将在 #i 秒后执行!", delay)
         net.Start("map_reload")
         net.WriteFloat(delay)

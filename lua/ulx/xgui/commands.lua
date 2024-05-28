@@ -182,64 +182,61 @@ function cmds.buildArgsList(cmd)
     for _, arg in ipairs(cmd.args) do
         if not arg.type.invisible then
             argnum = argnum + 1
-            if not (argnum == 1 and expectingplayers) then
-                if arg.invisible ~= true then
-                    local curitem = arg
-                    if curitem.repeat_min then --This command repeats!
-                        local panel = xlib.makepanel { h = 20, parent = cmds.argslist }
-                        local choices = {}
-                        panel.argnum = argnum
-                        panel.xguiIgnore = true
-                        panel.arg = curitem
-                        panel.addbutton = xlib.makebutton { label = "添加", w = 83, parent = panel }
-                        panel.addbutton.DoClick = function(self)
-                            local parent = self:GetParent()
-                            local ctrl = parent.arg.type.x_getcontrol(parent.arg, parent.argnum, cmds.argslist)
-                            cmds.argslist:Add(ctrl)
-                            ctrl:MoveToAfter(choices[#choices])
-                            table.insert(choices, ctrl)
-                            table.insert(cmds.curargs, ctrl)
-                            panel.removebutton:SetDisabled(false)
-                            if parent.arg.repeat_max and #choices >= parent.arg.repeat_max then self:SetDisabled(true) end
-                        end
-                        panel.removebutton = xlib.makebutton { label = "移除", x = 83, w = 82, disabled = true, parent =
-                            panel }
-                        panel.removebutton.DoClick = function(self)
-                            local parent = self:GetParent()
-                            local ctrl = choices[#choices]
-                            ctrl:Remove()
-                            table.remove(choices)
-                            table.remove(cmds.curargs)
-                            panel.addbutton:SetDisabled(false)
-                            if #choices <= parent.arg.repeat_min then self:SetDisabled(true) end
-                        end
-                        cmds.argslist:Add(panel)
-                        panel:SetZPos(zpos)
-                        zpos = zpos + 1
-                        for i = 1, curitem.repeat_min do
-                            local ctrl = arg.type.x_getcontrol(arg, argnum, cmds.argslist)
-                            cmds.argslist:Add(ctrl)
-                            ctrl:SetZPos(zpos)
-                            zpos = zpos + 1
-                            table.insert(choices, ctrl)
-                            table.insert(cmds.curargs, ctrl)
-                        end
-                    else
-                        local panel = arg.type.x_getcontrol(arg, argnum, cmds.argslist)
-                        table.insert(cmds.curargs, panel)
-                        if curitem.type == ULib.cmds.NumArg then
-                            panel.TextArea.OnEnter = function(self)
-                                cmds.runCmd(cmd.cmd)
-                            end
-                        elseif curitem.type == ULib.cmds.StringArg then
-                            panel.OnEnter = function(self)
-                                cmds.runCmd(cmd.cmd)
-                            end
-                        end
-                        cmds.argslist:Add(panel)
-                        panel:SetZPos(zpos)
-                        zpos = zpos + 1
+            if not (argnum == 1 and expectingplayers) and arg.invisible ~= true then
+                local curitem = arg
+                if curitem.repeat_min then --This command repeats!
+                    local panel = xlib.makepanel { h = 20, parent = cmds.argslist }
+                    local choices = {}
+                    panel.argnum = argnum
+                    panel.xguiIgnore = true
+                    panel.arg = curitem
+                    panel.addbutton = xlib.makebutton { label = "添加", w = 83, parent = panel }
+                    panel.addbutton.DoClick = function(self)
+                        local parent = self:GetParent()
+                        local ctrl = parent.arg.type.x_getcontrol(parent.arg, parent.argnum, cmds.argslist)
+                        cmds.argslist:Add(ctrl)
+                        ctrl:MoveToAfter(choices[#choices])
+                        table.insert(choices, ctrl)
+                        table.insert(cmds.curargs, ctrl)
+                        panel.removebutton:SetDisabled(false)
+                        if parent.arg.repeat_max and #choices >= parent.arg.repeat_max then self:SetDisabled(true) end
                     end
+                    panel.removebutton = xlib.makebutton { label = "移除", x = 83, w = 82, disabled = true, parent = panel }
+                    panel.removebutton.DoClick = function(self)
+                        local parent = self:GetParent()
+                        local ctrl = choices[#choices]
+                        ctrl:Remove()
+                        table.remove(choices)
+                        table.remove(cmds.curargs)
+                        panel.addbutton:SetDisabled(false)
+                        if #choices <= parent.arg.repeat_min then self:SetDisabled(true) end
+                    end
+                    cmds.argslist:Add(panel)
+                    panel:SetZPos(zpos)
+                    zpos = zpos + 1
+                    for i = 1, curitem.repeat_min do
+                        local ctrl = arg.type.x_getcontrol(arg, argnum, cmds.argslist)
+                        cmds.argslist:Add(ctrl)
+                        ctrl:SetZPos(zpos)
+                        zpos = zpos + 1
+                        table.insert(choices, ctrl)
+                        table.insert(cmds.curargs, ctrl)
+                    end
+                else
+                    local panel = arg.type.x_getcontrol(arg, argnum, cmds.argslist)
+                    table.insert(cmds.curargs, panel)
+                    if curitem.type == ULib.cmds.NumArg then
+                        panel.TextArea.OnEnter = function(self)
+                            cmds.runCmd(cmd.cmd)
+                        end
+                    elseif curitem.type == ULib.cmds.StringArg then
+                        panel.OnEnter = function(self)
+                            cmds.runCmd(cmd.cmd)
+                        end
+                    end
+                    cmds.argslist:Add(panel)
+                    panel:SetZPos(zpos)
+                    zpos = zpos + 1
                 end
             end
         end

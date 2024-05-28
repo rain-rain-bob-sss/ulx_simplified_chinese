@@ -33,7 +33,8 @@ ucl.authed = ucl.authed or {} -- alias to ucl.users subtable for player if they 
 function ucl.query(ply, access, hide)
     if SERVER and (not ply:IsValid() or (not hide and ply:IsListenServerHost())) then return true end -- Grant full access to server host.
     if access == nil then return true end
-    -- if ply:IsBot() then return false end -- Bots have no access!
+    -- if ply:IsBot() then return false end
+    -- Bots have no access!
 
     access = access:lower()
 
@@ -42,13 +43,13 @@ function ucl.query(ply, access, hide)
         unique_id = "1" -- Fix garry's bug
     end
 
-    if not ucl.authed[unique_id] then return error("[ULIB] Unauthed player") end  -- Sanity check
+    if not ucl.authed[unique_id] then return error("[ULIB] Unauthed player") end -- Sanity check
     local playerInfo = ucl.authed[unique_id]
 
     -- First check the player's info
-    if table.HasValue(playerInfo.deny, access) then return false end            -- Deny overrides all else
+    if table.HasValue(playerInfo.deny, access) then return false end -- Deny overrides all else
     if table.HasValue(playerInfo.allow, access) then return true end
-    if playerInfo.allow[access] then return true, playerInfo.allow[access] end  -- Access tag
+    if playerInfo.allow[access] then return true, playerInfo.allow[access] end -- Access tag
 
     -- Now move onto groups and group inheritance
     local group = ply:GetUserGroup()
@@ -117,7 +118,7 @@ function ucl.getInheritanceTree()
             if not inherits_from then inherits_from = ULib.ACCESS_ALL end
 
             find[inherits_from] = find[inherits_from] or {} -- Use index if it exists, otherwise create one for this group
-            find[group] = find[group] or {}            -- If someone's created our index, use it. Otherwise, create one.
+            find[group] = find[group] or {} -- If someone's created our index, use it. Otherwise, create one.
             find[inherits_from][group] = find[group]
         end
     end

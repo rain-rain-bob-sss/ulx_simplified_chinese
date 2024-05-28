@@ -7,7 +7,7 @@ function ulx.disconnects(calling_ply)
     end
 
     calling_ply:ConCommand("menu_disconnects")
-    ulx.fancyLogAdmin(calling_ply, true,"#A 打开离线名单!")
+    ulx.fancyLogAdmin(calling_ply, true, "#A 打开离线名单!")
 end
 
 local disconnects = ulx.command(CATEGORY_NAME, "ulx disconnects", ulx.disconnects, "!disconnects")

@@ -3,8 +3,7 @@
 
 local groups = {}
 function groups.init()
-    ULib.ucl.registerAccess("xgui_managegroups", "superadmin", "允许通过 XGUI 中的组选项卡管理组,用户和访问字符串.",
-        "XGUI")
+    ULib.ucl.registerAccess("xgui_managegroups", "superadmin", "允许通过 XGUI 中的组选项卡管理组,用户和访问字符串.", "XGUI")
 
     xgui.addDataType("playermodels", player_manager.AllValidModels, "xgui_managegroups", 0, 10)
     xgui.addDataType("teams", function() return xgui.teams end, "xgui_managegroups", 0, -20)

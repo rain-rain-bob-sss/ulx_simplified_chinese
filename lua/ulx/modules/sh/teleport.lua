@@ -35,7 +35,7 @@ local function playerSend(from, to, force)
     if not to:IsInWorld() and not force then return false end -- No way we can do this one
 
     local yawForward = to:EyeAngles().yaw
-    local directions = {                   -- Directions to try
+    local directions = { -- Directions to try
         math.NormalizeAngle(yawForward - 180), -- Behind first
         math.NormalizeAngle(yawForward + 90), -- Right
         math.NormalizeAngle(yawForward - 90), -- Left
@@ -48,11 +48,11 @@ local function playerSend(from, to, force)
 
     local i = 1
     t.endpos = to:GetPos() +
-    Angle(0, directions[i], 0):Forward() * 47                           -- (33 is player width, this is sqrt( 33^2 * 2 ))
+        Angle(0, directions[i], 0):Forward() * 47 -- (33 is player width, this is sqrt( 33^2 * 2 ))
     local tr = util.TraceEntity(t, from)
-    while tr.Hit do                                                     -- While it's hitting something, check other angles
+    while tr.Hit do -- While it's hitting something, check other angles
         i = i + 1
-        if i > #directions then                                         -- No place found
+        if i > #directions then -- No place found
             if force then
                 from.ulx_prevpos = from:GetPos()
                 from.ulx_prevang = from:EyeAngles()
@@ -168,7 +168,7 @@ bring:addParam { type = ULib.cmds.PlayersArg, target = "!^" }
 bring:defaultAccess(ULib.ACCESS_ADMIN)
 bring:help("将目标玩家传送到你身边.")
 
-function ulx.goto(calling_ply, target_ply)
+function ulx.gotoPlayer(calling_ply, target_ply) -- Renamed function to avoid 'goto' keyword
     if not calling_ply:IsValid() then
         Msg("您可能无法从控制台进入凡人世界.\n")
         return
@@ -209,16 +209,16 @@ function ulx.goto(calling_ply, target_ply)
 
     calling_ply:SetPos(newpos)
     calling_ply:SetEyeAngles(newang)
-    calling_ply:SetLocalVelocity(Vector(0, 0, 0))  -- Stop!
+    calling_ply:SetLocalVelocity(Vector(0, 0, 0)) -- Stop!
 
     ulx.fancyLogAdmin(calling_ply, true, "#A 传送到 #T", target_ply)
 end
 
-local goto = ulx.command(CATEGORY_NAME, "ulx goto", ulx.goto, "!goto")
-goto:addParam { type = ULib.cmds.PlayerArg, target = "!^", ULib.cmds.ignoreCanTarget }
-goto:defaultAccess(ULib.ACCESS_ADMIN)
-goto:setOpposite("ulx silent goto", { nil, nil, nil, true }, "!sgoto", true)
-goto:help("传送到目标玩家旁边.")
+local gotoPlayer = ulx.command(CATEGORY_NAME, "ulx goto", ulx.gotoPlayer, "!goto") -- Updated function reference
+gotoPlayer:addParam { type = ULib.cmds.PlayerArg, target = "!^", ULib.cmds.ignoreCanTarget }
+gotoPlayer:defaultAccess(ULib.ACCESS_ADMIN)
+gotoPlayer:setOpposite("ulx silent goto", { nil, nil, nil, true }, "!sgoto", true)
+gotoPlayer:help("传送到目标玩家旁边.")
 
 function ulx.send(calling_ply, target_from, target_to)
     if target_from == target_to then
@@ -265,7 +265,7 @@ function ulx.send(calling_ply, target_from, target_to)
 
     target_from:SetPos(newpos)
     target_from:SetEyeAngles(newang)
-    target_from:SetLocalVelocity(Vector(0, 0, 0))  -- Stop!
+    target_from:SetLocalVelocity(Vector(0, 0, 0)) -- Stop!
 
     ulx.fancyLogAdmin(calling_ply, "#A 传送 #T 到 #T", target_from, target_to)
 end
@@ -306,7 +306,7 @@ function ulx.teleport(calling_ply, target_ply)
     end
 
     target_ply:SetPos(pos)
-    target_ply:SetLocalVelocity(Vector(0, 0, 0))  -- Stop!
+    target_ply:SetLocalVelocity(Vector(0, 0, 0)) -- Stop!
 
     if target_ply ~= calling_ply then
         ulx.fancyLogAdmin(calling_ply, "#A 传送到 #T", target_ply) -- We don't want to log otherwise
@@ -347,7 +347,7 @@ function ulx.retrn(calling_ply, target_ply)
     target_ply:SetEyeAngles(target_ply.ulx_prevang)
     target_ply.ulx_prevpos = nil
     target_ply.ulx_prevang = nil
-    target_ply:SetLocalVelocity(Vector(0, 0, 0))  -- Stop!
+    target_ply:SetLocalVelocity(Vector(0, 0, 0)) -- Stop!
 
     ulx.fancyLogAdmin(calling_ply, "#A 将 #T 送回最后一次传送的上一个位置", target_ply)
 end
@@ -362,7 +362,7 @@ local function playerSend(from, to, force)
 
     local yawForward = to:EyeAngles().yaw
 
-    local directions = {                   -- Directions to try
+    local directions = { -- Directions to try
 
         math.NormalizeAngle(yawForward - 180), -- Behind first
 
@@ -382,7 +382,7 @@ local function playerSend(from, to, force)
 
     local i = 1
 
-    t.endpos = to:GetPos() + Angle(0, directions[i], 0):Forward() * 47                           -- (33 is player width, this is sqrt( 33^2 * 2 ))
+    t.endpos = to:GetPos() + Angle(0, directions[i], 0):Forward() * 47 -- (33 is player width, this is sqrt( 33^2 * 2 ))
 
     local tr = util.TraceEntity(t, from)
 

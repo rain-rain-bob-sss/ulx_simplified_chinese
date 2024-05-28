@@ -4,8 +4,8 @@
 local settings = xlib.makepanel { parent = xgui.null }
 
 local autorefreshTab
-if xgui.settings_tabs ~= nil then 
-    autorefreshTab = xgui.settings_tabs:GetActiveTab() 
+if xgui.settings_tabs ~= nil then
+    autorefreshTab = xgui.settings_tabs:GetActiveTab()
 end
 
 xgui.settings_tabs = xlib.makepropertysheet { x = -5, y = 6, w = 600, h = 368, parent = settings, offloadparent = xgui.null }
@@ -41,4 +41,4 @@ if autorefreshTab ~= nil then
     xgui.settings_tabs:SetActiveTab(autorefreshTab, true)
 end
 
-xgui.addModule("服务器设定", settings, "icon16/wrench.png")
+xgui.addModule("服务器", settings, "icon16/wrench.png")

@@ -214,17 +214,17 @@ function xbans.ShowBanDetailsWindow(bandata)
 
     local panel = xbans.openWindows[bandata.steamID]
     local name = xlib.makelabel { x = 50, y = 30, label = "名字:", parent = panel }
-    xlib.makelabel { x = 90, y = 30, w = 190, label = (bandata.name or "<未知>"), parent = panel, tooltip = bandata.name }
+    xlib.makelabel { x = 90, y = 30, w = 190, label = bandata.name or "<未知>", parent = panel, tooltip = bandata.name }
     xlib.makelabel { x = 36, y = 50, label = "SteamID:", parent = panel }
     xlib.makelabel { x = 90, y = 50, label = bandata.steamID, parent = panel }
     xlib.makelabel { x = 33, y = 70, label = "封禁日期:", parent = panel }
     xlib.makelabel { x = 90, y = 70, label = bandata.time and (os.date("%b %d, %Y - %I:%M:%S %p", tonumber(bandata.time))) or "<此封禁没有数据>", parent = panel }
     xlib.makelabel { x = 20, y = 90, label = "解封日期:", parent = panel }
-    xlib.makelabel { x = 90, y = 90, label = (tonumber(bandata.unban) == 0 and "从不" or os.date("%b %d, %Y - %I:%M:%S %p", math.min(tonumber(bandata.unban), 4294967295))), parent = panel }
+    xlib.makelabel { x = 90, y = 90, label = tonumber(bandata.unban) == 0 and "从不" or os.date("%b %d, %Y - %I:%M:%S %p", math.min(tonumber(bandata.unban), 4294967295)), parent = panel }
     xlib.makelabel { x = 10, y = 110, label = "封禁时长:", parent = panel }
-    xlib.makelabel { x = 90, y = 110, label = (tonumber(bandata.unban) == 0 and "无限期" or xgui.ConvertTime(tonumber(bandata.unban) - bandata.time)), parent = panel }
+    xlib.makelabel { x = 90, y = 110, label = tonumber(bandata.unban) == 0 and "无限期" or xgui.ConvertTime(tonumber(bandata.unban) - bandata.time), parent = panel }
     xlib.makelabel { x = 33, y = 130, label = "剩余时长:", parent = panel }
-    local timeleft = xlib.makelabel { x = 90, y = 130, label = (tonumber(bandata.unban) == 0 and "N/A" or xgui.ConvertTime(tonumber(bandata.unban) - os.time())), parent = panel }
+    local timeleft = xlib.makelabel { x = 90, y = 130, label = tonumber(bandata.unban) == 0 and "N/A" or xgui.ConvertTime(tonumber(bandata.unban) - os.time()), parent = panel }
     xlib.makelabel { x = 26, y = 150, label = "封禁者:", parent = panel }
     if bandata.admin then
         xlib.makelabel { x = 90, y = 150, label = string.gsub(bandata.admin, "%(STEAM_%w:%w:%w*%)", ""), parent = panel }
@@ -235,7 +235,7 @@ function xbans.ShowBanDetailsWindow(bandata)
     xlib.makelabel { x = 41, y = 185, label = "原因:", parent = panel }
     xlib.makelabel { x = 90, y = 185, w = 190, label = bandata.reason, parent = panel, tooltip = bandata.reason ~= "" and bandata.reason or nil }
     xlib.makelabel { x = 13, y = 205, label = "最后更新:", parent = panel }
-    xlib.makelabel { x = 90, y = 205, label = ((bandata.modified_time == nil) and "从未" or os.date("%b %d, %Y - %I:%M:%S %p", tonumber(bandata.modified_time))), parent = panel }
+    xlib.makelabel { x = 90, y = 205, label = (bandata.modified_time == nil) and "从未" or os.date("%b %d, %Y - %I:%M:%S %p", tonumber(bandata.modified_time)), parent = panel }
     xlib.makelabel { x = 21, y = 225, label = "更新者:", parent = panel }
     if bandata.modified_admin then
         xlib.makelabel { x = 90, y = 225, label = string.gsub(bandata.modified_admin, "%(STEAM_%w:%w:%w*%)", ""), parent = panel }
@@ -283,7 +283,7 @@ end
 function xgui.ShowBanWindow(ply, ID, doFreeze, isUpdate, bandata)
     if not LocalPlayer():query("ulx ban") and not LocalPlayer():query("ulx banid") then return end
 
-    local xgui_banwindow = xlib.makeframe { label = (isUpdate and "编辑封禁" or "封禁玩家"), w = 285, h = 180, skin = xgui.settings.skin }
+    local xgui_banwindow = xlib.makeframe { label = isUpdate and "编辑封禁" or "封禁玩家", w = 285, h = 180, skin = xgui.settings.skin }
     xlib.makelabel { x = 37, y = 33, label = "名字:", parent = xgui_banwindow }
     xlib.makelabel { x = 23, y = 58, label = "SteamID:", parent = xgui_banwindow }
     xlib.makelabel { x = 28, y = 83, label = "原因:", parent = xgui_banwindow }
@@ -353,10 +353,8 @@ function xgui.ShowBanWindow(ply, ID, doFreeze, isUpdate, bandata)
         end
     end
 
-    local steamID = xlib.maketextbox { x = 75, y = 55, w = 200, selectall = true, disabled = (isUpdate or not LocalPlayer():query("ulx banid")), parent =
-        xgui_banwindow }
-    name.steamIDbox =
-        steamID --Make a reference to the steamID textbox so it can change the value easily without needing a global variable
+    local steamID = xlib.maketextbox { x = 75, y = 55, w = 200, selectall = true, disabled = isUpdate or not LocalPlayer():query("ulx banid"), parent = xgui_banwindow }
+    name.steamIDbox = steamID --Make a reference to the steamID textbox so it can change the value easily without needing a global variable
 
     if doFreeze and ply then
         if LocalPlayer():query("ulx freeze") then
@@ -382,9 +380,7 @@ function xgui.ShowBanWindow(ply, ID, doFreeze, isUpdate, bandata)
             end
             btime = banpanel:GetMinutes()
             if btime ~= 0 and bandata and btime * 60 + bandata.time < os.time() then
-                Derma_Query("警告! 你指定的封禁时间将导致该封禁过期.\n成功地改变封禁时长需要最短时间为 "
-                    .. xgui.ConvertTime(os.time() - bandata.time) .. ".\n你希望继续吗?", "XGUI 警告",
-                    "更新封禁", function()
+                Derma_Query("警告! 你指定的封禁时间将导致该封禁过期.\n成功地改变封禁时长需要最短时间为 " .. xgui.ConvertTime(os.time() - bandata.time) .. ".\n你希望继续吗?", "XGUI 警告", "更新封禁", function()
                         performUpdate(btime)
                         xbans.RemoveBanDetailsWindow(bandata.steamID)
                     end,
@@ -407,8 +403,7 @@ function xgui.ShowBanWindow(ply, ID, doFreeze, isUpdate, bandata)
                 if name:GetValue() == "" then
                     RunConsoleCommand("ulx", "banid", steamID:GetValue(), banpanel:GetValue(), reason:GetValue())
                 else
-                    RunConsoleCommand("xgui", "updateBan", steamID:GetValue(), banpanel:GetMinutes(), reason:GetValue(),
-                        (name:GetValue() ~= "" and name:GetValue() or nil))
+                    RunConsoleCommand("xgui", "updateBan", steamID:GetValue(), banpanel:GetMinutes(), reason:GetValue(), name:GetValue() ~= "" and name:GetValue() or nil)
                 end
             else
                 RunConsoleCommand("ulx", "ban", "$" .. ULib.getUniqueIDForPlayer(isOnline), banpanel:GetValue(),

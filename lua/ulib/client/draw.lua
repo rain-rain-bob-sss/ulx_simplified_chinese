@@ -30,13 +30,13 @@ function ULib.csayDraw(msg, color, duration, fade)
             return
         end
 
-        if fade - dtime > 0 then          -- beginning fade
+        if fade - dtime > 0 then -- beginning fade
             alpha = (fade - dtime) / fade -- 0 to 1
-            alpha = 1 - alpha             -- Reverse
+            alpha = 1 - alpha -- Reverse
             alpha = alpha * 255
         end
 
-        if duration - dtime < fade then       -- ending fade
+        if duration - dtime < fade then -- ending fade
             alpha = (duration - dtime) / fade -- 0 to 1
             alpha = alpha * 255
         end

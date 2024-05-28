@@ -113,8 +113,7 @@ function bans.init()
                 for k, v in pairs(ULib.bans) do
                     table.insert(xgui.bansbyname, { k, v.name and string.upper(v.name) or nil })
                 end
-                table.sort(xgui.bansbyname,
-                    function(a, b) return (a[2] or "\255" .. a[1]) < (b[2] or "\255" .. b[1]) end)
+                table.sort(xgui.bansbyname, function(a, b) return (a[2] or "\255" .. a[1]) < (b[2] or "\255" .. b[1]) end)
             end
             return xgui.bansbyname
         end,
@@ -270,11 +269,10 @@ function bans.init()
     function bans.unbanTimer()
         timer.Create("xgui_unbanTimer", 3600, 0, bans.unbanTimer)
         for ID, data in pairs(ULib.bans) do
-            if tonumber(data.unban) ~= 0 then
-                if tonumber(data.unban) - os.time() <= 3600 then
-                    timer.Remove("xgui_unban" .. ID)
-                    timer.Create("xgui_unban" .. ID, tonumber(data.unban) - os.time(), 1, function() ULib.unban(ID) end)
-                end
+            local timeRemaining = tonumber(data.unban) - os.time()
+            if tonumber(data.unban) ~= 0 and timeRemaining <= 3600 then
+                timer.Remove("xgui_unban" .. ID)
+                timer.Create("xgui_unban" .. ID, timeRemaining, 1, function() ULib.unban(ID) end)
             end
         end
     end

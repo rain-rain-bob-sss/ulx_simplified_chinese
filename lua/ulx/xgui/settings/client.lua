@@ -6,7 +6,7 @@ local client = xlib.makepanel { parent = xgui.null }
 client.panel = xlib.makepanel { x = 160, y = 5, w = 425, h = 322, parent = client }
 
 client.catList = xlib.makelistview { x = 5, y = 5, w = 150, h = 302, parent = client }
-client.catList:AddColumn("客户端设置")
+client.catList:AddColumn("客户端")
 client.catList.Columns[1].DoClick = function() end
 client.catList.OnRowSelected = function(self, LineID, Line)
     local nPanel = xgui.modules.submodule[Line:GetValue(2)].panel
@@ -77,8 +77,7 @@ end
 client.processModules()
 
 xgui.hookEvent("onProcessModules", nil, client.processModules, "xguiProcessModules")
-xgui.addSettingModule("客户端设定", client, "icon16/layout_content.png")
-
+xgui.addSettingModule("客户端", client, "icon16/layout_content.png")
 
 --------------------General Clientside Module--------------------
 local genpnl = xlib.makepanel { parent = xgui.null }
@@ -137,23 +136,23 @@ end
 ----------------
 local themeCount = {}
 
-xlib.makelabel{ x=10, y=273, label="XGUI主题:", parent=xguipnl }
-xguipnl.skinSelector = xlib.makecombobox{ x=10, y=290, w=150, parent=xguipnl }
+xlib.makelabel { x = 10, y = 273, label = "XGUI主题:", parent = xguipnl }
+xguipnl.skinSelector = xlib.makecombobox { x = 10, y = 290, w = 150, parent = xguipnl }
 
 if not derma.SkinList[xgui.settings.skin] then
     xgui.settings.skin = "Default"
 end
 
-xguipnl.skinSelector:SetText( derma.SkinList[xgui.settings.skin].PrintName )
+xguipnl.skinSelector:SetText(derma.SkinList[xgui.settings.skin].PrintName)
 xgui.base.refreshSkin = true
 
-xguipnl.skinSelector.OnSelect = function( self, index, value, data )
+xguipnl.skinSelector.OnSelect = function(self, index, value, data)
     xgui.settings.skin = data
-    xgui.base:SetSkin( data )
+    xgui.base:SetSkin(data)
 end
 
 -- Loop through the derma.SkinList and add a unique identifier for each theme name
-for skin, skinData in pairs( derma.SkinList ) do
+for skin, skinData in pairs(derma.SkinList) do
     local themeName = skinData.PrintName
     if themeCount[themeName] then
         themeCount[themeName] = themeCount[themeName] + 1
@@ -161,7 +160,7 @@ for skin, skinData in pairs( derma.SkinList ) do
     else
         themeCount[themeName] = 1
     end
-    xguipnl.skinSelector:AddChoice( themeName, skin )
+    xguipnl.skinSelector:AddChoice(themeName, skin)
 end
 
 ----------------
@@ -304,8 +303,7 @@ function xguipnl.updatePos(position, xoffset, yoffset, ignoreanim)
     xguipnl.b9:SetDisabled(position == 9)
 end
 
-xguipnl.xwang = xlib.makenumberwang { x = 245, y = 167, w = 50, min = -1000, max = 1000, value = xgui.settings.xguipos
-.xoff, decimal = 0, parent = xguipnl }
+xguipnl.xwang = xlib.makenumberwang { x = 245, y = 167, w = 50, min = -1000, max = 1000, value = xgui.settings.xguipos.xoff, decimal = 0, parent = xguipnl }
 xguipnl.xwang.OnValueChanged = function(self, val)
     xguipnl.updatePos(xgui.settings.xguipos.pos, tonumber(val), xgui.settings.xguipos.yoffset, true)
 end
@@ -323,8 +321,7 @@ end
 
 xlib.makelabel { x = 300, y = 169, label = "X坐标", parent = xguipnl }
 
-xguipnl.ywang = xlib.makenumberwang { x = 245, y = 193, w = 50, min = -1000, max = 1000, value = xgui.settings.xguipos
-.yoff, decimal = 0, parent = xguipnl }
+xguipnl.ywang = xlib.makenumberwang { x = 245, y = 193, w = 50, min = -1000, max = 1000, value = xgui.settings.xguipos.yoff, decimal = 0, parent = xguipnl }
 xguipnl.ywang.OnValueChanged = function(self, val)
     xguipnl.updatePos(xgui.settings.xguipos.pos, xgui.settings.xguipos.xoffset, tonumber(val), true)
 end
@@ -348,8 +345,7 @@ xlib.makelabel { x = 300, y = 195, label = "Y坐标", parent = xguipnl }
 xlib.makelabel { x = 175, y = 229, label = "XGUI动画:", parent = xguipnl }
 xlib.makelabel { x = 175, y = 247, label = "打开时:", parent = xguipnl }
 
-xguipnl.inAnim = xlib.makecombobox { x = 225, y = 245, w = 150, choices = { "淡入", "从顶部滑入", "从左边滑入",
-    "从底部滑入", "从右边滑入" }, parent = xguipnl }
+xguipnl.inAnim = xlib.makecombobox { x = 225, y = 245, w = 150, choices = { "淡入", "从顶部滑入", "从左边滑入", "从底部滑入", "从右边滑入" }, parent = xguipnl }
 xguipnl.inAnim:ChooseOptionID(tonumber(xgui.settings.animIntype))
 
 function xguipnl.inAnim:OnSelect(index, value, data)
@@ -358,8 +354,7 @@ end
 
 xlib.makelabel { x = 175, y = 272, label = "关闭时:", parent = xguipnl }
 
-xguipnl.outAnim = xlib.makecombobox { x = 225, y = 270, w = 150, choices = { "淡出", "从顶部滑出", "从左边滑出",
-    "从底部滑出", "从右边滑出" }, parent = xguipnl }
+xguipnl.outAnim = xlib.makecombobox { x = 225, y = 270, w = 150, choices = { "淡出", "从顶部滑出", "从左边滑出", "从底部滑出", "从右边滑出" }, parent = xguipnl }
 xguipnl.outAnim:ChooseOptionID(tonumber(xgui.settings.animOuttype))
 
 function xguipnl.outAnim:OnSelect(index, value, data)

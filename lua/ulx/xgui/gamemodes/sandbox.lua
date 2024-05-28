@@ -47,7 +47,7 @@ function sbox_settings.processLimits()
                 xgui.queueFunctionCall(xlib.makeslider, "sboxlimits", { x = 10 + (i % 2 * 195), y = 20 + math.floor(i / 2) * 40, w = 185, label = "<--->", min = 0, max = cvardata[2], convar = xlib.ifListenHost(cvardata[1]), repconvar = xlib.ifNotListenHost("rep_" .. cvardata[1]), parent = panel, fixclip = true })
                 i = i + 1
             end
-            sbox_settings.plist:Add(xlib.makecat { label = limits.title .. " (" .. #limits .. " 个限制" .. ((#limits > 1) and "s" or "") .. ")", contents = panel, expanded = (g == 1) })
+            sbox_settings.plist:Add(xlib.makecat { label = limits.title .. " (" .. #limits .. " 个限制" .. ((#limits > 1) and "s" or "") .. ")", contents = panel, expanded = g == 1 })
         end
     end
 end

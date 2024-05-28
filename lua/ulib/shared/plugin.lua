@@ -73,14 +73,14 @@ end
 
 local ulibBuildNumURL = ULib.RELEASE and "https://teamulysses.github.io/ulib/ulib.build" or "https://raw.githubusercontent.com/TeamUlysses/ulib/master/ulib.build"
 ULib.registerPlugin {
-    Name          = "ULib",
-    Version       = string.format( "%.2f", ULib.VERSION ),
-    IsRelease     = ULib.RELEASE,
-    Author        = "Team Ulysses",
-    URL           = "https://ulyssesmod.net",
-    WorkshopID    = 557962238,
+    Name = "ULib",
+    Version = string.format("%.2f", ULib.VERSION),
+    IsRelease = ULib.RELEASE,
+    Author = "Team Ulysses",
+    URL = "https://ulyssesmod.net",
+    WorkshopID = 557962238,
     --WorkshopMounted = true,
-    BuildNumLocal = tonumber(ULib.fileRead( "ulib.build" )),
+    BuildNumLocal = tonumber(ULib.fileRead("ulib.build")),
     --BuildHidden = true,
     BuildNumRemoteURL = ulibBuildNumURL,
     --BuildNumRemote = 123,
@@ -175,7 +175,7 @@ local function httpErr()
 end
 
 local function downloadForUlibUpdateCheck()
-    http.Fetch( "http://connectivity-check.ubuntu.com/", httpCheck, httpErr )
+    http.Fetch("http://connectivity-check.ubuntu.com/", httpCheck, httpErr)
 end
 
 if ULib.AUTOMATIC_UPDATE_CHECKS then

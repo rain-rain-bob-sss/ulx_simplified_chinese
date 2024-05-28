@@ -125,10 +125,8 @@ end
 
 local whip = ulx.command(CATEGORY_NAME, "ulx whip", ulx.whip, "!whip")
 whip:addParam { type = ULib.cmds.PlayersArg }
-whip:addParam { type = ULib.cmds.NumArg, min = 2, max = 1000000, default = 10, hint = "次数", ULib.cmds.optional, ULib
-    .cmds.round }
-whip:addParam { type = ULib.cmds.NumArg, min = 0, max = 1000000, default = 0, hint = "伤害", ULib.cmds.optional, ULib
-    .cmds.round }
+whip:addParam { type = ULib.cmds.NumArg, min = 2, max = 1000000, default = 10, hint = "次数", ULib.cmds.optional, ULib.cmds.round }
+whip:addParam { type = ULib.cmds.NumArg, min = 0, max = 1000000, default = 0, hint = "伤害", ULib.cmds.optional, ULib.cmds.round }
 whip:defaultAccess(ULib.ACCESS_ADMIN)
 whip:help("设置打目标玩家多少次脸并\n且每次附带的伤害.")
 
@@ -418,8 +416,7 @@ end
 
 local cloak = ulx.command(CATEGORY_NAME, "ulx cloak", ulx.cloak, "!cloak")
 cloak:addParam { type = ULib.cmds.PlayersArg, ULib.cmds.optional }
-cloak:addParam { type = ULib.cmds.NumArg, min = 0, max = 255, default = 255, hint = "透明度", ULib.cmds.round, ULib
-    .cmds.optional }
+cloak:addParam { type = ULib.cmds.NumArg, min = 0, max = 255, default = 255, hint = "透明度", ULib.cmds.round, ULib.cmds.optional }
 cloak:addParam { type = ULib.cmds.BoolArg, invisible = true }
 cloak:defaultAccess(ULib.ACCESS_ADMIN)
 cloak:help("给目标玩家设置透明度.")
@@ -460,8 +457,7 @@ end
 
 local blind = ulx.command(CATEGORY_NAME, "ulx blind", ulx.blind, "!blind")
 blind:addParam { type = ULib.cmds.PlayersArg }
-blind:addParam { type = ULib.cmds.NumArg, min = 0, max = 255, default = 255, hint = "透明度", ULib.cmds.round, ULib
-    .cmds.optional }
+blind:addParam { type = ULib.cmds.NumArg, min = 0, max = 255, default = 255, hint = "透明度", ULib.cmds.round, ULib.cmds.optional }
 blind:addParam { type = ULib.cmds.BoolArg, invisible = true }
 blind:defaultAccess(ULib.ACCESS_ADMIN)
 blind:help("搞瞎某个玩家.")
@@ -557,8 +553,7 @@ end
 
 local jailtp = ulx.command(CATEGORY_NAME, "ulx jailtp", ulx.jailtp, "!jailtp")
 jailtp:addParam { type = ULib.cmds.PlayerArg }
-jailtp:addParam { type = ULib.cmds.NumArg, min = 0, default = 0, hint = "监禁时长(秒),0为无限", ULib.cmds.round,
-    ULib.cmds.optional }
+jailtp:addParam { type = ULib.cmds.NumArg, min = 0, default = 0, hint = "监禁时长(秒),0为无限", ULib.cmds.round, ULib.cmds.optional }
 jailtp:defaultAccess(ULib.ACCESS_ADMIN)
 jailtp:help("传送至准星所指的地方,再监\n禁玩家.")
 
@@ -598,14 +593,14 @@ end
 
 local mdl1 = Model("models/props_building_details/Storefront_Template001a_Bars.mdl")
 local jail = {
-    { pos = Vector(0, 0, -5),     ang = Angle(90, 0, 0), mdl = mdl1 },
-    { pos = Vector(0, 0, 97),     ang = Angle(90, 0, 0), mdl = mdl1 },
-    { pos = Vector(21, 31, 46),   ang = Angle(0, 90, 0), mdl = mdl1 },
-    { pos = Vector(21, -31, 46),  ang = Angle(0, 90, 0), mdl = mdl1 },
-    { pos = Vector(-21, 31, 46),  ang = Angle(0, 90, 0), mdl = mdl1 },
+    { pos = Vector(0, 0, -5), ang = Angle(90, 0, 0), mdl = mdl1 },
+    { pos = Vector(0, 0, 97), ang = Angle(90, 0, 0), mdl = mdl1 },
+    { pos = Vector(21, 31, 46), ang = Angle(0, 90, 0), mdl = mdl1 },
+    { pos = Vector(21, -31, 46), ang = Angle(0, 90, 0), mdl = mdl1 },
+    { pos = Vector(-21, 31, 46), ang = Angle(0, 90, 0), mdl = mdl1 },
     { pos = Vector(-21, -31, 46), ang = Angle(0, 90, 0), mdl = mdl1 },
-    { pos = Vector(-52, 0, 46),   ang = Angle(0, 0, 0),  mdl = mdl1 },
-    { pos = Vector(52, 0, 46),    ang = Angle(0, 0, 0),  mdl = mdl1 },
+    { pos = Vector(-52, 0, 46), ang = Angle(0, 0, 0), mdl = mdl1 },
+    { pos = Vector(52, 0, 46), ang = Angle(0, 0, 0), mdl = mdl1 },
 }
 doJail = function(v, seconds)
     if v.jail then -- They're already jailed
@@ -770,7 +765,7 @@ function ulx.unragdollPlayer(v)
     v:UnSpectate() -- Need this for DarkRP for some reason, works fine without it in sbox
 
     local ragdoll = v.ragdoll
-    v.ragdoll = nil               -- Gotta do this before spawn or our hook catches it
+    v.ragdoll = nil -- Gotta do this before spawn or our hook catches it
 
     if not ragdoll:IsValid() then -- Something must have removed it, just spawn
         ULib.spawn(v, true)
@@ -826,7 +821,7 @@ ragdoll:setOpposite("ulx unragdoll", { _, _, true }, "!unragdoll")
 
 local function ragdollSpawnCheck(ply)
     if ply.ragdoll then
-        timer.Simple(0.01, function()            -- Doesn't like us using it instantly
+        timer.Simple(0.01, function() -- Doesn't like us using it instantly
             if not ply:IsValid() then return end -- Make sure they're still here
             ply:Spectate(OBS_MODE_CHASE)
             ply:SpectateEntity(ply.ragdoll)
@@ -880,7 +875,7 @@ local function newZombie(pos, ang, ply, b)
     ent:SetAngles(ang)
     ent:Spawn()
     ent:Activate()
-    ent:AddRelationship("player D_NU 98")    -- Don't attack other players
+    ent:AddRelationship("player D_NU 98") -- Don't attack other players
     ent:AddEntityRelationship(ply, D_HT, 99) -- Hate target
 
     ent:DisallowDeleting(true, _, true)
@@ -898,7 +893,7 @@ zombieDeath = function(ent, ply)
     if ply.maul_npcs then -- Recreate!
         local pos = ent:GetPos()
         local ang = ent:GetAngles()
-        ULib.queueFunctionCall(function()        -- Create it next frame because 1. Old NPC won't be in way and 2. We won't overflow the server while shutting down with someone being mauled
+        ULib.queueFunctionCall(function() -- Create it next frame because 1. Old NPC won't be in way and 2. We won't overflow the server while shutting down with someone being mauled
             if not ply:IsValid() then return end -- Player left
 
             local ent2 = newZombie(pos, ang, ply)
@@ -923,13 +918,13 @@ local function maulMoreDamage()
         if ply.maul_npcs and ply:Alive() then
             if CurTime() > ply.maulStart + 10 then
                 local damage = math.ceil(ply.maulStartHP / 10) -- Damage per second
-                damage = damage * FrameTime()                  -- Damage this frame
+                damage = damage * FrameTime() -- Damage this frame
                 damage = math.ceil(damage)
                 local newhp = ply:Health() - damage
                 if newhp < 1 then newhp = 1 end
-                ply:SetHealth(newhp)    -- We don't use takedamage because the player slides across the ground.
+                ply:SetHealth(newhp) -- We don't use takedamage because the player slides across the ground.
                 if CurTime() > ply.maulStart + 20 then
-                    ply:Kill()          -- Worst case senario.
+                    ply:Kill() -- Worst case senario.
                     checkMaulDeath(ply) -- Just in case the death hook is broken
                 end
             end
@@ -952,10 +947,10 @@ function ulx.maul(calling_ply, target_plys)
             local testent = newZombie(Vector(0, 0, 0), Angle(0, 0, 0), v, true) -- Test ent for traces
 
             local yawForward = v:EyeAngles().yaw
-            local directions = {                       -- Directions to try
+            local directions = { -- Directions to try
                 math.NormalizeAngle(yawForward - 180), -- Behind first
-                math.NormalizeAngle(yawForward + 90),  -- Right
-                math.NormalizeAngle(yawForward - 90),  -- Left
+                math.NormalizeAngle(yawForward + 90), -- Right
+                math.NormalizeAngle(yawForward - 90), -- Left
                 yawForward,
             }
 
@@ -964,9 +959,7 @@ function ulx.maul(calling_ply, target_plys)
             t.filter = { v, testent }
 
             for i = 1, #directions do -- Check all directions
-                t.endpos = v:GetPos() +
-                    Angle(0, directions[i], 0):Forward() *
-                    47 -- (33 is player width, this is sqrt( 33^2 * 2 ))
+                t.endpos = v:GetPos() + Angle(0, directions[i], 0):Forward() * 47 -- (33 is player width, this is sqrt( 33^2 * 2 ))
                 local tr = util.TraceEntity(t, testent)
 
                 if not tr.Hit then
@@ -1021,7 +1014,7 @@ maul:help("围攻目标玩家.")
 checkMaulDeath = function(ply, weapon, killer)
     if ply.maul_npcs then
         if killer == ply and CurTime() < ply.maulStart + 20 then -- Suicide
-            ply:AddFrags(1)                                      -- Won't show on scoreboard
+            ply:AddFrags(1) -- Won't show on scoreboard
             local pos = ply:GetPos()
             local ang = ply:EyeAngles()
             ULib.queueFunctionCall(function()

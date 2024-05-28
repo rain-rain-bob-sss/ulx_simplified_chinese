@@ -3,7 +3,7 @@ local CATEGORY_NAME = "用户管理器"
 local function checkForValidId(calling_ply, id)
     if id == "BOT" or id == "NULL" then -- Bot check
         return true
-    elseif id:find("%.") then           -- Assume IP and check
+    elseif id:find("%.") then -- Assume IP and check
         if not ULib.isValidIP(id) then
             ULib.tsayError(calling_ply, "无效的 IP.", true)
             return false
@@ -62,8 +62,7 @@ end
 
 local adduser = ulx.command(CATEGORY_NAME, "ulx adduser", ulx.adduser, nil, false, false, true)
 adduser:addParam { type = ULib.cmds.PlayerArg }
-adduser:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+adduser:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 adduser:defaultAccess(ULib.ACCESS_SUPERADMIN)
 adduser:help("添加用户到指定权限组.")
 
@@ -86,8 +85,7 @@ end
 
 local adduserid = ulx.command(CATEGORY_NAME, "ulx adduserid", ulx.adduserid, nil, false, false, true)
 adduserid:addParam { type = ULib.cmds.StringArg, hint = "SteamID, IP, 或唯一ID" }
-adduserid:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+adduserid:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 adduserid:defaultAccess(ULib.ACCESS_SUPERADMIN)
 adduserid:help("通过ID将玩家添加到\n特定权限组.")
 
@@ -113,8 +111,7 @@ function ulx.removeuserid(calling_ply, id)
         return false
     end
 
-    local name = (ULib.ucl.authed[id] and ULib.ucl.authed[id].name) or
-        (ULib.ucl.users[id] and ULib.ucl.users[id].name)
+    local name = (ULib.ucl.authed[id] and ULib.ucl.authed[id].name) or (ULib.ucl.users[id] and ULib.ucl.users[id].name)
 
     ULib.ucl.removeUser(id)
 
@@ -145,14 +142,12 @@ function ulx.userallow(calling_ply, target_ply, access_string, access_tag)
 
     local success = ULib.ucl.userAllow(id, accessTable)
     if not success then
-        ULib.tsayError(calling_ply, string.format("玩家 \"%s\" 已经拥有权限 \"%s\"", target_ply:Nick(),
-            access_string), true)
+        ULib.tsayError(calling_ply, string.format("玩家 \"%s\" 已经拥有权限 \"%s\"", target_ply:Nick(), access_string), true)
     else
         if not access_tag or access_tag == "" then
             ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 到玩家 #T", access_string, target_ply)
         else
-            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到玩家 #T", access_string, access_tag,
-                target_ply)
+            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到玩家 #T", access_string, access_tag, target_ply)
         end
     end
 end
@@ -192,8 +187,7 @@ function ulx.userallowid(calling_ply, id, access_string, access_tag)
         if not access_tag or access_tag == "" then
             ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 到玩家 #s", access_string, name)
         else
-            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到玩家 #s", access_string, access_tag,
-                name)
+            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到玩家 #s", access_string, access_tag, name)
         end
     end
 end
@@ -208,22 +202,18 @@ userallowid:help("通过ID给予玩家某个权限.")
 function ulx.userdeny(calling_ply, target_ply, access_string, should_use_neutral)
     local success = ULib.ucl.userAllow(target_ply:UniqueID(), access_string, should_use_neutral, true)
     if should_use_neutral then
-        success = success or
-            ULib.ucl.userAllow(target_ply:UniqueID(), access_string, should_use_neutral, false) -- Remove from both lists
+        success = success or ULib.ucl.userAllow(target_ply:UniqueID(), access_string, should_use_neutral, false) -- Remove from both lists
     end
 
     if should_use_neutral then
         if success then
             ulx.fancyLogAdmin(calling_ply, "#A made access #q neutral to #T", access_string, target_ply)
         else
-            ULib.tsayError(calling_ply,
-                string.format("User \"%s\" isn't denied or allowed access to \"%s\"", target_ply:Nick(), access_string),
-                true)
+            ULib.tsayError(calling_ply, string.format("User \"%s\" isn't denied or allowed access to \"%s\"", target_ply:Nick(), access_string), true)
         end
     else
         if not success then
-            ULib.tsayError(calling_ply,
-                string.format("User \"%s\" is already denied access to \"%s\"", target_ply:Nick(), access_string), true)
+            ULib.tsayError(calling_ply, string.format("User \"%s\" is already denied access to \"%s\"", target_ply:Nick(), access_string), true)
         else
             ulx.fancyLogAdmin(calling_ply, "#A denied access #q to #T", access_string, target_ply)
         end
@@ -233,8 +223,7 @@ end
 local userdeny = ulx.command(CATEGORY_NAME, "ulx userdeny", ulx.userdeny, nil, false, false, true)
 userdeny:addParam { type = ULib.cmds.PlayerArg }
 userdeny:addParam { type = ULib.cmds.StringArg, hint = "command" } -- TODO, add completes for this
-userdeny:addParam { type = ULib.cmds.BoolArg, hint = "remove explicit allow or deny instead of outright denying", ULib
-    .cmds.optional }
+userdeny:addParam { type = ULib.cmds.BoolArg, hint = "remove explicit allow or deny instead of outright denying", ULib.cmds.optional }
 userdeny:defaultAccess(ULib.ACCESS_SUPERADMIN)
 userdeny:help("Remove from a user's access.")
 
@@ -255,8 +244,7 @@ end
 
 local addgroup = ulx.command(CATEGORY_NAME, "ulx addgroup", ulx.addgroup, nil, false, false, true)
 addgroup:addParam { type = ULib.cmds.StringArg, hint = "group" }
-addgroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "继承于", error =
-"指定的用户组 \"%s\" 无效", ULib.cmds.restrictToCompletes, default = "user", ULib.cmds.optional }
+addgroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "继承于", error = "指定的用户组 \"%s\" 无效", ULib.cmds.restrictToCompletes, default = "user", ULib.cmds.optional }
 addgroup:defaultAccess(ULib.ACCESS_SUPERADMIN)
 addgroup:help("创建新权限组并指定继承于谁.")
 
@@ -271,8 +259,7 @@ function ulx.renamegroup(calling_ply, current_group, new_group)
 end
 
 local renamegroup = ulx.command(CATEGORY_NAME, "ulx renamegroup", ulx.renamegroup, nil, false, false, true)
-renamegroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "当前组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+renamegroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "当前组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 renamegroup:addParam { type = ULib.cmds.StringArg, hint = "新权限组名" }
 renamegroup:defaultAccess(ULib.ACCESS_SUPERADMIN)
 renamegroup:help("重命名一个权限组.")
@@ -287,10 +274,8 @@ function ulx.setGroupCanTarget(calling_ply, group, can_target)
     end
 end
 
-local setgroupcantarget = ulx.command(CATEGORY_NAME, "ulx setgroupcantarget", ulx.setGroupCanTarget, nil, false, false,
-    true)
-setgroupcantarget:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+local setgroupcantarget = ulx.command(CATEGORY_NAME, "ulx setgroupcantarget", ulx.setGroupCanTarget, nil, false, false, true)
+setgroupcantarget:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 setgroupcantarget:addParam { type = ULib.cmds.StringArg, hint = "目标权限组名称", ULib.cmds.optional }
 setgroupcantarget:defaultAccess(ULib.ACCESS_SUPERADMIN)
 setgroupcantarget:help("设置权限组能够针对\n谁使用权限")
@@ -301,8 +286,7 @@ function ulx.removegroup(calling_ply, group_name)
 end
 
 local removegroup = ulx.command(CATEGORY_NAME, "ulx removegroup", ulx.removegroup, nil, false, false, true)
-removegroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+removegroup:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names_no_user, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 removegroup:defaultAccess(ULib.ACCESS_SUPERADMIN)
 removegroup:help("移除权限组. 请小心使用.")
 
@@ -318,21 +302,18 @@ function ulx.groupallow(calling_ply, group_name, access_string, access_tag)
 
     local success = ULib.ucl.groupAllow(group_name, accessTable)
     if not success then
-        ULib.tsayError(calling_ply, string.format("权限组 \"%s\" 已经拥有权限 \"%s\"", group_name, access_string),
-            true)
+        ULib.tsayError(calling_ply, string.format("权限组 \"%s\" 已经拥有权限 \"%s\"", group_name, access_string), true)
     else
         if not access_tag or access_tag == "" then
             ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 到权限组 #s", access_string, group_name)
         else
-            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到权限组 #s", access_string,
-                access_tag, group_name)
+            ulx.fancyLogAdmin(calling_ply, "#A 给予权限 #q 伴随标签 #q 到权限组 #s", access_string, access_tag, group_name)
         end
     end
 end
 
 local groupallow = ulx.command(CATEGORY_NAME, "ulx groupallow", ulx.groupallow, nil, false, false, true)
-groupallow:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+groupallow:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 groupallow:addParam { type = ULib.cmds.StringArg, hint = "指令" } -- TODO, add completes for this
 groupallow:addParam { type = ULib.cmds.StringArg, hint = "标签", ULib.cmds.optional }
 groupallow:defaultAccess(ULib.ACCESS_SUPERADMIN)
@@ -350,14 +331,12 @@ function ulx.groupdeny(calling_ply, group_name, access_string)
     if success then
         ulx.fancyLogAdmin(calling_ply, "#A 移除了权限 #q 从权限组 #s", access_string, group_name)
     else
-        ULib.tsayError(calling_ply, string.format("权限组 \"%s\" 已经无权访问 \"%s\"", group_name, access_string),
-            true)
+        ULib.tsayError(calling_ply, string.format("权限组 \"%s\" 已经无权访问 \"%s\"", group_name, access_string), true)
     end
 end
 
 local groupdeny = ulx.command(CATEGORY_NAME, "ulx groupdeny", ulx.groupdeny, nil, false, false, true)
-groupdeny:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error =
-"指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
+groupdeny:addParam { type = ULib.cmds.StringArg, completes = ulx.group_names, hint = "权限组", error = "指定的权限组 \"%s\" 无效", ULib.cmds.restrictToCompletes }
 groupdeny:addParam { type = ULib.cmds.StringArg, hint = "指令" } -- TODO, add completes for this
 groupdeny:defaultAccess(ULib.ACCESS_SUPERADMIN)
 groupdeny:help("移除权限组的权限.")

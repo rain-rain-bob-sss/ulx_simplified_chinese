@@ -76,7 +76,7 @@ local function sayCmdCheck(ply, strText, bTeam)
     return nil
 end
 
-hook.Add("PlayerSay", "ULib_saycmd", sayCmdCheck, HOOK_HIGH)   -- High-priority
+hook.Add("PlayerSay", "ULib_saycmd", sayCmdCheck, HOOK_HIGH) -- High-priority
 
 --[[
 	Function: addSayCommand

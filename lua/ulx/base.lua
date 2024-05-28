@@ -36,7 +36,7 @@ end
 function ulx.addToHelpManually(category, cmd, string, access_tag)
     ulx.cmdsByCategory[category] = ulx.cmdsByCategory[category] or {}
     for i = #ulx.cmdsByCategory[category], 1, -1 do
-        local existingCmd = ulx.cmdsByCategory[ category ][i]
+        local existingCmd = ulx.cmdsByCategory[category][i]
         if existingCmd.cmd == cmd and existingCmd.manual == true then
             table.remove(ulx.cmdsByCategory[category], i)
             break
@@ -57,7 +57,7 @@ do
     for _, map in ipairs(maps) do
         table.insert(ulx.maps, map:sub(1, -5):lower()) -- Take off the .bsp
     end
-    table.sort(ulx.maps)                             -- Make sure it's alphabetical
+    table.sort(ulx.maps) -- Make sure it's alphabetical
 
     ulx.gamemodes = {}
     local fromEngine = engine.GetGamemodes()
@@ -75,7 +75,7 @@ function ulx.addKickReason(reason)
 end
 
 local function sendAutocompletes(ply)
-    if ply:query("ulx map") or ply:query("ulx votemap2") then  -- Only send if they have access to this.
+    if ply:query("ulx map") or ply:query("ulx votemap2") then -- Only send if they have access to this.
         ULib.clientRPC(ply, "ulx.populateClMaps", ulx.maps)
         ULib.clientRPC(ply, "ulx.populateClGamemodes", ulx.gamemodes)
     end
@@ -91,7 +91,7 @@ function cvarChanged(sv_cvar, cl_cvar, ply, old_value, new_value)
     if not sv_cvar:find("^ulx_") then return end
     local command = sv_cvar:gsub("^ulx_", ""):lower() -- Strip it off for lookup below
     if not ulx.cvars[command] then return end
-    sv_cvar = ulx.cvars[command].original            -- Make sure we have intended casing
+    sv_cvar = ulx.cvars[command].original -- Make sure we have intended casing
     local path = "data/ulx/config.txt"
     if not ULib.fileExists(path) then
         Msg("[ULX ERROR] Config doesn't exist at " .. path .. "\n")
@@ -101,12 +101,12 @@ function cvarChanged(sv_cvar, cl_cvar, ply, old_value, new_value)
     sv_cvar = sv_cvar:gsub("_", " ") -- Convert back to space notation
 
     if new_value:find("[%s:']") then new_value = string.format("%q", new_value) end
-    local replacement = string.format("%s %s ", sv_cvar, new_value:gsub("%%", "%%%%"))                                                                                     -- Because we're feeding it through gsub below, need to expand '%'s
+    local replacement = string.format("%s %s ", sv_cvar, new_value:gsub("%%", "%%%%")) -- Because we're feeding it through gsub below, need to expand '%'s
     local config = ULib.fileRead(path)
     config, found = config:gsub(
-    ULib.makePatternSafe(sv_cvar):gsub("%a", function(c) return "[" .. c:lower() .. c:upper() .. "]" end) ..
-    "%s+[^;\r\n]*", replacement)                                                                                                                                           -- The gsub makes us case neutral
-    if found == 0 then                                                                                                                                                     -- Configuration option does not exist in config- append it
+        ULib.makePatternSafe(sv_cvar):gsub("%a", function(c) return "[" .. c:lower() .. c:upper() .. "]" end) ..
+        "%s+[^;\r\n]*", replacement) -- The gsub makes us case neutral
+    if found == 0 then -- Configuration option does not exist in config- append it
         newline = config:match("\r?\n") or "\n"
         if not config:find("\r?\n$") then config = config .. newline end
         config = config .. "ulx " .. replacement .. "; " .. ulx.cvars[command].help .. newline
@@ -114,5 +114,4 @@ function cvarChanged(sv_cvar, cl_cvar, ply, old_value, new_value)
     ULib.fileWrite(path, config)
 end
 
-hook.Add(ulx.HOOK_ULXDONELOADING, "AddCvarHook",
-    function() hook.Add(ULib.HOOK_REPCVARCHANGED, "ULXCheckCvar", cvarChanged) end)                                                  -- We're not interested in changing cvars till after load
+hook.Add(ulx.HOOK_ULXDONELOADING, "AddCvarHook", function() hook.Add(ULib.HOOK_REPCVARCHANGED, "ULXCheckCvar", cvarChanged) end) -- We're not interested in changing cvars till after load

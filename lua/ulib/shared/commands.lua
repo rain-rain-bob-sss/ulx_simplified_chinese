@@ -165,7 +165,7 @@ function cmds.NumArg:processRestrictions(cmdRestrictions, plyRestrictions)
 
     local allowTimeString = table.HasValue(cmdRestrictions, cmds.allowTimeString)
 
-    if plyRestrictions then               -- Access tag restriction
+    if plyRestrictions then                   -- Access tag restriction
         if not plyRestrictions:find(":") then -- Assume they only want one number here
             self.min = plyRestrictions
             self.max = plyRestrictions
@@ -443,7 +443,7 @@ cmds.PlayerArg = inheritsFrom(cmds.BaseArg)
 --]]
 
 function cmds.PlayerArg:processRestrictions(ply, cmdRestrictions, plyRestrictions)
-    self.restrictedTargets = nil        -- Reset
+    self.restrictedTargets = nil           -- Reset
     cmds.PlayerArg.restrictedTargets = nil -- Because of inheritance, make sure this is reset too
     local ignore_can_target = false
     if plyRestrictions and plyRestrictions:sub(1, 1) == "$" then
@@ -456,11 +456,11 @@ function cmds.PlayerArg:processRestrictions(ply, cmdRestrictions, plyRestriction
         self.restrictedTargets = ULib.getUsers(cmdRestrictions.target, true, ply)
     end
 
-    if plyRestrictions and plyRestrictions ~= "" then  -- Access tag restriction
+    if plyRestrictions and plyRestrictions ~= "" then        -- Access tag restriction
         local restricted = ULib.getUsers(plyRestrictions, true, ply)
         if not restricted or not self.restrictedTargets then -- Easy, just set it
             self.restrictedTargets = restricted
-        else -- Make a subset! We want to remove any values from self.restrictedTargets that aren't in restricted
+        else                                                 -- Make a subset! We want to remove any values from self.restrictedTargets that aren't in restricted
             local i = 1
             while self.restrictedTargets[i] do
                 if not table.HasValue(restricted, self.restrictedTargets[i]) then
@@ -472,12 +472,12 @@ function cmds.PlayerArg:processRestrictions(ply, cmdRestrictions, plyRestriction
         end
     end
 
-    if ply:IsValid() and not ignore_can_target and not table.HasValue(cmdRestrictions, cmds.ignoreCanTarget) and ULib.ucl.getGroupCanTarget(ply:GetUserGroup()) then  -- can_target restriction
+    if ply:IsValid() and not ignore_can_target and not table.HasValue(cmdRestrictions, cmds.ignoreCanTarget) and ULib.ucl.getGroupCanTarget(ply:GetUserGroup()) then -- can_target restriction
         local selfTarget = "$" .. ULib.getUniqueIDForPlayer(ply)
-        local restricted = ULib.getUsers(ULib.ucl.getGroupCanTarget(ply:GetUserGroup()) .. "," .. selfTarget, true, ply)                                              -- Allow self on top of restrictions
-        if not restricted or not self.restrictedTargets then                                                                                                          -- Easy, just set it
+        local restricted = ULib.getUsers(ULib.ucl.getGroupCanTarget(ply:GetUserGroup()) .. "," .. selfTarget, true, ply)                                             -- Allow self on top of restrictions
+        if not restricted or not self.restrictedTargets then                                                                                                         -- Easy, just set it
             self.restrictedTargets = restricted
-        else -- Make a subset! We want to remove any values from self.restrictedTargets that aren't in restricted
+        else                                                                                                                                                         -- Make a subset! We want to remove any values from self.restrictedTargets that aren't in restricted
             local i = 1
             while self.restrictedTargets[i] do
                 if not table.HasValue(restricted, self.restrictedTargets[i]) then
@@ -735,14 +735,14 @@ cmds.StringArg = inheritsFrom(cmds.BaseArg)
 
 function cmds.StringArg:processRestrictions(cmdRestrictions, plyRestrictions)
     self.restrictedCompletes = table.Copy(cmdRestrictions.completes) -- Reset
-    self.playerLevelRestriction = nil                               -- Reset
+    self.playerLevelRestriction = nil                                -- Reset
 
-    if plyRestrictions and plyRestrictions ~= "*" then              -- Access tag restriction
+    if plyRestrictions and plyRestrictions ~= "*" then               -- Access tag restriction
         self.playerLevelRestriction = true
         local restricted = ULib.explode(",", plyRestrictions)
         if not self.restrictedCompletes or not table.HasValue(cmdRestrictions, cmds.restrictToCompletes) then -- Easy, just set it
             self.restrictedCompletes = restricted
-        else -- Make a subset! We want to remove any values from self.restrictedCompletes that aren't in restricted
+        else                                                                                                  -- Make a subset! We want to remove any values from self.restrictedCompletes that aren't in restricted
             local i = 1
             while self.restrictedCompletes[i] do
                 if not table.HasValue(restricted, self.restrictedCompletes[i]) then
@@ -1248,11 +1248,11 @@ function cmds.getCommandTableAndArgv(commandName, argv, valveErrorCorrection)
         for k, v in ipairs(argv) do
             args = string.format('%s"%s" ', args, v)
         end
-        args = string.Trim(args)         -- Remove that last space we added
+        args = string.Trim(args)             -- Remove that last space we added
 
         args = args:gsub("\" \":\" \"", ":") -- Valve error correction.
         args = args:gsub("\" \"'\" \"", "'") -- Valve error correction.
-        argv = ULib.splitArgs(args)      -- We're going to go ahead and reparse argv to fix the errors.
+        argv = ULib.splitArgs(args)          -- We're going to go ahead and reparse argv to fix the errors.
     else
         argv = table.Copy(argv)
     end
@@ -1327,7 +1327,7 @@ local function routedCommandCallback(ply, commandName, argv)
         return error("Base command \"" .. commandName .. "\" is not defined!")
     end
 
-	local currTable
+    local currTable
 
     currTable, commandName, argv = cmds.getCommandTableAndArgv(commandName, argv, true)
     cmds.execute(currTable, ply, commandName, argv)
@@ -1384,7 +1384,7 @@ local function autocompleteCallback(commandName, args)
         for cmd, cmdInfo in pairs(currTable) do
             if cmd ~= "__fn" and cmd ~= "__word" and cmd ~= "__access_string" and cmd ~= "__client_only" then
                 if cmd:sub(1, args:len()) == args and (not cmdInfo.__access_string or ply:query(cmdInfo.__access_string)) then -- Ensure access
-                    table.insert(ret, commandName .. " " .. cmdInfo.__word)                                            -- Pull in properly cased autocomplete
+                    table.insert(ret, commandName .. " " .. cmdInfo.__word)                                                    -- Pull in properly cased autocomplete
                 end
             end
         end

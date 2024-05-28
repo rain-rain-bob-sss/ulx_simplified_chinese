@@ -129,8 +129,13 @@ function xgui.load_helpers()
                 xgui.anchor:SetPos(xgui.x, xgui.y)
             else
                 local curx, cury = xgui.anchor:GetPos()
-                xlib.addToAnimQueue("pnlSlide", { panel = xgui.anchor, startx = curx, starty = cury, endx = xgui.x,
-                    endy = xgui.y })
+                xlib.addToAnimQueue("pnlSlide", {
+                    panel = xgui.anchor,
+                    startx = curx,
+                    starty = cury,
+                    endx = xgui.x,
+                    endy = xgui.y
+                })
                 xlib.animQueue_start()
             end
         end
@@ -239,7 +244,7 @@ function xgui.load_helpers()
             xlib.makelabel { x = 5, y = 3, label = "封禁时长:", parent = outPanel }
             outPanel.interval = xlib.makecombobox { x = 90, w = 75, parent = outPanel }
             outPanel.val = xlib.makeslider { w = 165, y = 20, label = "<--->", min = min, max = max, value = min, decimal = 0, parent =
-            outPanel }
+                outPanel }
 
             local divisor = {}
             local sensiblemax = {}
@@ -383,9 +388,9 @@ function xgui.load_helpers()
         local restrictions = {}
         ULib.cmds.StringArg.processRestrictions(restrictions, arg, ulx.getTagArgNum(tag, argnum))
 
-        local is_restricted_to_completes = table.HasValue(arg, ULib.cmds.restrictToCompletes) -- Program-level restriction (IE, ulx map)
-            or restrictions.playerLevelRestriction                                        -- The player's tag specifies only certain strings
+        local is_restricted_to_completes = table.HasValue(arg, ULib.cmds.restrictToCompletes) -- Program-level restriction (IE, ulx map) or restrictions.playerLevelRestriction
 
+        -- The player's tag specifies only certain strings
         if is_restricted_to_completes then
             return xlib.makecombobox { text = arg.hint or "StringArg", choices = restrictions.restrictedCompletes, parent = parent }
         elseif restrictions.restrictedCompletes and table.Count(restrictions.restrictedCompletes) > 0 then

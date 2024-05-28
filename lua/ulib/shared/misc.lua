@@ -26,14 +26,14 @@
 function ULib.explode(separator, str, limit)
     local t = {}
     local curpos = 1
-    while true do                                      -- We have a break in the loop
+    while true do -- We have a break in the loop
         local newpos, endpos = str:find(separator, curpos) -- find the next separator in the string
-        if newpos ~= nil then                          -- if found then..
+        if newpos ~= nil then -- if found then..
             table.insert(t, str:sub(curpos, newpos - 1)) -- Save it in our table.
-            curpos = endpos + 1                        -- save just after where we found it for searching next time.
+            curpos = endpos + 1 -- save just after where we found it for searching next time.
         else
             if limit and #t > limit then
-                return t                -- Reached limit
+                return t -- Reached limit
             end
             table.insert(t, str:sub(curpos)) -- Save what's left in our array.
             break
@@ -64,7 +64,7 @@ end
 		v2.02 - Fixed block comments in more complicated files.
 ]]
 function ULib.stripComments(str, comment, blockcommentbeg, blockcommentend)
-    if blockcommentbeg and string.sub(blockcommentbeg, 1, string.len(comment)) == comment then  -- If the first of the block comment is the linecomment ( IE: --[[ and -- ).
+    if blockcommentbeg and string.sub(blockcommentbeg, 1, string.len(comment)) == comment then -- If the first of the block comment is the linecomment ( IE: --[[ and -- ).
         string.gsub(str, ULib.makePatternSafe(comment) .. "[%S \t]*", function(match)
             if string.sub(match, 1, string.len(blockcommentbeg)) == blockcommentbeg then
                 return "" -- No substitution, this is a block comment.
@@ -196,7 +196,7 @@ end
 function ULib.splitArgs(args, start_token, end_token)
     args = args:Trim()
     local argv = {}
-    local curpos = 1    -- Our current position within the string
+    local curpos = 1 -- Our current position within the string
     local in_quote = false -- Is the text we're currently processing in a quote?
     start_token = start_token or "\""
     end_token = end_token or "\""
@@ -887,9 +887,9 @@ function inheritsFrom(base_class)
     -- The meta-table for the root_class (this will only ever have one table associated with it)
     local class_mt = table.Copy(instance_mt) -- Only a few differences so copy
     class_mt.__index = base_class or root_class -- Use base or our special meta-base
-    class_mt.__call = root_class.call        -- Set up call alias
-    class_mt.class = new_class               -- Set up alias to ourself
-    class_mt.instance_mt = instance_mt       -- Need this for root_class:create()
+    class_mt.__call = root_class.call -- Set up call alias
+    class_mt.class = new_class -- Set up alias to ourself
+    class_mt.instance_mt = instance_mt -- Need this for root_class:create()
 
     setmetatable(new_class, class_mt)
 
@@ -982,9 +982,9 @@ function isClass(obj)
 end
 
 -- This wonderful bit of following code will make sure that no rogue coder can screw us up by changing the value of '_'
-_ = nil                                      -- Make sure we're starting out right.
+_ = nil -- Make sure we're starting out right.
 local meta = getmetatable(_G) or {}
-if type(meta) == "boolean" then return end   -- Metatable is protected, so we aren't able to run this code without erroring.
+if type(meta) == "boolean" then return end -- Metatable is protected, so we aren't able to run this code without erroring.
 local old__newindex = meta.__newindex
 setmetatable(_G, meta)
 function meta.__newindex(t, k, v)

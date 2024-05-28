@@ -27,17 +27,17 @@ local function init()
 end
 hook.Add(ulx.HOOK_ULXDONELOADING, "ULXInitConfigs", init) -- Time for configs
 
-local userMapvote = {}                                    -- Indexed by player.
-local mapvotes = {}                                       -- Indexed by map.
+local userMapvote = {} -- Indexed by player.
+local mapvotes = {} -- Indexed by map.
 ulx.timedVeto = nil
 
-ulx.convar("votemapEnabled", "1", _, ULib.ACCESS_ADMIN)        -- Enable/Disable the entire votemap command
-ulx.convar("votemapMintime", "10", _, ULib.ACCESS_ADMIN)       -- Time after map change before votes count.
-ulx.convar("votemapWaittime", "5", _, ULib.ACCESS_ADMIN)       -- Time before a user must wait before they can change their vote.
+ulx.convar("votemapEnabled", "1", _, ULib.ACCESS_ADMIN) -- Enable/Disable the entire votemap command
+ulx.convar("votemapMintime", "10", _, ULib.ACCESS_ADMIN) -- Time after map change before votes count.
+ulx.convar("votemapWaittime", "5", _, ULib.ACCESS_ADMIN) -- Time before a user must wait before they can change their vote.
 ulx.convar("votemapSuccessratio", "0.5", _, ULib.ACCESS_ADMIN) -- Ratio of (votes for map)/(total players) needed to change map. (Rounds up)
-ulx.convar("votemapMinvotes", "3", _, ULib.ACCESS_ADMIN)       -- Number of minimum votes needed to change map (Prevents llamas). This supersedes the above convar on small servers.
-ulx.convar("votemapVetotime", "30", _, ULib.ACCESS_ADMIN)      -- Time in seconds an admin has after a successful votemap to veto the vote. Set to 0 to disable.
-ulx.convar("votemapMapmode", "1", _, ULib.ACCESS_ADMIN)        -- 1 = Use all maps but what's specified below, 2 = Use only the maps specified below.
+ulx.convar("votemapMinvotes", "3", _, ULib.ACCESS_ADMIN) -- Number of minimum votes needed to change map (Prevents llamas). This supersedes the above convar on small servers.
+ulx.convar("votemapVetotime", "30", _, ULib.ACCESS_ADMIN) -- Time in seconds an admin has after a successful votemap to veto the vote. Set to 0 to disable.
+ulx.convar("votemapMapmode", "1", _, ULib.ACCESS_ADMIN) -- 1 = Use all maps but what's specified below, 2 = Use only the maps specified below.
 
 function ulx.votemapVeto(calling_ply)
     if not ulx.timedVeto then

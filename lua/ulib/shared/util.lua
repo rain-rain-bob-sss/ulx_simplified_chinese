@@ -614,7 +614,7 @@ end
 function ULib.pcallError(...)
     local returns = { pcall(...) }
 
-    if not returns[1] then    -- The status flag
+    if not returns[1] then -- The status flag
         ErrorNoHalt(returns[2]) -- The error message
     end
 
