@@ -488,6 +488,7 @@ local votegag = ulx.command(CATEGORY_NAME, "ulx votegag", ulx.votegag, "!votegag
 votegag:addParam { type = ULib.cmds.PlayerArg }
 votegag:addParam { type = ULib.cmds.NumArg, min = 0, default = 1440, hint = "时长,单位为分", ULib.cmds.allowTimeString, ULib.cmds.optional }
 votegag:addParam { type = ULib.cmds.StringArg, hint = "请输入原因或者选择原因", ULib.cmds.optional, ULib.cmds.takeRestOfLine, completes = ulx.common_kick_reasons }
+votegag:defaultAccess(ULib.ACCESS_ALL)
 votegag:help("开始反对目标的公众投票.")
 
 timer.Create("ulx_votingTimer", 60, 0, function()
