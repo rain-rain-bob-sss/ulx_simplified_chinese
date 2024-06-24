@@ -2,10 +2,12 @@ local CATEGORY_NAME = "功能"
 
 CreateConVar("hacker_mode", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Set hacker mode (0 for Halos SpecialEffect, 1 for 3D2D SpecialEffect)")
 CreateConVar("hacker_show_names", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Show player names (0 for off, 1 for on)")
+CreateConVar("hacker_show_ent_names", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Show entity names (0 for off, 1 for on)")
 
 hook.Add("HackerSyncGlobals", "AddHackerGlobals", function()
     SetGlobalInt("hacker_mode", GetConVar("hacker_mode"):GetInt())
     SetGlobalInt("hacker_show_names", GetConVar("hacker_show_names"):GetInt())
+    SetGlobalInt("hacker_show_ent_names", GetConVar("hacker_show_entnames"):GetInt())
 end)
 
 cvars.AddChangeCallback("hacker_mode", function(name, old, new)
@@ -14,6 +16,10 @@ end)
 
 cvars.AddChangeCallback("hacker_show_names", function(name, old, new)
     SetGlobalInt("hacker_show_names", tonumber(new))
+end)
+
+cvars.AddChangeCallback("hacker_show_entnames", function(name, old, new)
+    SetGlobalInt("hacker_show_ent_names", tonumber(new))
 end)
 
 if SERVER then
@@ -107,6 +113,24 @@ if CLIENT then
         end)
     end
 
+    function drawEntityInfo()
+        hook.Add("HUDPaint", "DrawEntityInfo", function()
+            if GetConVar("hacker_show_ent_names"):GetInt() == 0 then return end
+
+            for _, ent in ipairs(ents.GetAll()) do
+                if ent:GetClass() == "prop_physics" then
+                    local pos = ent:GetPos() + Vector(0, 0, 10)
+                    pos = pos:ToScreen()
+
+                    --draw.SimpleText(ent:GetClass(), "PlayerName", pos.x, pos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+                    local posText = "Pos: " .. tostring(math.Round(ent:GetPos().x)) .. ", " .. tostring(math.Round(ent:GetPos().y)) .. ", " .. tostring(math.Round(ent:GetPos().z))
+                    draw.SimpleText(posText, "PlayerName", pos.x, pos.y + 20, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+            end
+        end)
+    end
+
     function drawPlayerNames()
         hook.Add("HUDPaint", "DrawPlayerNames", function()
             for _, ply in ipairs(player.GetAll()) do
@@ -123,6 +147,7 @@ if CLIENT then
         hook.Remove("PreDrawHalos", "AddNewSpecialHalos")
         hook.Remove("PostDrawOpaqueRenderables", "PlayerBorders")
         hook.Remove("HUDPaint", "DrawPlayerNames")
+        hook.Remove("HUDPaint", "DrawEntityInfo")
         playerMap = {}
     end
 
@@ -138,6 +163,7 @@ if CLIENT then
 
     local hackerMode = GetConVar("hacker_mode"):GetInt()
     local showNames = GetConVar("hacker_show_names"):GetInt()
+    local showEntNames = GetConVar("hacker_show_ent_names"):GetInt()
 
     if hackerMode == 0 then
         net.Receive("SpecialEffect", function()
@@ -148,6 +174,9 @@ if CLIENT then
             end
 
             applyHaloEffect(playerMap)
+            if showEntNames == 1 then
+                drawEntityInfo()
+            end
         end)
 
         net.Receive("ClearSpecialEffects", function()
@@ -162,7 +191,9 @@ if CLIENT then
             end
 
             applyHaloEffect(playerMap)
-
+            if showEntNames == 1 then
+                drawEntityInfo()
+            end
             apply3D2DEffect(playerMap)
         end)
 
