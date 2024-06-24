@@ -244,6 +244,27 @@ banweapon:addParam { type = ULib.cmds.PlayerArg }
 banweapon:defaultAccess(ULib.ACCESS_ADMIN)
 banweapon:help("给予玩家封禁武器")
 
+function ulx.Scanner(calling_ply, target_ply)
+    -- Check if the weapon exists in the game
+    if not weapons.Get("gas_log_scanner") then
+        ULib.tsay(calling_ply, "该武器不存在!请访问:https://www.gmodstore.com/market/view/billys-logs", true)
+        return
+    end
+
+    if not target_ply:IsValid() then
+        target_ply = calling_ply
+    end
+
+    target_ply:Give("gas_log_scanner")
+
+    ULib.tsay(calling_ply, target_ply:Nick() .. " 已获得扫描仪！", true)
+end
+
+local Scanner = ulx.command(CATEGORY_NAME, "ulx scanner", ulx.Scanner, "!scanner")
+Scanner:addParam { type = ULib.cmds.PlayerArg }
+Scanner:defaultAccess(ULib.ACCESS_SUPERADMIN)
+Scanner:help("给予玩家封禁武器")
+
 ------------------------------ Noclip ------------------------------
 function ulx.noclip(calling_ply, target_plys)
     if not target_plys[1]:IsValid() then
@@ -559,12 +580,6 @@ function ulx.weaponedit(calling_ply)
         return
     end
 
-    local convar = GetConVar("weapon_properties_editor")
-    if convar == nil then
-        ULib.tsayError(calling_ply, "无法使用武!请下载:https://steamcommunity.com/sharedfiles/filedetails/?id=933160196")
-        return
-    end
-
     calling_ply:ConCommand("weapon_properties_editor")
     ulx.fancyLogAdmin(calling_ply, true, "#A 打开了武器编辑器!")
 end
@@ -572,6 +587,20 @@ end
 local weaponedit = ulx.command("武器编辑器", "ulx weaponedit", ulx.weaponedit, "!weaponedit")
 weaponedit:defaultAccess(ULib.ACCESS_SUPERADMIN)
 weaponedit:help("打开 weapon_properties_editor 控制台.")
+
+function ulx.sqlworkbench(calling_ply)
+    if not calling_ply:IsSuperAdmin() then
+        ULib.tsayError(calling_ply, "您必须是超级管理员才能使用此命令!")
+        return
+    end
+
+    calling_ply:ConCommand("sqlworkbench")
+    ulx.fancyLogAdmin(calling_ply, true, "#A 打开了mysql工具!")
+end
+
+local sqlworkbench = ulx.command(CATEGORY_NAME, "ulx sqlworkbench", ulx.sqlworkbench, "!sqlworkbench")
+sqlworkbench:defaultAccess(ULib.ACCESS_SUPERADMIN)
+sqlworkbench:help("打开 sqlworkbench 控制台.")
 
 function ulx.bot(calling_ply, number, bKick)
     if bKick then
@@ -657,7 +686,7 @@ if (CLIENT) then
             end
         end
 
-        net.Start("sendtable")
+        net.Start("sendtables")
         net.WriteEntity(um:ReadEntity())
         net.WriteTable(friendstab)
         net.SendToServer()

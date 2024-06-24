@@ -2,8 +2,8 @@ local CATEGORY_NAME = "管理员频道"
 
 -- Initialize default positions and time
 local DEFAULT_POS_X = 5 / 10
-local DEFAULT_POS_Y = 20 / 10
-local DEFAULT_TIME = 15
+local DEFAULT_POS_Y = 25 / 10
+local DEFAULT_TIME = 10
 
 -- Table to store individual player settings on the server
 local playerSettings = {}

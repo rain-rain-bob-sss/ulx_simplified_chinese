@@ -52,7 +52,7 @@ if CLIENT then
             local localPlayer = LocalPlayer()
 
             for userID, ply in pairs(playerMap) do
-                if ply:Alive() and ply ~= localPlayer then
+                if ply and ply:Alive() and ply ~= localPlayer then
                     table.insert(alivePlayers, ply)
                 end
             end
