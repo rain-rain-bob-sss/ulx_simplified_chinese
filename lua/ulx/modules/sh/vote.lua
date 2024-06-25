@@ -7,6 +7,11 @@ if SERVER then ulx.convar("voteEcho", "0", _, ULib.ACCESS_SUPERADMIN) end -- Ech
 
 if SERVER then
     util.AddNetworkString("ulx_vote")
+
+    ulx.convar("votegagSuccessratio", "0.75", _, ULib.ACCESS_SUPERADMIN)
+    ulx.convar("votegagMinvotes", "6", _, ULib.ACCESS_SUPERADMIN)
+    ulx.convar("votemuteSuccessratio", "0.75", _, ULib.ACCESS_SUPERADMIN)
+    ulx.convar("votemuteMinvotes", "6", _, ULib.ACCESS_SUPERADMIN)
 end
 
 -- First, our helper function to make voting so much easier!
@@ -564,8 +569,8 @@ local function voteMuteDone(t, target, time, ply)
             winnernum = numvotes
         end
     end
-    local ratioNeeded = GetConVar("ulx_votemuteSuccessratio"):GetInt()
-    local minVotes = GetConVar("ulx_votemuteMinvotes"):GetInt()
+    local ratioNeeded = GetConVar("votemuteSuccessratio"):GetInt()
+    local minVotes = GetConVar("votemuteMinvotes"):GetInt()
     local str
     if ((winner ~= 1) or (winnernum < minVotes) or (winnernum / t.voters < ratioNeeded)) then
         str = "投票结果: 用户不会被静音. (" .. (results[1] or "0") .. "/" .. t.voters .. ")"
