@@ -8,6 +8,15 @@ function ulx.psay(calling_ply, target_ply, message)
         return
     end
 
+    local isAdmin = calling_ply:IsAdmin() or calling_ply:IsSuperAdmin()
+    local callingPlyAlive = calling_ply:Alive()
+    local targetPlyAlive = target_ply:Alive()
+
+    if not isAdmin and (callingPlyAlive or targetPlyAlive) then
+        ULib.tsayError(calling_ply, "只有死亡状态的玩家才能相互发送私密信息!", true)
+        return
+    end
+
     ulx.fancyLog({ target_ply, calling_ply }, "#P 发送到 #P: " .. message, calling_ply, target_ply)
 end
 
