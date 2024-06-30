@@ -501,8 +501,8 @@ local function voteGagDone(t, target, time, ply)
         end
     end
 
-    local ratioNeeded = GetConVar("votegagSuccessratio"):GetInt()
-    local minVotes = GetConVar("votegagMinvotes"):GetInt()
+    local ratioNeeded = GetConVar("ulx_votegagSuccessratio"):GetInt()
+    local minVotes = GetConVar("ulx_votegagMinvotes"):GetInt()
     local str
     if (winner ~= 1) or (winnernum < minVotes) or (winnernum / t.voters < ratioNeeded) then
         str = "投票结果: 用户不会被堵嘴. (" .. (results[1] or "0") .. "/" .. t.voters .. ")"
@@ -540,7 +540,8 @@ votegag:addParam{
 votegag:addParam{
     type = ULib.cmds.NumArg,
     min = 0,
-    default = 1440,
+    max = 9999,
+    default = 10,
     hint = "时长,单位为分",
     ULib.cmds.allowTimeString,
     ULib.cmds.optional
