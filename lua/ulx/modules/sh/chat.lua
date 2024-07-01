@@ -317,6 +317,39 @@ if SERVER then
     hook.Add("PlayerSay", "ULXGimpCheck", gimpCheck, HOOK_LOW)
 end
 
+if SERVER then
+    util.AddNetworkString("ignored")
+end
+
+if CLIENT then
+    net.Receive("ignored", function()
+        local ply = net.ReadEntity()
+        local should_unignore = net.ReadBool()
+
+        ply:SetMuted(not should_unignore)
+    end)
+end
+
+function ulx.ignore(calling_ply, target_ply, should_unignore)
+    net.Start("ignored")
+    net.WriteEntity(target_ply)
+    net.WriteBool(should_unignore)
+    net.Send(calling_ply)
+
+    if should_unignore then
+        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 取消静音了 ", Color(255, 0, 0), target_ply:Nick())
+    else
+        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 静音了 ", Color(255, 0, 0), target_ply:Nick())
+    end
+end
+
+local ignore = ulx.command(CATEGORY_NAME, "ulx ignore", ulx.ignore, "!ignore")
+ignore:addParam { type = ULib.cmds.PlayerArg }
+ignore:addParam { type = ULib.cmds.BoolArg, invisible = true }
+ignore:defaultAccess(ULib.ACCESS_ALL)
+ignore:help("在本地静音或取消静音目标玩家.")
+ignore:setOpposite("ulx unignore", { _, _, true }, "!unignore")
+
 ------------------------------ Gag ------------------------------
 function ulx.gag(calling_ply, target_plys, should_ungag)
     local players = player.GetAll()
