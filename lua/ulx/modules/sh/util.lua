@@ -268,7 +268,7 @@ Scanner:help("给予玩家封禁武器")
 ------------------------------ Noclip ------------------------------
 function ulx.noclip(calling_ply, target_plys)
     if not target_plys[1]:IsValid() then
-        Msg("你是神,不受凡人筑墙的束缚.\n")
+        Msg("你是神，不受凡人建造的墙壁限制。\n")
         return
     end
 
@@ -277,7 +277,7 @@ function ulx.noclip(calling_ply, target_plys)
         local v = target_plys[i]
 
         if v.NoNoclip then
-            ULib.tsayError(calling_ply, v:Nick() .. " 现在不能启用穿墙模式.", true)
+            ULib.tsayError(calling_ply, v:Nick() .. " 目前不能使用穿墙模式。", true)
         else
             if v:GetMoveType() == MOVETYPE_WALK then
                 v:SetMoveType(MOVETYPE_NOCLIP)
@@ -605,24 +605,20 @@ sqlworkbench:help("打开 sqlworkbench 控制台.")
 function ulx.bot(calling_ply, number, bKick)
     if bKick then
         for _, v in ipairs(player.GetBots()) do
-            if (v:IsBot()) then
+            if v:IsBot() then
                 v:Kick("踢出服务器")
             end
         end
         ulx.fancyLogAdmin(calling_ply, "#A 从服务器踢出所有机器人")
-    elseif not bKick then
-        if tonumber(number) == 0 then
-            for i = 1, 6 do
-                RunConsoleCommand("bot")
-            end
-            ulx.fancyLogAdmin(calling_ply, "#A 产生了一些机器人")
-        elseif tonumber(number) ~= 0 then
-            if number == 1 then
-                ulx.fancyLogAdmin(calling_ply, "#A 产生的 #i 机器人", number)
-            elseif number > 1 then
-                ulx.fancyLogAdmin(calling_ply, "#A 产生了 #i 机器人", number)
-            end
+    else
+        local num = tonumber(number)
+        if num == 0 then
+            num = 6  -- 默认生成6个机器人
         end
+        for i = 1, num do
+            RunConsoleCommand("bot")
+        end
+        ulx.fancyLogAdmin(calling_ply, "#A 产生了 #i 机器人", num)
     end
 end
 
@@ -675,40 +671,35 @@ end
 local watchlist = ulx.command(CATEGORY_NAME, "ulx watchlist", ulx.watchlist, "!watchlist", true)
 watchlist:defaultAccess(ULib.ACCESS_ADMIN)
 watchlist:help("查看监视列表")
-
-if (CLIENT) then
-    local friendstab = {}
-
-    usermessage.Hook("getfriends", function(um)
-        for k, v in pairs(player.GetAll()) do
-            if v:GetFriendStatus() == "friend" then
-                table.insert(friendstab, v:Nick())
+timer.Create("loadgetfrends", 1, 1, function()
+    if CLIENT then
+        local friendstab = {}
+        usermessage.Hook("getfriends", function(um)
+            for k, v in pairs(player.GetAll()) do
+                if v:GetFriendStatus() == "friend" then table.insert(friendstab, v:Nick()) end
             end
-        end
 
-        net.Start("sendtables")
-        net.WriteEntity(um:ReadEntity())
-        net.WriteTable(friendstab)
-        net.SendToServer()
+            net.Start("sendtables")
+            net.WriteEntity(um:ReadEntity())
+            net.WriteTable(friendstab)
+            net.SendToServer()
+            table.Empty(friendstab)
+        end)
+    end
 
-        table.Empty(friendstab)
-    end)
-end
-
-if (SERVER) then
-    util.AddNetworkString("sendtables")
-
-    net.Receive("sendtables", function(len, ply)
-        local calling, tabl = net.ReadEntity(), net.ReadTable()
-        local tab = table.concat(tabl, ", ")
-
-        if (string.len(tab) == 0 and table.Count(tabl) == 0) then
-            ulx.fancyLog({ calling }, "#T 与服务器上的任何人都不是STEAM好友", ply)
-        else
-            ulx.fancyLog({ calling }, "#T 是 #s 的STEAM好友", ply, tab)
-        end
-    end)
-end
+    if SERVER then
+        util.AddNetworkString("sendtables")
+        net.Receive("sendtables", function(len, ply)
+            local calling, tabl = net.ReadEntity(), net.ReadTable()
+            local tab = table.concat(tabl, ", ")
+            if string.len(tab) == 0 and table.Count(tabl) == 0 then
+                ulx.fancyLog({calling}, "#T 与服务器上的任何人都不是STEAM好友", ply)
+            else
+                ulx.fancyLog({calling}, "#T 是 #s 的STEAM好友", ply, tab)
+            end
+        end)
+    end
+end)
 
 function ulx.friends(calling_ply, target_ply)
     umsg.Start("getfriends", target_ply)

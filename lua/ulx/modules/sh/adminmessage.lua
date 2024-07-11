@@ -46,7 +46,7 @@ else
         displayPosY = posY or displayPosY
         displayTime = time or displayTime
 
-        surface.PlaySound("common/warning.wav")
+        --surface.PlaySound("common/warning.wav")
 
         -- Add timer to clear the message after displayTime seconds
         timer.Simple(displayTime, function()
