@@ -62,7 +62,7 @@ function ulx.asay(calling_ply, message)
             umsg.Bool(isAdmin)
             umsg.End()
             if ply:IsAdmin() then
-                --ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
+            --  ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
             end
         end
     end
