@@ -111,7 +111,7 @@ end
 server.processModules()
 
 xgui.hookEvent("onProcessModules", nil, server.processModules, "serverSettingsProcessModules")
-xgui.addSettingModule("服务器", server, "icon16/server.png", "xgui_svsettings")
+xgui.addSettingModule("服务端", server, "icon16/server.png", "xgui_svsettings")
 
 ---------------------------
 --Server Settings Modules--
