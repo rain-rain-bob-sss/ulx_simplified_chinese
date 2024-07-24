@@ -60,7 +60,7 @@ local defaultGroupsText = -- To populate initially or when the user deletes it
 	{
 	}
 	"inherit_from"	"operator"
-	"can_target"    "!%admin"
+	"can_target"    "!%superadmin"
 }
 
 "superadmin"
