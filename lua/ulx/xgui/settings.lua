@@ -27,14 +27,9 @@ end
 
 local func = xgui.settings_tabs.PerformLayout
 xgui.settings_tabs.PerformLayout = function(self)
-    local status, err = pcall(function()
-        func(self)
-        self.tabScroller:SetPos(10, 0)
-        self.tabScroller:SetWide(555) --Make the tabs smaller to accommodate for the X button at the top-right corner.
-    end)
-    if not status then
-        print("Error: " .. err)
-    end
+    func(self)
+    self.tabScroller:SetPos(10, 0)
+    self.tabScroller:SetWide(555) --Make the tabs smaller to accommodate for the X button at the top-right corner.
 end
 
 if autorefreshTab ~= nil then

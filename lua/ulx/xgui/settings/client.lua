@@ -132,36 +132,21 @@ xlib.makecolorpicker { x = 10, y = 135, color = xgui.settings.infoColor, addalph
 end
 
 ----------------
--- 皮肤管理器 --
+--SKIN MANAGER--
 ----------------
-xlib.makelabel{ x=10, y=273, label="Derma Theme:", parent=xguipnl }
-xguipnl.skinselect = xlib.makecombobox{ x=10, y=290, w=150, parent=xguipnl }
-
--- 检查并设置默认皮肤为"Default"
+xlib.makelabel { x = 10, y = 273, label = "Derma Theme:", parent = xguipnl }
+xguipnl.skinselect = xlib.makecombobox { x = 10, y = 290, w = 150, parent = xguipnl }
 if not derma.SkinList[xgui.settings.skin] then
     xgui.settings.skin = "Default"
 end
-
--- 设置皮肤选择框的默认显示文本
-local defaultSkinName = derma.SkinList[xgui.settings.skin].PrintName
-xguipnl.skinselect:SetText( defaultSkinName )
-
+xguipnl.skinselect:SetText(derma.SkinList[xgui.settings.skin].PrintName)
 xgui.base.refreshSkin = true
-
--- 当选择不同皮肤时的回调函数
-xguipnl.skinselect.OnSelect = function( self, index, value, data )
+xguipnl.skinselect.OnSelect = function(self, index, value, data)
     xgui.settings.skin = data
-    xgui.base:SetSkin( data )
+    xgui.base:SetSkin(data)
 end
-
--- 添加皮肤选项到选择框中
-local addedSkins = {}  -- 用于记录已经添加过的皮肤名字
-for skin, skindata in pairs( derma.SkinList ) do
-    local skinPrintName = skindata.PrintName
-    if not addedSkins[skinPrintName] then
-        xguipnl.skinselect:AddChoice( skinPrintName, skin )
-        addedSkins[skinPrintName] = true
-    end
+for skin, skindata in pairs(derma.SkinList) do
+    xguipnl.skinselect:AddChoice(skindata.PrintName, skin)
 end
 
 ----------------
