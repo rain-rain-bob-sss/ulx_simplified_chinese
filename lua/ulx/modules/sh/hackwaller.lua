@@ -4,6 +4,14 @@ CreateConVar("hacker_mode", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }
 CreateConVar("hacker_show_names", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Show player names (0 for off, 1 for on)")
 CreateConVar("hacker_show_ent_names", 1, { FCVAR_NOTIFY, FCVAR_ARCHIVE, FCVAR_REPLICATED }, "Show entity names (0 for off, 1 for on)")
 
+hook.Add("HackerSyncGlobals", "AddHackerGlobals", function()
+    SetGlobalInt("hacker_mode", GetConVar("hacker_mode"):GetInt())
+    SetGlobalInt("hacker_show_names", GetConVar("hacker_show_names"):GetInt())
+    SetGlobalInt("hacker_show_ent_names", GetConVar("hacker_show_ent_names"):GetInt())
+    print("HackerSyncGlobals hook executed")
+end)
+hook.Run("HackerSyncGlobals")
+
 cvars.AddChangeCallback("hacker_mode", function(name, old, new)
     SetGlobalInt("hacker_mode", tonumber(new))
 end)
