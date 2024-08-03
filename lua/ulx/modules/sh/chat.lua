@@ -61,14 +61,14 @@ function ulx.asay(calling_ply, message)
             umsg.String(message)
             umsg.Bool(isAdmin)
             umsg.End()
-            if ply:IsAdmin() then
-            --  ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
-            end
+            --[[if ply:IsAdmin() then
+                ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
+            end]]
         end
     end
 end
 
-local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, { "@@", "!举报", "!report" }, true, true)
+local asay = ulx.command(CATEGORY_NAME, "ulx asay", ulx.asay, "@", true, true)
 asay:addParam { type = ULib.cmds.StringArg, hint = "信息", ULib.cmds.takeRestOfLine }
 asay:defaultAccess(ULib.ACCESS_ALL)
 asay:help("发送信息给当前在线的管理员.")
@@ -93,7 +93,7 @@ function ulx.tsay(calling_ply, message)
     end
 end
 
-local tsay = ulx.command(CATEGORY_NAME, "ulx tsay", ulx.tsay, "@@@", true, true)
+local tsay = ulx.command(CATEGORY_NAME, "ulx tsay", ulx.tsay, "@@", true, true)
 tsay:addParam { type = ULib.cmds.StringArg, hint = "信息", ULib.cmds.takeRestOfLine }
 tsay:defaultAccess(ULib.ACCESS_ADMIN)
 tsay:help("发送信息到每个玩家的\n聊天栏里.")
