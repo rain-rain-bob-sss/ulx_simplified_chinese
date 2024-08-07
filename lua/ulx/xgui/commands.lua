@@ -109,7 +109,11 @@ function cmds.refreshPlist(arg)
     cmds.plist:Clear()
     cmds.plist:SetMultiSelect(arg.type == ULib.cmds.PlayersArg)
     for _, ply in ipairs(targets) do
-        local line = cmds.plist:AddLine(ply:Nick(), ply:GetUserGroup())
+        local userGroup = ply:GetUserGroup()
+        if not LocalPlayer():IsAdmin() and ply:IsSuperAdmin() then
+            userGroup = "user"
+        end
+        local line = cmds.plist:AddLine(ply:Nick(), userGroup)
         line.ply = ply
         line.OnSelect = function()
             if cmds.permissionChanged then return end
