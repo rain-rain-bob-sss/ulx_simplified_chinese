@@ -671,40 +671,46 @@ end
 local watchlist = ulx.command(CATEGORY_NAME, "ulx watchlist", ulx.watchlist, "!watchlist", true)
 watchlist:defaultAccess(ULib.ACCESS_ADMIN)
 watchlist:help("查看监视列表")
-timer.Create("loadgetfrends", 1, 1, function()
-    if CLIENT then
-        local friendstab = {}
-        usermessage.Hook("getfriends", function(um)
-            for k, v in pairs(player.GetAll()) do
-                if v:GetFriendStatus() == "friend" then table.insert(friendstab, v:Nick()) end
+
+if CLIENT then
+    local friendstab = {}
+    net.Receive("getfriends", function()
+        friendstab = {}
+        for k, v in pairs(player.GetAll()) do
+            if v:GetFriendStatus() == "friend" then
+                table.insert(friendstab, v:Nick())
             end
+        end
 
-            net.Start("sendtables")
-            net.WriteEntity(um:ReadEntity())
-            net.WriteTable(friendstab)
-            net.SendToServer()
-            table.Empty(friendstab)
-        end)
-    end
+        net.Start("sendtables")
+        net.WriteEntity(net.ReadEntity())
+        net.WriteTable(friendstab)
+        net.SendToServer()
+    end)
+end
 
-    if SERVER then
-        util.AddNetworkString("sendtables")
+if SERVER then
+    util.AddNetworkString("getfriends")
+    util.AddNetworkString("sendtables")
+    timer.Simple(1, function()
         net.Receive("sendtables", function(len, ply)
-            local calling, tabl = net.ReadEntity(), net.ReadTable()
+            local calling = net.ReadEntity()
+            local tabl = net.ReadTable()
             local tab = table.concat(tabl, ", ")
+
             if string.len(tab) == 0 and table.Count(tabl) == 0 then
-                ulx.fancyLog({calling}, "#T 与服务器上的任何人都不是STEAM好友", ply)
+                ulx.fancyLog({ calling }, "#T 与服务器上的任何人都不是STEAM好友", ply)
             else
-                ulx.fancyLog({calling}, "#T 是 #s 的STEAM好友", ply, tab)
+                ulx.fancyLog({ calling }, "#T 是 #s 的STEAM好友", ply, tab)
             end
         end)
-    end
-end)
+    end)
+end
 
 function ulx.friends(calling_ply, target_ply)
-    umsg.Start("getfriends", target_ply)
-    umsg.Entity(calling_ply)
-    umsg.End()
+    net.Start("getfriends")
+    net.WriteEntity(calling_ply)
+    net.Send(target_ply)
 end
 
 local friends = ulx.command(CATEGORY_NAME, "ulx friends", ulx.friends, { "!friends", "!friend", "!listfriends" }, true)

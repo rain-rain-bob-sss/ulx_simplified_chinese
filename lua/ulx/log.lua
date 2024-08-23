@@ -354,13 +354,13 @@ local function makePlayerList( calling_ply, target_list, showing_ply, use_self_s
 	local anonymous = showing_ply ~= "CONSOLE" and not ULib.ucl.query( showing_ply, seeanonymousechoAccess ) and logEcho:GetInt() == 1
 
 	if #players > 1 and #target_list == #players then
-		return { everyone_color, "Everyone" }
+		return { everyone_color, "每个人" }
 	elseif is_admin_part then
 		local target = target_list[ 1 ] -- Only one target here
 		if anonymous and target ~= showing_ply then
-			return { everyone_color, "(Someone)" }
+			return { everyone_color, "(匿名)" }
 		elseif not target:IsValid() then
-			return { console_color, "(Console)" }
+			return { console_color, "(控制台)" }
 		end
 	end
 
@@ -380,14 +380,14 @@ local function makePlayerList( calling_ply, target_list, showing_ply, use_self_s
 		table.insert( strs, plyColor( target, showing_ply ) )
 		if target == showing_ply then
 			if not use_self_suffix or calling_ply ~= showing_ply then
-				table.insert( strs, "You" )
+				table.insert( strs, "你" )
 			else
-				table.insert( strs, "Yourself" )
+				table.insert( strs, "你自己" )
 			end
 		elseif not use_self_suffix or calling_ply ~= target_list[ i ] or anonymous then
-			table.insert( strs, target_list[ i ]:IsValid() and target_list[ i ]:Nick() or "(Console)" )
+			table.insert( strs, target_list[ i ]:IsValid() and target_list[ i ]:Nick() or "(控制台)" )
 		else
-			table.insert( strs, "Themself" )
+			table.insert( strs, "自我" )
 		end
 		table.insert( strs, default_color )
 		table.insert( strs, "," )

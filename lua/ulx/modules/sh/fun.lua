@@ -1330,48 +1330,45 @@ local zaptable = {
 function ulx.shock(calling_ply, target_plys, damage)
     for k, v in ipairs(target_plys) do
         if not IsValid(v) then return end
-
         local eData = EffectData()
         eData:SetEntity(v)
         eData:SetOrigin(v:GetPos())
         eData:SetStart(v:GetPos())
         eData:SetScale(1)
         eData:SetMagnitude(15)
-
         util.Effect("TeslaHitBoxes", eData)
         v:EmitSound(tostring(table.Random(zaptable)))
-
         local dmginfo = DamageInfo()
         dmginfo:SetDamage(damage)
         dmginfo:SetAttacker(calling_ply) -- Set the attacker to avoid NULL entity error
         v:TakeDamageInfo(dmginfo)
-
-        if (SERVER) then
-            umsg.Start("ulx_blind", v)
-            umsg.Bool(true)
-            umsg.Short(255)
-            umsg.End()
+        if SERVER then
+            util.AddNetworkString("ulx_blinds")
+            net.Start("ulx_blinds")
+            net.WriteBool(true)
+            net.WriteInt(255, 16)
+            net.Send(v)
             timer.Simple(0.2, function()
                 for i = -255, 0 do
-                    if (i > 0) then
-                        umsg.Start("ulx_blind", v)
-                        umsg.Bool(true)
-                        umsg.Short(math.abs(i))
-                        umsg.End()
+                    net.Start("ulx_blinds")
+                    if i > 0 then
+                        net.WriteBool(true)
+                        net.WriteInt(math.abs(i), 16)
                     else
-                        umsg.Start("ulx_blind", v)
-                        umsg.Bool(false)
-                        umsg.Short(0)
-                        umsg.End()
+                        net.WriteBool(false)
+                        net.WriteInt(0, 16)
                     end
+
+                    net.Send(v)
                 end
             end)
+
             net.Start("ulxcc_blur")
             net.Send(v)
         end
     end
 
-    if (damage and damage > 0) then
+    if damage and damage > 0 then
         ulx.fancyLogAdmin(calling_ply, "#A 电击 #T 给予 #i 伤害", target_plys, damage)
     else
         ulx.fancyLogAdmin(calling_ply, "#A 电击 #T", target_plys)

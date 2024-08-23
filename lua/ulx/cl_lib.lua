@@ -40,7 +40,7 @@ end
 function ulx.blindUser( bool, amt )
 	if bool then
 		local function blind()
-			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 255, 255, 255, amt ) )
+			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, amt) )
 		end
 		hook.Add( "HUDPaint", "ulx_blind", blind )
 	else
@@ -48,12 +48,27 @@ function ulx.blindUser( bool, amt )
 	end
 end
 
-
+function ulx.shockUser( bool, amt )
+	if bool then
+		local function blinds()
+			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 255, 255, 255, amt ) )
+		end
+		hook.Add( "HUDPaint", "ulx_blinds", blinds )
+	else
+		hook.Remove( "HUDPaint", "ulx_blinds" )
+	end
+end
 
 net.Receive( "ulx_blind", function( ln )
 	local bool = net.ReadBool()
 	local amt = net.ReadInt(16)
 	ulx.blindUser( bool, amt )
+end )
+
+net.Receive( "ulx_blinds", function( ln )
+	local bool = net.ReadBool()
+	local amt = net.ReadInt(16)
+	ulx.shockUser( bool, amt )
 end )
 
 local curVote
