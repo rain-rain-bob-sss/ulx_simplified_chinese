@@ -38,7 +38,7 @@ Structures:
 			Function that decides whether a player can execute this privilege,
 			optionally on another player (target).
 	}
---]]
+]]
 
 -- Version number in YearMonthDay format.
 local version = 20150902.1
@@ -52,29 +52,27 @@ CAMI.Version = version
 usergroups
 	Contains the registered CAMI_USERGROUP usergroup structures.
 	Indexed by usergroup name.
---]]
-
+]]
 local usergroups = CAMI.GetUsergroups and CAMI.GetUsergroups() or {
-    user = {
-        Name = "user",
-        Inherits = "user"
-    },
-    admin = {
-        Name = "admin",
-        Inherits = "user"
-    },
-    superadmin = {
-        Name = "superadmin",
-        Inherits = "admin"
-    }
+	user = {
+		Name = "user",
+		Inherits = "user"
+	},
+	admin = {
+		Name = "admin",
+		Inherits = "user"
+	},
+	superadmin = {
+		Name = "superadmin",
+		Inherits = "admin"
+	}
 }
 
 --[[
 privileges
 	Contains the registered CAMI_PRIVILEGE privilege structures.
 	Indexed by privilege name.
---]]
-
+]]
 local privileges = CAMI.GetPrivileges and CAMI.GetPrivileges() or {}
 
 --[[
@@ -96,13 +94,12 @@ CAMI.RegisterUsergroup
 	Return value:
 		CAMI_USERGROUP
 			The usergroup given as argument.
---]]
-
+]]
 function CAMI.RegisterUsergroup(usergroup, source)
-    usergroups[usergroup.Name] = usergroup
+	usergroups[usergroup.Name] = usergroup
 
-    hook.Call("CAMI.OnUsergroupRegistered", nil, usergroup, source)
-    return usergroup
+	hook.Call("CAMI.OnUsergroupRegistered", nil, usergroup, source)
+	return usergroup
 end
 
 --[[
@@ -125,17 +122,16 @@ CAMI.UnregisterUsergroup
 	Return value:
 		bool
 			Whether the unregistering succeeded.
---]]
-
+]]
 function CAMI.UnregisterUsergroup(usergroupName, source)
-    if not usergroups[usergroupName] then return false end
+	if not usergroups[usergroupName] then return false end
 
-    local usergroup = usergroups[usergroupName]
-    usergroups[usergroupName] = nil
+	local usergroup = usergroups[usergroupName]
+	usergroups[usergroupName] = nil
 
-    hook.Call("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
+	hook.Call("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
 
-    return true
+	return true
 end
 
 --[[
@@ -144,10 +140,9 @@ CAMI.GetUsergroups
 
 	Return value:
 		Table of CAMI_USERGROUP, indexed by their names.
---]]
-
+]]
 function CAMI.GetUsergroups()
-    return usergroups
+	return usergroups
 end
 
 --[[
@@ -157,10 +152,9 @@ CAMI.GetUsergroup
 	Return value:
 		CAMI_USERGROUP
 			Returns nil when the usergroup does not exist.
---]]
-
+]]
 function CAMI.GetUsergroup(usergroupName)
-    return usergroups[usergroupName]
+	return usergroups[usergroupName]
 end
 
 --[[
@@ -181,21 +175,20 @@ CAMI.UsergroupInherits
 	Return value:
 		bool
 			Whether usergroupName1 inherits usergroupName2.
---]]
-
+]]
 function CAMI.UsergroupInherits(usergroupName1, usergroupName2)
-    repeat
-        if usergroupName1 == usergroupName2 then return true end
+	repeat
+		if usergroupName1 == usergroupName2 then return true end
 
-        usergroupName1 = usergroups[usergroupName1] and
-            usergroups[usergroupName1].Inherits or
-            usergroupName1
-    until not usergroups[usergroupName1] or
-        usergroups[usergroupName1].Inherits == usergroupName1
+		usergroupName1 = usergroups[usergroupName1] and
+						 usergroups[usergroupName1].Inherits or
+						 usergroupName1
+	until not usergroups[usergroupName1] or
+		  usergroups[usergroupName1].Inherits == usergroupName1
 
-    -- One can only be sure the usergroup inherits from user if the
-    -- usergroup isn't registered.
-    return usergroupName1 == usergroupName2 or usergroupName2 == "user"
+	-- One can only be sure the usergroup inherits from user if the
+	-- usergroup isn't registered.
+	return usergroupName1 == usergroupName2 or usergroupName2 == "user"
 end
 
 --[[
@@ -216,17 +209,16 @@ CAMI.InheritanceRoot
 	Return value:
 		string
 			The name of the root usergroup (either user, admin or superadmin)
---]]
-
+]]
 function CAMI.InheritanceRoot(usergroupName)
-    if not usergroups[usergroupName] then return end
+	if not usergroups[usergroupName] then return end
 
-    local inherits = usergroups[usergroupName].Inherits
-    while inherits ~= usergroups[usergroupName].Inherits do
-        usergroupName = usergroups[usergroupName].Inherits
-    end
+	local inherits = usergroups[usergroupName].Inherits
+	while inherits ~= usergroups[usergroupName].Inherits do
+		usergroupName = usergroups[usergroupName].Inherits
+	end
 
-    return usergroupName
+	return usergroupName
 end
 
 --[[
@@ -245,14 +237,13 @@ CAMI.RegisterPrivilege
 	Return value:
 		CAMI_PRIVILEGE
 			The privilege given as argument.
---]]
-
+]]
 function CAMI.RegisterPrivilege(privilege)
-    privileges[privilege.Name] = privilege
+	privileges[privilege.Name] = privilege
 
-    hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
+	hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
 
-    return privilege
+	return privilege
 end
 
 --[[
@@ -270,17 +261,16 @@ CAMI.UnregisterPrivilege
 	Return value:
 		bool
 			Whether the unregistering succeeded.
---]]
-
+]]
 function CAMI.UnregisterPrivilege(privilegeName)
-    if not privileges[privilegeName] then return false end
+	if not privileges[privilegeName] then return false end
 
-    local privilege = privileges[privilegeName]
-    privileges[privilegeName] = nil
+	local privilege = privileges[privilegeName]
+	privileges[privilegeName] = nil
 
-    hook.Call("CAMI.OnPrivilegeUnregistered", nil, privilege)
+	hook.Call("CAMI.OnPrivilegeUnregistered", nil, privilege)
 
-    return true
+	return true
 end
 
 --[[
@@ -289,10 +279,9 @@ CAMI.GetPrivileges
 
 	Return value:
 		Table of CAMI_PRIVILEGE, indexed by their names.
---]]
-
+]]
 function CAMI.GetPrivileges()
-    return privileges
+	return privileges
 end
 
 --[[
@@ -302,10 +291,9 @@ CAMI.GetPrivilege
 	Return value:
 		CAMI_PRIVILEGE when the privilege exists.
 			nil when the privilege does not exist.
---]]
-
+]]
 function CAMI.GetPrivilege(privilegeName)
-    return privileges[privilegeName]
+	return privileges[privilegeName]
 end
 
 --[[
@@ -348,42 +336,39 @@ CAMI.PlayerHasAccess
 	Return value:
 		None, the answer is given in the callback function in order to allow
 		for the admin mod to perform e.g. a database lookup.
---]]
-
+]]
 -- Default access handler
-local defaultAccessHandler = {
-    ["CAMI.PlayerHasAccess"] =
-        function(_, actorPly, privilegeName, callback, _, extraInfoTbl)
-            -- The server always has access in the fallback
-            if not IsValid(actorPly) then return callback(true, "Fallback.") end
+local defaultAccessHandler = {["CAMI.PlayerHasAccess"] =
+	function(_, actorPly, privilegeName, callback, _, extraInfoTbl)
+		-- The server always has access in the fallback
+		if not IsValid(actorPly) then return callback(true, "Fallback.") end
 
-            local priv = privileges[privilegeName]
+		local priv = privileges[privilegeName]
 
-            local fallback = extraInfoTbl and (
-                not extraInfoTbl.Fallback and actorPly:IsAdmin() or
-                extraInfoTbl.Fallback == "user" and true or
-                extraInfoTbl.Fallback == "admin" and actorPly:IsAdmin() or
-                extraInfoTbl.Fallback == "superadmin" and actorPly:IsSuperAdmin())
+		local fallback = extraInfoTbl and (
+			not extraInfoTbl.Fallback and actorPly:IsAdmin() or
+			extraInfoTbl.Fallback == "user" and true or
+			extraInfoTbl.Fallback == "admin" and actorPly:IsAdmin() or
+			extraInfoTbl.Fallback == "superadmin" and actorPly:IsSuperAdmin())
 
 
-            if not priv then return callback(fallback, "Fallback.") end
+		if not priv then return callback(fallback, "Fallback.") end
 
-            callback(
-                priv.MinAccess == "user" or
-                priv.MinAccess == "admin" and actorPly:IsAdmin() or
-                priv.MinAccess == "superadmin" and actorPly:IsSuperAdmin()
-                , "Fallback.")
-        end,
-    ["CAMI.SteamIDHasAccess"] =
-        function(_, _, _, callback)
-            callback(false, "No information available.")
-        end
+		callback(
+			priv.MinAccess == "user" or
+			priv.MinAccess == "admin" and actorPly:IsAdmin() or
+			priv.MinAccess == "superadmin" and actorPly:IsSuperAdmin()
+			, "Fallback.")
+	end,
+	["CAMI.SteamIDHasAccess"] =
+	function(_, _, _, callback)
+		callback(false, "No information available.")
+	end
 }
-
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly,
-                              extraInfoTbl)
-    hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
-        privilegeName, callback, targetPly, extraInfoTbl)
+extraInfoTbl)
+	hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
+		privilegeName, callback, targetPly, extraInfoTbl)
 end
 
 --[[
@@ -418,24 +403,25 @@ CAMI.GetPlayersWithAccess
 				CommandArguments
 					table
 					Extra arguments that were given to the privilege command.
---]]
-function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly, extraInfoTbl)
-    local allowedPlys = {}
-    local allPlys = player.GetAll()
-    local countdown = #allPlys
+]]
+function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly,
+extraInfoTbl)
+	local allowedPlys = {}
+	local allPlys = player.GetAll()
+	local countdown = #allPlys
 
-    local function onResult(ply, hasAccess, _)
-        countdown = countdown - 1
+	local function onResult(ply, hasAccess, _)
+		countdown = countdown - 1
 
-        if hasAccess then table.insert(allowedPlys, ply) end
-        if countdown == 0 then callback(allowedPlys) end
-    end
+		if hasAccess then table.insert(allowedPlys, ply) end
+		if countdown == 0 then callback(allowedPlys) end
+	end
 
-    for _, ply in pairs(allPlys) do
-        CAMI.PlayerHasAccess(ply, privilegeName,
-            function(...) onResult(ply, ...) end,
-            targetPly, extraInfoTbl)
-    end
+	for _, ply in pairs(allPlys) do
+		CAMI.PlayerHasAccess(ply, privilegeName,
+			function(...) onResult(ply, ...) end,
+			targetPly, extraInfoTbl)
+	end
 end
 
 --[[
@@ -478,10 +464,11 @@ CAMI.SteamIDHasAccess
 	Return value:
 		None, the answer is given in the callback function in order to allow
 		for the admin mod to perform e.g. a database lookup.
---]]
-
-function CAMI.SteamIDHasAccess(actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
-    hook.Call("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam, privilegeName, callback, targetSteam, extraInfoTbl)
+]]
+function CAMI.SteamIDHasAccess(actorSteam, privilegeName, callback,
+targetSteam, extraInfoTbl)
+	hook.Call("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam,
+		privilegeName, callback, targetSteam, extraInfoTbl)
 end
 
 --[[
@@ -505,10 +492,9 @@ CAMI.SignalUserGroupChanged
 		source
 			any
 			Identifier for your own admin mod. Can be anything.
---]]
-
+]]
 function CAMI.SignalUserGroupChanged(ply, old, new, source)
-    hook.Call("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
+	hook.Call("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
 end
 
 --[[
@@ -532,8 +518,7 @@ CAMI.SignalSteamIDUserGroupChanged
 		source
 			any
 			Identifier for your own admin mod. Can be anything.
---]]
-
+]]
 function CAMI.SignalSteamIDUserGroupChanged(steamId, old, new, source)
-    hook.Call("CAMI.SteamIDUsergroupChanged", nil, steamId, old, new, source)
+	hook.Call("CAMI.SteamIDUsergroupChanged", nil, steamId, old, new, source)
 end
