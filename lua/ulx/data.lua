@@ -50,27 +50,25 @@ files["banmessage.txt"] = [[
 ; {{STEAMID}} - The banned player's Steam ID (excluding non-number characters)
 ; {{STEAMID64}} - The banned player's 64-bit Steam ID
 ; The two steam ID variables are useful for constructing URLs for appealing bans
--------===== [ 已被封禁 ] =====-------
+-------===== [ BANNED ] =====-------
 
----= 原因 =---
+---= Reason =---
 {{REASON}}
 
----= 剩余时间 =---
+---= Time Left =---
 {{TIME_LEFT}}
-
----= 操作者 =---
-{{BANNED_BY}}
 ]]
 
+
 files["banreasons.txt"] =
-[[;该文件用于存储踢出和封禁用户的默认理由。
-;这些理由会显示在控制台自动完成和 XGUI 下拉菜单中。
-垃圾邮件
-服务器崩溃
-明格
-吝啬鬼
-粗言秽语
-不遵守规则
+[[; This file is used to store default reasons for kicking and banning users.
+; These reasons show up in console autocomplete and in XGUI dropdowns.
+Spammer
+Crashed server
+Minge
+Griefer
+Foul language
+Disobeying the rules
 ]]
 
 files["config.txt"] =
@@ -495,12 +493,11 @@ files["motd.txt"] =
 }
 ]]
 
-ULib.fileCreateDir("data/ulx") -- This is ignored if the folder already exists
-for filename, content in pairs(files) do
-    local filepath = "data/ulx/" .. filename
-    if not ULib.fileExists(filepath, true) then
-        ULib.fileWrite(filepath, content)
-    end
+ULib.fileCreateDir( "data/ulx" ) -- This is ignored if the folder already exists
+for filename, content in pairs( files ) do
+	local filepath = "data/ulx/" .. filename
+	if not ULib.fileExists( filepath, true ) then
+		ULib.fileWrite( filepath, content )
+	end
 end
-
 files = nil -- Cleanup
