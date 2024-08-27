@@ -337,9 +337,9 @@ function ulx.ignore(calling_ply, target_ply, should_unignore)
     net.Send(calling_ply)
 
     if should_unignore then
-        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 取消静音了 ", Color(255, 0, 0), target_ply:Nick())
+        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 取消静音了 ", Color(255, 55, 55), target_ply:Nick())
     else
-        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 静音了 ", Color(255, 0, 0), target_ply:Nick())
+        ULib.tsayColor(nil, false, Color(255, 0, 0), calling_ply:Nick(), Color(255, 255, 255), " 静音了 ", Color(255, 55, 55), target_ply:Nick())
     end
 end
 
