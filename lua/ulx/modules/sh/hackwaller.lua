@@ -61,7 +61,7 @@ if CLIENT then
             local localPlayer = LocalPlayer()
 
             for userID, ply in pairs(playerMap) do
-                if ply and ply:Alive() and ply ~= localPlayer then
+                if ply:IsValid() and ply:Alive() and ply ~= localPlayer then
                     table.insert(alivePlayers, ply)
                 end
             end
@@ -93,7 +93,7 @@ if CLIENT then
             local ents = player.GetAll()
 
             for _, ply in ipairs(ents) do
-                if ply:Alive() and ply ~= LocalPlayer() then
+                if ply:IsValid() and ply:Alive() and ply ~= localPlayer then
                     ply:DrawModel()
                 end
             end
@@ -107,7 +107,7 @@ if CLIENT then
             cam.End3D2D()
 
             for _, ply in ipairs(ents) do
-                if ply:Alive() and ply ~= LocalPlayer() then
+                if ply:IsValid() and ply:Alive() and ply ~= localPlayer then
                     ply:DrawModel()
                 end
             end
@@ -137,7 +137,7 @@ if CLIENT then
     function drawPlayerNames()
         hook.Add("HUDPaint", "DrawPlayerNames", function()
             for _, ply in ipairs(player.GetAll()) do
-                if ply:Alive() and ply ~= LocalPlayer() then
+                if ply:IsValid() and ply:Alive() and ply ~= localPlayer then
                     local pos = ply:GetPos() + Vector(0, 0, 80)
                     pos = pos:ToScreen()
                     draw.SimpleText(ply:Nick(), "PlayerName", pos.x, pos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
