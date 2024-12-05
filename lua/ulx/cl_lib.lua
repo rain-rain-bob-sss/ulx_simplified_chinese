@@ -37,25 +37,29 @@ function ulx.soundComplete( ply, args )
 	return soundList
 end
 
-function ulx.blindUser( bool, amt )
+function ulx.blindUser( bool, amt, r, g, b )
 	if bool then
 		local function blind()
-			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color(0, 0, 0, amt) )
+			cam.Start2D()
+			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color(r or 0, g or 0, b or 0, amt) )
+			cam.End2D()
 		end
-		hook.Add( "HUDPaint", "ulx_blind", blind )
+		hook.Add( "PostRender", "ulx_blind", blind )
 	else
-		hook.Remove( "HUDPaint", "ulx_blind" )
+		hook.Remove( "PostRender", "ulx_blind" )
 	end
 end
 
-function ulx.shockUser( bool, amt )
+function ulx.shockUser( bool, amt, r, g, b )
 	if bool then
 		local function blinds()
-			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 255, 255, 255, amt ) )
+			cam.Start2D()
+			draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color(r or 0, g or 0, b or 0, amt) )
+			cam.End2D()
 		end
-		hook.Add( "HUDPaint", "ulx_blinds", blinds )
+		hook.Add( "PostRender", "ulx_blinds", blinds )
 	else
-		hook.Remove( "HUDPaint", "ulx_blinds" )
+		hook.Remove( "PostRender", "ulx_blinds" )
 	end
 end
 
