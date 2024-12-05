@@ -19,7 +19,18 @@ function ulx.luaRun(calling_ply, command)
         return_results = true
     end
 
-    RunString(command)
+    local error = RunString(command, "["..calling_ply:Nick().."]", false)
+    if error~=nil and isstring(error) then
+        local lines = ULib.explode("\n", ulx.dumpTable(error))
+        local chunk_size = 50
+        for i = 1, #lines, chunk_size do -- Break it up so we don't overflow the client
+            ULib.queueFunctionCall(function()
+                for j = i, math.min(i + chunk_size - 1, #lines) do
+                    ULib.console(calling_ply, lines[j]:gsub("%%", "<p>"))
+                end
+            end)
+        end
+    end
 
     if return_results then
         if type(tmp_var) == "table" then
@@ -105,6 +116,12 @@ function ulx.ent(calling_ply, classname, params)
 
     newEnt:Spawn()
     newEnt:Activate()
+
+    params:gsub("([^|:\"]+)\"?:\"?([^|]+)", function(key, value)
+        key = key:Trim()
+        value = value:Trim()
+        newEnt:SetKeyValue(key, value)
+    end)
 
     undo.Create("ulx_ent")
     undo.AddEntity(newEnt)
