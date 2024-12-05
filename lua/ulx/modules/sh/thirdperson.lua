@@ -1,3 +1,4 @@
+do return end
 if (CLIENT) then
      local enabled = false
 
