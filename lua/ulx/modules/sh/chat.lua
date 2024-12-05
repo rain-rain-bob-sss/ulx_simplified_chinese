@@ -17,6 +17,9 @@ function ulx.psay(calling_ply, target_ply, message)
         return
     end
 
+    target_ply:SendLua( [[surface.PlaySound 'Friends/message.wav']] )
+	calling_ply:SendLua( [[surface.PlaySound 'Friends/message.wav']] )
+
     ulx.fancyLog({ target_ply, calling_ply }, "#P 发送到 #P: " .. message, calling_ply, target_ply)
 end
 
@@ -61,9 +64,9 @@ function ulx.asay(calling_ply, message)
             umsg.String(message)
             umsg.Bool(isAdmin)
             umsg.End()
-            --[[if ply:IsAdmin() then
+            if ply:IsAdmin() then
                 ply:SendLua("surface.PlaySound(\"common/warning.wav\")")
-            end]]
+            end
         end
     end
 end
