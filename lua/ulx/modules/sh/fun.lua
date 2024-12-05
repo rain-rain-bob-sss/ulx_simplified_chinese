@@ -16,12 +16,8 @@ function ulx.explode(calling_ply, target_plys)
             util.Decal("Scorch", worldpos1, worldpos2)
         end)
 
-        if GetConVarNumber("explode_ragdolls") == 1 then
-            v:SetVelocity(Vector(0, 0, 10) * math.random(75, 150))
-            timer.Simple(0.05, function() v:Kill() end)
-        elseif GetConVarNumber("explode_ragdolls") == 0 then
-            v:Kill()
-        end
+        v:SetVelocity(Vector(0, 0, 10) * math.random(75, 150))
+        timer.Simple(0.05, function() v:Kill() end)
 
         util.ScreenShake(playerpos, 5, 5, 1.5, 200)
 
@@ -435,6 +431,7 @@ function ulx.blind(calling_ply, target_plys, amount, should_unblind)
         net.WriteInt(amount, 16)
         net.Send(v)
 
+        --[[
         if should_unblind then
             if v.HadCamera then
                 v:Give("gmod_camera")
@@ -446,6 +443,7 @@ function ulx.blind(calling_ply, target_plys, amount, should_unblind)
             end
             v:StripWeapon("gmod_camera")
         end
+        --]]
     end
 
     if not should_unblind then
@@ -1132,6 +1130,7 @@ boday:addParam { type = ULib.cmds.NumArg, min = 0, default = 0, hint = "数值",
 boday:defaultAccess(ULib.ACCESS_SUPERADMIN)
 boday:help("调整目标玩家的模型附件.")
 
+--[[
 --------------------- SCP 4016 Watermelon ---------------------------
 function ulx.watamelon(calling_ply)
     if not calling_ply:IsValid() then
@@ -1166,6 +1165,7 @@ local watamelon = ulx.command(CATEGORY_NAME, "ulx watermelon", ulx.watamelon, "!
 watamelon:addParam { type = ULib.cmds.PlayersArg }
 watamelon:defaultAccess(ULib.ACCESS_SUPERADMIN)
 watamelon:help("生成SCP4016-小西瓜.")
+--]]
 
 function injectPointshopModule()
     hook.Add("PlayerInitialSpawn", "ULX_VariableSet", function(ply)
