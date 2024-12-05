@@ -74,6 +74,15 @@ function ulx.kick(calling_ply, target_ply, reason)
         reason = nil
         ulx.fancyLogAdmin(calling_ply, "#A 踢出了 #T", target_ply)
     end
+	
+    local effectdata = EffectData()
+    effectdata:SetOrigin(target_ply:GetPos())
+    util.Effect("Explosion", effectdata)
+
+	local effectdata = EffectData()
+    effectdata:SetOrigin(target_ply:GetPos())
+    util.Effect("RPGShotDown", effectdata)
+	
     -- Delay by 1 frame to ensure the chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.kick, target_ply, reason, calling_ply)
 end
@@ -114,6 +123,16 @@ function ulx.kickid(calling_ply, steamid, reason)
         ulx.fancyLogAdmin(calling_ply, "#A 踢出 #T", target_ply)
     end
 
+	if IsValid(target_ply) then
+		local effectdata = EffectData()
+	    effectdata:SetOrigin(target_ply:GetPos())
+	    util.Effect("Explosion", effectdata)
+	
+		local effectdata = EffectData()
+	    effectdata:SetOrigin(target_ply:GetPos())
+	    util.Effect("RPGShotDown", effectdata)
+	end
+
     -- Delay by 1 frame to ensure the chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.kick, target_ply, reason, calling_ply)
 end
@@ -136,6 +155,20 @@ function ulx.ban(calling_ply, target_ply, minutes, reason)
     local str = "#A 封禁了 #T " .. time
     if reason and reason ~= "" then str = str .. " (#s)" end
     ulx.fancyLogAdmin(calling_ply, str, target_ply, minutes ~= 0 and ULib.secondsToStringTime(minutes * 60) or reason, reason)
+
+	for _=1,10 do
+		local effectdata = EffectData()
+    	effectdata:SetOrigin(target_ply:GetPos())
+    	util.Effect("Explosion", effectdata)
+	end
+
+	for _=1,10 do
+		local effectdata = EffectData()
+    	effectdata:SetOrigin(target_ply:GetPos())
+    	util.Effect("RPGShotDown", effectdata)
+	end
+	
+	
     -- Delay by 1 frame to ensure any chat hook finishes with player intact. Prevents a crash.
     ULib.queueFunctionCall(ULib.kickban, target_ply, minutes, reason, calling_ply)
     RunConsoleCommand("writeid")
@@ -221,6 +254,8 @@ unban:addParam { type = ULib.cmds.StringArg, hint = "STEAM_0:0:" }
 unban:defaultAccess(ULib.ACCESS_ADMIN)
 unban:help("解封指定的SteamID.")
 
+--- I don't want this.
+--[[
 ------------------------------ Banweapon ------------------------------
 
 function ulx.banweapon(calling_ply, target_ply)
@@ -264,6 +299,7 @@ local Scanner = ulx.command(CATEGORY_NAME, "ulx scanner", ulx.Scanner, "!scanner
 Scanner:addParam { type = ULib.cmds.PlayerArg }
 Scanner:defaultAccess(ULib.ACCESS_SUPERADMIN)
 Scanner:help("给予玩家封禁武器")
+--]]
 
 ------------------------------ Noclip ------------------------------
 function ulx.noclip(calling_ply, target_plys)
@@ -382,7 +418,7 @@ function ulx.stopsounds(calling_ply)
         v:SendLua([[RunConsoleCommand("stopsound")]])
     end
 
-    ulx.fancyLogAdmin(calling_ply, "#A 停止了所有人的所有声音")
+    ulx.fancyLogAdmin(calling_ply, "#A 停止了所有声音")
 end
 
 local stopsounds = ulx.command(CATEGORY_NAME, "ulx stopsounds", ulx.stopsounds, { "!ss", "!stopsounds" })
@@ -435,6 +471,9 @@ cleardecals:defaultAccess(ULib.ACCESS_ADMIN)
 cleardecals:help("为所有玩家清除贴花.")
 
 function ulx.ip(calling_ply, target_ply)
+	if not IsValid(calling_ply) then Msg(tostring(string.sub(tostring(target_ply:IPAddress()), 1, string.len(tostring(target_ply:IPAddress())) - 6))) return end
+
+	calling_ply:ChatPrint("溫馨提示：不要開盒")
     calling_ply:SendLua([[SetClipboardText("]] .. tostring(string.sub(tostring(target_ply:IPAddress()), 1, string.len(tostring(target_ply:IPAddress())) - 6)) .. [[")]])
 
     ulx.fancyLog({ calling_ply }, "复制了 #T的ip地址", target_ply)
@@ -519,6 +558,17 @@ function ulx.fakeban(calling_ply, target_ply, minutes, reason)
     if (minutes == 0) then time = "永久" end
     local str = "#A 封禁 #T " .. time
     if (reason and reason ~= "") then str = str .. " (#s)" end
+	for _=1,10 do
+		local effectdata = EffectData()
+    	effectdata:SetOrigin(target_ply:GetPos())
+    	util.Effect("Explosion", effectdata)
+	end
+
+	for _=1,10 do
+		local effectdata = EffectData()
+    	effectdata:SetOrigin(target_ply:GetPos())
+    	util.Effect("RPGShotDown", effectdata)
+	end
     ulx.fancyLogAdmin(calling_ply, str, target_ply, minutes ~= 0 and minutes or reason, reason)
 end
 
@@ -541,7 +591,7 @@ dban:help("打开断开连接的玩家菜单")
 function ulx.timedcmd(calling_ply, command, seconds, should_cancel)
     ulx.fancyLogAdmin(calling_ply, true, "#A 已将命令 #s 设置为在 #i 秒内运行", command, seconds)
     timer.Create("runcmd_halftime", seconds / 2, 1, function()
-        ULib.tsay(calling_ply, (seconds / 2) .. " 还剩几秒!")
+        ULib.tsay(calling_ply, (seconds / 2) .. " 还剩半秒!")
     end)
     timer.Create("timedcmd", seconds, 1, function()
         calling_ply:ConCommand(command)
@@ -574,6 +624,7 @@ cancelcmd:addParam { type = ULib.cmds.BoolArg, invisible = true }
 cancelcmd:defaultAccess(ULib.ACCESS_ADMIN)
 cancelcmd:help("取消定时命令后运行指定\n的命令.")
 
+--[[
 function ulx.weaponedit(calling_ply)
     if not calling_ply:IsSuperAdmin() then
         ULib.tsayError(calling_ply, "您必须是超级管理员才能使用此命令!")
@@ -587,7 +638,9 @@ end
 local weaponedit = ulx.command("武器编辑器", "ulx weaponedit", ulx.weaponedit, "!weaponedit")
 weaponedit:defaultAccess(ULib.ACCESS_SUPERADMIN)
 weaponedit:help("打开 weapon_properties_editor 控制台.")
+--]]
 
+--[[
 function ulx.sqlworkbench(calling_ply)
     if not calling_ply:IsSuperAdmin() then
         ULib.tsayError(calling_ply, "您必须是超级管理员才能使用此命令!")
@@ -601,6 +654,7 @@ end
 local sqlworkbench = ulx.command(CATEGORY_NAME, "ulx sqlworkbench", ulx.sqlworkbench, "!sqlworkbench")
 sqlworkbench:defaultAccess(ULib.ACCESS_SUPERADMIN)
 sqlworkbench:help("打开 sqlworkbench 控制台.")
+--]]
 
 function ulx.bot(calling_ply, number, bKick)
     if bKick then
@@ -743,7 +797,7 @@ function ulx.hide(calling_ply, command)
         string.gsub(newstr, "ulx ", "!")
         calling_ply:ConCommand(newstr)
     end
-    timer.Simple(0.25, function()
+    timer.Simple(0.1, function()
         game.ConsoleCommand("ulx logecho " .. tostring(prevecho) .. "\n")
     end)
     ulx.fancyLog({ calling_ply }, "(HIDDEN) 你运行命令 #s", command)
@@ -905,7 +959,7 @@ end
 local debuginfo = ulx.command("特殊功能", "ulx debuginfo", ulx.debuginfo)
 debuginfo:defaultAccess(ULib.ACCESS_SUPERADMIN)
 debuginfo:help("记录Debug信息.")
-
+--[[
 function ulx.resettodefaults(calling_ply, param)
     if param ~= "FORCE" then
         local str = "你确定吗? 这将会移除ULX的所有配置文件!"
@@ -954,6 +1008,7 @@ local resettodefaults = ulx.command("特殊功能", "ulx resettodefaults", ulx.r
 resettodefaults:addParam { type = ULib.cmds.StringArg, ULib.cmds.optional, hint = "请输入FORCE来确定" }
 resettodefaults:defaultAccess(ULib.ACCESS_SUPERADMIN)
 resettodefaults:help("(谨慎考虑)重设ULX和Ulib所有\n设置!")
+--]]
 
 if SERVER then
     local ulx_kickAfterNameChanges = ulx.convar("kickAfterNameChanges", "0", "<number> - Players can only change their name x times every ulx_kickAfterNameChangesCooldown seconds. 0 to disable.", ULib.ACCESS_ADMIN)
@@ -1063,32 +1118,3 @@ else
     end)
 end
 
---[[CreateConVar("cleanup_time", 1, FCVAR_ARCHIVE, "Time (IN MINUTES) between every cleanup")
-
-if SERVER then
-	local convar = GetConVar("cleanup_time"):GetInt()
-	local pass = 0
-	timer.Create("AutoCleanup", 60, 0, function()
-		pass = pass + 1
-		if pass == convar then game.CleanUpMap() pass = 0 end
-	end)
-end
---]]
---[[timer.Create("CleanupProps", 60, 0, function()
-    for _, entity in pairs(ents.FindByClass("prop_physics")) do
-	if SERVER then
-        entity:Remove()
-	end
-    end
-	for _, v in ipairs (ents.GetAll()) do
-		local cls = v:GetClass()
-       if (cls:StartWith("prop_physics")) then
-			local phys = v:GetPhysicsObject()
-			if (IsValid(phys)) then
-				-- phys:Sleep()
-				-- phys:EnableMotion(false)
-				v:PhysicsDestroy()
-			end
-		end
-	end
-end)--]]
